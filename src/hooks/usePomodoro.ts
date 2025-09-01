@@ -1,0 +1,102 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+
+export type Phase = 'focus' | 'short_break' | 'long_break'
+export interface PomodoroSettings {
+    focusMinutes: number
+    shortBreakMinutes: number
+    longBreakMinutes: number
+    sessionsUntilLongBreak: number
+    autoStartNext: boolean
+    sound: boolean
+    notifications: boolean
+}
+
+const defaultSettings: PomodoroSettings = {
+    focusMinutes: 25,
+    shortBreakMinutes: 5,
+    longBreakMinutes: 15,
+    sessionsUntilLongBreak: 4,
+    autoStartNext: true,
+    sound: true,
+    notifications: true,
+}
+
+export function usePomodoro() {
+    const [settings, setSettings] = useState<PomodoroSettings>(() => {
+        const raw = localStorage.getItem('settings')
+        return raw ? { ...defaultSettings, ...JSON.parse(raw) } : defaultSettings
+    })
+    const [phase, setPhase] = useState<Phase>('focus')
+    const [isRunning, setIsRunning] = useState(false)
+    const [secondsLeft, setSecondsLeft] = useState(settings.focusMinutes * 60)
+    const [completedFocusSessions, setCompletedFocusSessions] = useState<number>(() => Number(localStorage.getItem('focusCount') || 0))
+    const tickRef = useRef<number | null>(null)
+
+    useEffect(() => localStorage.setItem('settings', JSON.stringify(settings)), [settings])
+    useEffect(() => localStorage.setItem('focusCount', String(completedFocusSessions)), [completedFocusSessions])
+
+    const phaseSeconds = useMemo(() => ({
+        focus: settings.focusMinutes * 60,
+        short_break: settings.shortBreakMinutes * 60,
+        long_break: settings.longBreakMinutes * 60,
+    }), [settings])
+
+    const stop = useCallback(() => {
+        if (tickRef.current) cancelAnimationFrame(tickRef.current)
+        tickRef.current = null
+        setIsRunning(false)
+    }, [])
+
+    const start = useCallback(() => {
+        if (isRunning) return
+        setIsRunning(true)
+        let last = performance.now()
+        const loop = (now: number) => {
+            const delta = Math.floor((now - last) / 1000)
+            if (delta >= 1) {
+                setSecondsLeft(s => Math.max(0, s - delta))
+                last = now
+            }
+            tickRef.current = requestAnimationFrame(loop)
+        }
+        tickRef.current = requestAnimationFrame(loop)
+    }, [isRunning])
+
+    const reset = useCallback((p: Phase = phase) => {
+        setSecondsLeft(phaseSeconds[p])
+    }, [phase, phaseSeconds])
+
+    const nextPhase = useCallback(() => {
+        if (phase === 'focus') {
+            setCompletedFocusSessions(s => s + 1)
+            const c = (completedFocusSessions + 1) % settings.sessionsUntilLongBreak
+            const next: Phase = c === 0 ? 'long_break' : 'short_break'
+            setPhase(next)
+            setSecondsLeft(phaseSeconds[next])
+            return next
+        }
+        setPhase('focus')
+        setSecondsLeft(phaseSeconds.focus)
+        return 'focus'
+    }, [phase, phaseSeconds, settings.sessionsUntilLongBreak, completedFocusSessions])
+
+    useEffect(() => {
+        if (secondsLeft === 0) {
+            stop()
+            const p = nextPhase()
+            if (settings.autoStartNext) start()
+            window.dispatchEvent(new CustomEvent('pomodoro:phase-change', { detail: { phase: p } }))
+        }
+    }, [secondsLeft, nextPhase, settings.autoStartNext, start, stop])
+
+    const setPhaseAndReset = useCallback((p: Phase) => {
+        setPhase(p)
+        setSecondsLeft(phaseSeconds[p])
+    }, [phaseSeconds])
+
+    return {
+        phase, isRunning, secondsLeft,
+        settings, setSettings,
+        start, stop, reset, setPhaseAndReset
+    }
+}
