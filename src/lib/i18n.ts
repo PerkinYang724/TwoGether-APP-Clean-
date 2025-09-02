@@ -42,6 +42,85 @@ export interface Translations {
     letsGetBackToWork: string
     takeABreak: string
     installApp: string
+    tasks: string
+    active: string
+    completed: string
+    addTaskPlaceholder: string
+    activeTasks: string
+    completedTasks: string
+    clearCompleted: string
+    noTasksYet: string
+    addFirstTask: string
+    dailyGoal: string
+    pomodoros: string
+    goalReached: string
+    oneMorePomodoro: string
+    remainingPomodoros: string
+    setDailyGoal: string
+    goalRange: string
+    resetToday: string
+    goalCompleted: string
+    remaining: string
+    sessionStats: string
+    today: string
+    thisWeek: string
+    allTime: string
+    sessionsCompleted: string
+    focusTime: string
+    avgSession: string
+    longestSession: string
+    completionRate: string
+    totalSessions: string
+    totalFocusTime: string
+    avgDailySessions: string
+    streak: string
+    avgDailyFocusTime: string
+    completedSessions: string
+    noStatsYet: string
+    completeFirstSession: string
+    notificationSettings: string
+    enableNotifications: string
+    enableNotificationsDesc: string
+    browserNotifications: string
+    browserNotificationsDesc: string
+    enable: string
+    notificationSound: string
+    notificationSoundDesc: string
+    test: string
+    volume: string
+    vibration: string
+    vibrationDesc: string
+    beep: string
+    beepDescription: string
+    chime: string
+    chimeDescription: string
+    bell: string
+    bellDescription: string
+    ding: string
+    dingDescription: string
+    none: string
+    noneDescription: string
+    themeSettings: string
+    chooseTheme: string
+    currentTheme: string
+    // Theme names
+    studyZen: string
+    forestFocus: string
+    nightOwl: string
+    oceanBreeze: string
+    goldenHour: string
+    // Theme descriptions
+    studyZenDesc: string
+    forestFocusDesc: string
+    nightOwlDesc: string
+    oceanBreezeDesc: string
+    goldenHourDesc: string
+    // Theme moods
+    studyZenMood: string
+    forestFocusMood: string
+    nightOwlMood: string
+    oceanBreezeMood: string
+    goldenHourMood: string
 }
 
 const translations: Record<Language, Translations> = {
@@ -86,7 +165,86 @@ const translations: Record<Language, Translations> = {
         timeToRest: 'Time to rest',
         letsGetBackToWork: "Let's get back to work.",
         takeABreak: 'Take a break — you earned it.',
-        installApp: 'Install App'
+        installApp: 'Install App',
+        tasks: 'Tasks',
+        active: 'active',
+        completed: 'completed',
+        addTaskPlaceholder: 'What will you work on?',
+        activeTasks: 'Active Tasks',
+        completedTasks: 'Completed Tasks',
+        clearCompleted: 'Clear completed',
+        noTasksYet: 'No tasks yet',
+        addFirstTask: 'Add your first task to get started',
+        dailyGoal: 'Daily Goal',
+        pomodoros: 'Pomodoros',
+        goalReached: 'Goal reached! 🎉',
+        oneMorePomodoro: 'One more Pomodoro to go!',
+        remainingPomodoros: '{count} Pomodoros remaining',
+        setDailyGoal: 'Set Daily Goal',
+        goalRange: '1-20 Pomodoros per day',
+        resetToday: 'Reset Today',
+        goalCompleted: 'Goal completed!',
+        remaining: 'remaining',
+        sessionStats: 'Session Stats',
+        today: 'Today',
+        thisWeek: 'This Week',
+        allTime: 'All Time',
+        sessionsCompleted: 'Sessions',
+        focusTime: 'Focus Time',
+        avgSession: 'Avg Session',
+        longestSession: 'Longest',
+        completionRate: 'Completion Rate',
+        totalSessions: 'Total Sessions',
+        totalFocusTime: 'Total Focus Time',
+        avgDailySessions: 'Daily Avg',
+        streak: 'Streak',
+        avgDailyFocusTime: 'Daily Focus',
+        completedSessions: 'Completed',
+        noStatsYet: 'No stats yet',
+        completeFirstSession: 'Complete your first session to see stats',
+        notificationSettings: 'Notification Settings',
+        enableNotifications: 'Enable Notifications',
+        enableNotificationsDesc: 'Get alerts when sessions complete',
+        browserNotifications: 'Browser Notifications',
+        browserNotificationsDesc: 'Show desktop notifications',
+        enable: 'Enable',
+        notificationSound: 'Notification Sound',
+        notificationSoundDesc: 'Choose your preferred alert sound',
+        test: 'Test',
+        volume: 'Volume',
+        vibration: 'Vibration',
+        vibrationDesc: 'Vibrate on mobile devices',
+        beep: 'Beep',
+        beepDescription: 'Simple beep sound',
+        chime: 'Chime',
+        chimeDescription: 'Gentle musical chime',
+        bell: 'Bell',
+        bellDescription: 'Classic bell sound',
+        ding: 'Ding',
+        dingDescription: 'Short ding sound',
+        none: 'None',
+        noneDescription: 'No sound',
+        themeSettings: 'Theme Settings',
+        chooseTheme: 'Choose your preferred theme',
+        currentTheme: 'Current Theme',
+        // Theme names
+        studyZen: 'Study Zen',
+        forestFocus: 'Forest Focus',
+        nightOwl: 'Night Owl',
+        oceanBreeze: 'Ocean Breeze',
+        goldenHour: 'Golden Hour',
+        // Theme descriptions
+        studyZenDesc: 'Minimal white space with soft blue accents for ultimate focus',
+        forestFocusDesc: 'Calming greens inspired by nature to reduce study stress',
+        nightOwlDesc: 'Dark theme perfect for late-night coding and study sessions',
+        oceanBreezeDesc: 'Serene blue tones that calm the mind during intense study',
+        goldenHourDesc: 'Warm, energizing colors to boost motivation and creativity',
+        // Theme moods
+        studyZenMood: 'Calm and focused - perfect for deep concentration',
+        forestFocusMood: 'Peaceful and refreshing - like studying in a quiet forest',
+        nightOwlMood: 'Intense and productive - ideal for night owls and deep work',
+        oceanBreezeMood: 'Tranquil and refreshing - like studying by the ocean',
+        goldenHourMood: 'Energetic and inspiring - perfect for creative study sessions'
     },
     zh: {
         appName: '專注流',
@@ -129,7 +287,86 @@ const translations: Record<Language, Translations> = {
         timeToRest: '該休息了',
         letsGetBackToWork: '讓我們重新開始工作。',
         takeABreak: '休息一下——你值得擁有。',
-        installApp: '安裝應用'
+        installApp: '安裝應用',
+        tasks: '任務',
+        active: '進行中',
+        completed: '已完成',
+        addTaskPlaceholder: '你要做什麼？',
+        activeTasks: '進行中的任務',
+        completedTasks: '已完成的任務',
+        clearCompleted: '清除已完成',
+        noTasksYet: '還沒有任務',
+        addFirstTask: '添加第一個任務開始工作',
+        dailyGoal: '每日目標',
+        pomodoros: '番茄鐘',
+        goalReached: '目標達成！🎉',
+        oneMorePomodoro: '還差一個番茄鐘！',
+        remainingPomodoros: '還剩 {count} 個番茄鐘',
+        setDailyGoal: '設定每日目標',
+        goalRange: '每天 1-20 個番茄鐘',
+        resetToday: '重置今日',
+        goalCompleted: '目標完成！',
+        remaining: '剩餘',
+        sessionStats: '會話統計',
+        today: '今日',
+        thisWeek: '本週',
+        allTime: '全部',
+        sessionsCompleted: '會話數',
+        focusTime: '專注時間',
+        avgSession: '平均會話',
+        longestSession: '最長會話',
+        completionRate: '完成率',
+        totalSessions: '總會話數',
+        totalFocusTime: '總專注時間',
+        avgDailySessions: '日均會話',
+        streak: '連續天數',
+        avgDailyFocusTime: '日均專注',
+        completedSessions: '已完成',
+        noStatsYet: '暫無統計',
+        completeFirstSession: '完成第一個會話查看統計',
+        notificationSettings: '通知設定',
+        enableNotifications: '啟用通知',
+        enableNotificationsDesc: '會話完成時收到提醒',
+        browserNotifications: '瀏覽器通知',
+        browserNotificationsDesc: '顯示桌面通知',
+        enable: '啟用',
+        notificationSound: '通知聲音',
+        notificationSoundDesc: '選擇您喜歡的提醒聲音',
+        test: '測試',
+        volume: '音量',
+        vibration: '震動',
+        vibrationDesc: '在行動裝置上震動',
+        beep: '嗶聲',
+        beepDescription: '簡單的嗶聲',
+        chime: '鈴聲',
+        chimeDescription: '溫和的音樂鈴聲',
+        bell: '鐘聲',
+        bellDescription: '經典鐘聲',
+        ding: '叮聲',
+        dingDescription: '短促的叮聲',
+        none: '無',
+        noneDescription: '無聲音',
+        themeSettings: '主題設定',
+        chooseTheme: '選擇您喜歡的主題',
+        currentTheme: '目前主題',
+        // Theme names
+        studyZen: '學習禪',
+        forestFocus: '森林專注',
+        nightOwl: '夜貓子',
+        oceanBreeze: '海洋微風',
+        goldenHour: '黃金時光',
+        // Theme descriptions
+        studyZenDesc: '極簡白色空間配柔和藍色點綴，專注力極致',
+        forestFocusDesc: '受自然啟發的舒緩綠色，減少學習壓力',
+        nightOwlDesc: '深色主題，完美適合深夜編程和學習',
+        oceanBreezeDesc: '寧靜藍色調，在緊張學習中平靜心靈',
+        goldenHourDesc: '溫暖激勵色彩，提升動力和創造力',
+        // Theme moods
+        studyZenMood: '平靜專注 - 深度專注的完美選擇',
+        forestFocusMood: '寧靜清新 - 如置身安靜森林中學習',
+        nightOwlMood: '強烈高效 - 夜貓子和深度工作的理想選擇',
+        oceanBreezeMood: '寧靜清新 - 如在海邊學習般舒適',
+        goldenHourMood: '充滿活力 - 創意學習時光的完美選擇'
     }
 }
 
@@ -151,4 +388,40 @@ export function t(key: keyof Translations): string {
 
 export function getTranslations(): Translations {
     return translations[currentLanguage]
+}
+
+export function getTranslatedTheme(themeKey: string) {
+    const themeTranslations = {
+        'study-zen': {
+            name: t('studyZen'),
+            description: t('studyZenDesc'),
+            mood: t('studyZenMood')
+        },
+        'forest-focus': {
+            name: t('forestFocus'),
+            description: t('forestFocusDesc'),
+            mood: t('forestFocusMood')
+        },
+        'night-owl': {
+            name: t('nightOwl'),
+            description: t('nightOwlDesc'),
+            mood: t('nightOwlMood')
+        },
+        'ocean-breeze': {
+            name: t('oceanBreeze'),
+            description: t('oceanBreezeDesc'),
+            mood: t('oceanBreezeMood')
+        },
+        'golden-hour': {
+            name: t('goldenHour'),
+            description: t('goldenHourDesc'),
+            mood: t('goldenHourMood')
+        }
+    }
+
+    return themeTranslations[themeKey as keyof typeof themeTranslations] || {
+        name: themeKey,
+        description: '',
+        mood: ''
+    }
 }
