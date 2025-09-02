@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { usePomodoro, type Phase, type PomodoroSettings } from './usePomodoro'
+import { useCallback, useEffect, useState } from 'react'
+import { usePomodoro, type Phase } from './usePomodoro'
 import { saveSession, updateSession, getTodaySessions, getTotalSessions } from '../lib/sessions'
 import { getCurrentUser } from '../lib/auth'
 

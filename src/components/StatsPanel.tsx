@@ -9,7 +9,7 @@ export default function StatsPanel() {
     useEffect(() => {
         const raw = localStorage.getItem('stats')
         if (raw) { const s = JSON.parse(raw); setToday(s.today || 0); setTotal(s.total || 0) }
-        const handler = (e: any) => {
+        const handler = (_e: any) => {
             const now = new Date()
             const key = startOfDay(now).toISOString()
             const raw = localStorage.getItem('stats')

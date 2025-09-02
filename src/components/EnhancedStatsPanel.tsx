@@ -65,7 +65,7 @@ export default function EnhancedStatsPanel() {
 
     // Handle local phase changes
     useEffect(() => {
-        const handler = (e: any) => {
+        const handler = (_e: any) => {
             const now = new Date()
             const key = startOfDay(now).toISOString()
             const raw = localStorage.getItem('stats')

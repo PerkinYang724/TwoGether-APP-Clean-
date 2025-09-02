@@ -8,7 +8,7 @@ import { t, getTranslatedTheme } from '../lib/i18n'
 
 export default function ThemeSelector() {
     useLanguage()
-    const { currentTheme, themeConfig, changeTheme } = useTheme()
+    const { currentTheme, changeTheme } = useTheme()
     const [isExpanded, setIsExpanded] = useState(false)
 
     const handleThemeChange = (themeKey: Theme) => {

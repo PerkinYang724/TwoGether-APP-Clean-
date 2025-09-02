@@ -1,4 +1,4 @@
-import React from "react"
+// import React from "react"
 
 /**
  * Soft “aurora/bokeh” blobs + vignette.

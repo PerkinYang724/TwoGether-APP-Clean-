@@ -14,7 +14,7 @@ export default function GoalTracker() {
     } = useGoalTracking()
 
     const [isExpanded, setIsExpanded] = useState(false)
-    const [isEditing, setIsEditing] = useState(false)
+    // const [isEditing, setIsEditing] = useState(false)
 
     const progressPercentage = getProgressPercentage()
     const remaining = getRemainingPomodoros()
@@ -81,7 +81,7 @@ export default function GoalTracker() {
                         <span className="text-sm">
                             {remaining === 1
                                 ? t('oneMorePomodoro')
-                                : t('remainingPomodoros', { count: remaining })
+                                : t('remainingPomodoros')
                             }
                         </span>
                     </div>
