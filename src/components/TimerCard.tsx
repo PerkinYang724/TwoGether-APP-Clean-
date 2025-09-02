@@ -65,7 +65,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
 
             {/* Timer content */}
             <div className="text-sm uppercase tracking-widest text-white/70 mb-4">
-                {getLabel()}
+                {getLabel()} v2.0
             </div>
             <motion.div
                 className="text-9xl font-mono font-bold text-white mb-8"
