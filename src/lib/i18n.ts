@@ -121,6 +121,13 @@ export interface Translations {
     nightOwlMood: string
     oceanBreezeMood: string
     goldenHourMood: string
+    // New navigation translations
+    customizeYourExperience: string
+    pomodoroSettings: string
+    statsAndGoals: string
+    trackYourProgress: string
+    manageYourTasks: string
+    theme: string
 }
 
 const translations: Record<Language, Translations> = {
@@ -244,7 +251,14 @@ const translations: Record<Language, Translations> = {
         forestFocusMood: 'Peaceful and refreshing - like studying in a quiet forest',
         nightOwlMood: 'Intense and productive - ideal for night owls and deep work',
         oceanBreezeMood: 'Tranquil and refreshing - like studying by the ocean',
-        goldenHourMood: 'Energetic and inspiring - perfect for creative study sessions'
+        goldenHourMood: 'Energetic and inspiring - perfect for creative study sessions',
+        // New navigation translations
+        customizeYourExperience: 'Customize your experience',
+        pomodoroSettings: 'Pomodoro Settings',
+        statsAndGoals: 'Stats & Goals',
+        trackYourProgress: 'Track your progress',
+        manageYourTasks: 'Manage your tasks',
+        theme: 'Theme'
     },
     zh: {
         appName: '專注流',
@@ -366,7 +380,14 @@ const translations: Record<Language, Translations> = {
         forestFocusMood: '寧靜清新 - 如置身安靜森林中學習',
         nightOwlMood: '強烈高效 - 夜貓子和深度工作的理想選擇',
         oceanBreezeMood: '寧靜清新 - 如在海邊學習般舒適',
-        goldenHourMood: '充滿活力 - 創意學習時光的完美選擇'
+        goldenHourMood: '充滿活力 - 創意學習時光的完美選擇',
+        // New navigation translations
+        customizeYourExperience: '自訂您的體驗',
+        pomodoroSettings: '番茄工作法設定',
+        statsAndGoals: '統計與目標',
+        trackYourProgress: '追蹤您的進度',
+        manageYourTasks: '管理您的任務',
+        theme: '主題'
     }
 }
 
