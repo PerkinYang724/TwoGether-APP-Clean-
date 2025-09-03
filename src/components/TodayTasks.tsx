@@ -20,13 +20,13 @@ export default function TodayTasks() {
     // Filter tasks for today only
     const today = new Date()
     today.setHours(0, 0, 0, 0)
-    
+
     const todayActiveTasks = activeTasks.filter(task => {
         const taskDate = new Date(task.createdAt)
         taskDate.setHours(0, 0, 0, 0)
         return taskDate.getTime() === today.getTime()
     })
-    
+
     const todayCompletedTasks = completedTasks.filter(task => {
         const taskDate = new Date(task.createdAt)
         taskDate.setHours(0, 0, 0, 0)

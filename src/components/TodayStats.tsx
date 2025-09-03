@@ -31,17 +31,17 @@ export default function TodayStats() {
         try {
             setLoading(true)
             const allSessions = await getSessions(user.id, 50) // Get more sessions to filter today's
-            
+
             // Filter sessions for today only
             const today = new Date()
             today.setHours(0, 0, 0, 0)
-            
+
             const todaySessions = allSessions.filter(session => {
                 const sessionDate = new Date(session.started_at)
                 sessionDate.setHours(0, 0, 0, 0)
                 return sessionDate.getTime() === today.getTime()
             })
-            
+
             setSessions(todaySessions)
         } catch (error) {
             console.error('Error loading today sessions:', error)
@@ -61,10 +61,33 @@ export default function TodayStats() {
             const duration = session.minutes * 60 // Convert minutes to seconds
             return total + duration
         }, 0)
-        
+
         const totalFocusMinutes = Math.floor(totalFocusTime / 60)
         const totalFocusHours = Math.floor(totalFocusMinutes / 60)
         const remainingMinutes = totalFocusMinutes % 60
+
+        // Calculate time spent per tag
+        const tagStats = focusSessions.reduce((acc, session) => {
+            const tag = session.tag || 'General'
+            const duration = session.minutes
+
+            if (!acc[tag]) {
+                acc[tag] = {
+                    totalMinutes: 0,
+                    sessionCount: 0,
+                    sessions: []
+                }
+            }
+
+            acc[tag].totalMinutes += duration
+            acc[tag].sessionCount += 1
+            acc[tag].sessions.push(session)
+
+            return acc
+        }, {} as Record<string, { totalMinutes: number; sessionCount: number; sessions: Session[] }>)
+
+        // Sort tags by total time spent
+        const sortedTags = Object.entries(tagStats).sort(([, a], [, b]) => b.totalMinutes - a.totalMinutes)
 
         return {
             totalSessions: focusSessions.length,
@@ -72,7 +95,8 @@ export default function TodayStats() {
             totalFocusMinutes,
             totalFocusHours,
             remainingMinutes,
-            focusSessions
+            focusSessions,
+            tagStats: sortedTags
         }
     }
 
@@ -115,10 +139,47 @@ export default function TodayStats() {
                         </div>
                     </div>
 
+                    {/* Time per Tag Statistics */}
+                    {stats.tagStats.length > 0 && (
+                        <div className="space-y-3">
+                            <div className="text-sm text-white/70 mb-2">Time by Task/Subject:</div>
+                            {stats.tagStats.map(([tag, tagData]) => {
+                                const hours = Math.floor(tagData.totalMinutes / 60)
+                                const minutes = tagData.totalMinutes % 60
+                                const timeDisplay = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`
+
+                                return (
+                                    <div
+                                        key={tag}
+                                        className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10"
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex-shrink-0 w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center">
+                                                <Target className="size-4 text-blue-400" />
+                                            </div>
+                                            <div>
+                                                <div className="text-white/90 text-sm font-medium">{tag}</div>
+                                                <div className="text-white/60 text-xs">
+                                                    {tagData.sessionCount} session{tagData.sessionCount !== 1 ? 's' : ''}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <div className="text-white/90 text-sm font-medium">{timeDisplay}</div>
+                                            <div className="text-white/60 text-xs">
+                                                {Math.round((tagData.totalMinutes / stats.totalFocusMinutes) * 100)}%
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    )}
+
                     {/* Today's Sessions List */}
                     <div className="space-y-2">
-                        <div className="text-sm text-white/70 mb-2">Today's Sessions:</div>
-                        {stats.focusSessions.slice(0, 5).map((session) => (
+                        <div className="text-sm text-white/70 mb-2">Recent Sessions:</div>
+                        {stats.focusSessions.slice(0, 3).map((session) => (
                             <div
                                 key={session.id}
                                 className="flex items-center gap-3 p-3 bg-white/5 rounded-lg border border-white/10"
@@ -141,9 +202,9 @@ export default function TodayStats() {
                                 </div>
                             </div>
                         ))}
-                        {stats.focusSessions.length > 5 && (
+                        {stats.focusSessions.length > 3 && (
                             <div className="text-center text-white/50 text-xs py-2">
-                                +{stats.focusSessions.length - 5} more sessions
+                                +{stats.focusSessions.length - 3} more sessions
                             </div>
                         )}
                     </div>

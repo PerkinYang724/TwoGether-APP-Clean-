@@ -41,6 +41,13 @@ export function usePomodoro() {
         long_break: settings.longBreakMinutes * 60,
     }), [settings])
 
+    // Update secondsLeft when settings change (but only if timer is not running)
+    useEffect(() => {
+        if (!isRunning) {
+            setSecondsLeft(phaseSeconds[phase])
+        }
+    }, [phaseSeconds, phase, isRunning])
+
     const stop = useCallback(() => {
         if (tickRef.current) cancelAnimationFrame(tickRef.current)
         tickRef.current = null

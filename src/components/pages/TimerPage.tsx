@@ -11,24 +11,30 @@ export default function TimerPage({ className = '' }: TimerPageProps) {
     const { phase, isRunning, secondsLeft, start, stop, reset, setPhaseAndReset } = usePomodoroWithSync()
 
     return (
-        <div className={`flex flex-col items-center justify-start min-h-screen px-4 sm:px-6 py-8 ${className}`}>
-            <div className="w-full max-w-sm sm:max-w-md md:max-w-lg space-y-6">
+        <div className={`flex flex-col items-center justify-start min-h-screen px-4 sm:px-6 py-4 ${className}`}>
+            <div className="w-full max-w-sm sm:max-w-md md:max-w-lg space-y-8">
                 {/* Timer Card */}
-                <TimerCard
-                    phase={phase}
-                    isRunning={isRunning}
-                    secondsLeft={secondsLeft}
-                    onStart={start}
-                    onStop={stop}
-                    onReset={() => reset()}
-                    onSetPhase={(p) => setPhaseAndReset(p)}
-                />
+                <div className="pt-20">
+                    <TimerCard
+                        phase={phase}
+                        isRunning={isRunning}
+                        secondsLeft={secondsLeft}
+                        onStart={start}
+                        onStop={stop}
+                        onReset={() => reset()}
+                        onSetPhase={(p) => setPhaseAndReset(p)}
+                    />
+                </div>
 
                 {/* Today's Tasks */}
-                <TodayTasks />
+                <div className="pt-4">
+                    <TodayTasks />
+                </div>
 
                 {/* Today's Stats */}
-                <TodayStats />
+                <div className="pt-4 pb-8">
+                    <TodayStats />
+                </div>
             </div>
 
             {/* Swipe indicators - Mobile only */}
