@@ -9,8 +9,8 @@ export default function TimerPage({ className = '' }: TimerPageProps) {
     const { phase, isRunning, secondsLeft, start, stop, reset, setPhaseAndReset } = usePomodoroWithSync()
 
     return (
-        <div className={`flex flex-col items-center justify-center min-h-screen px-6 ${className}`}>
-            <div className="w-full max-w-md">
+        <div className={`flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 ${className}`}>
+            <div className="w-full max-w-sm sm:max-w-md md:max-w-lg">
                 <TimerCard
                     phase={phase}
                     isRunning={isRunning}
