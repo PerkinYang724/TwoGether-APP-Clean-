@@ -91,8 +91,8 @@ export default function SwipeNavigator() {
                             key={page}
                             onClick={() => navigateToPage(page as Page)}
                             className={`px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200 ${currentPage === page
-                                    ? 'bg-white text-black'
-                                    : 'text-white/70 hover:text-white hover:bg-white/10'
+                                ? 'bg-white text-black'
+                                : 'text-white/70 hover:text-white hover:bg-white/10'
                                 }`}
                         >
                             {page === 'timer' ? 'Timer' : page === 'settings' ? 'Settings' : 'Stats'}
@@ -101,8 +101,8 @@ export default function SwipeNavigator() {
                     <button
                         onClick={() => navigateToPage('tasks')}
                         className={`px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200 ${currentPage === 'tasks'
-                                ? 'bg-white text-black'
-                                : 'text-white/70 hover:text-white hover:bg-white/10'
+                            ? 'bg-white text-black'
+                            : 'text-white/70 hover:text-white hover:bg-white/10'
                             }`}
                     >
                         Tasks
