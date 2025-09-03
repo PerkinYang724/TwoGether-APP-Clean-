@@ -42,8 +42,35 @@ export function usePomodoro() {
             setSettings(e.detail)
         }
 
+        // Also listen for the event on document for better mobile compatibility
+        const handleDocumentSettingsChange = (e: CustomEvent) => {
+            console.log('usePomodoro: Received settings change event on document:', e.detail)
+            setSettings(e.detail)
+        }
+
         window.addEventListener('pomodoro:settings-change', handleSettingsChange as EventListener)
-        return () => window.removeEventListener('pomodoro:settings-change', handleSettingsChange as EventListener)
+        document.addEventListener('pomodoro:settings-change', handleDocumentSettingsChange as EventListener)
+        
+        // Fallback polling mechanism for mobile devices
+        const pollInterval = setInterval(() => {
+            try {
+                const storedSettings = localStorage.getItem('settings')
+                if (storedSettings && storedSettings !== lastSettingsRef.current) {
+                    const newSettings = JSON.parse(storedSettings)
+                    console.log('usePomodoro: Polling detected settings change:', newSettings)
+                    setSettings(newSettings)
+                    lastSettingsRef.current = storedSettings
+                }
+            } catch (error) {
+                console.error('Error polling settings:', error)
+            }
+        }, 500) // Check every 500ms
+
+        return () => {
+            window.removeEventListener('pomodoro:settings-change', handleSettingsChange as EventListener)
+            document.removeEventListener('pomodoro:settings-change', handleDocumentSettingsChange as EventListener)
+            clearInterval(pollInterval)
+        }
     }, [])
 
     const phaseSeconds = useMemo(() => ({
@@ -53,6 +80,7 @@ export function usePomodoro() {
     }), [settings])
 
     const prevPhaseSecondsRef = useRef(phaseSeconds)
+    const lastSettingsRef = useRef(JSON.stringify(settings))
 
     // Update secondsLeft when settings change (live update even when running)
     useEffect(() => {

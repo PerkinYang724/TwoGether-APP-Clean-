@@ -11,9 +11,17 @@ export default function SettingsDrawer({ settings, setSettings }: { settings: Po
         const newSettings = { ...settings, [k]: v as any }
         console.log('SettingsDrawer: Updating setting', { key: k, value: v, currentSettings: settings, newSettings })
         setSettings(newSettings)
-        
+
         // Dispatch custom event to notify other components
-        window.dispatchEvent(new CustomEvent('pomodoro:settings-change', { detail: newSettings }))
+        // Use setTimeout to ensure the state update completes first (important for mobile)
+        setTimeout(() => {
+            const event = new CustomEvent('pomodoro:settings-change', { detail: newSettings })
+            console.log('SettingsDrawer: Dispatching settings change event:', event)
+            
+            // Dispatch on both window and document for better mobile compatibility
+            window.dispatchEvent(event)
+            document.dispatchEvent(event)
+        }, 0)
     }
 
     return (
