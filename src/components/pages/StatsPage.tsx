@@ -13,8 +13,8 @@ export default function StatsPage({ className = '' }: StatsPageProps) {
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
-                    <h1 className="text-2xl font-semibold">{t('statsAndGoals')}</h1>
-                    <p className="text-white/70 text-sm">{t('trackYourProgress')}</p>
+                    <h1 className="text-2xl font-semibold">{t('statsAndGoals')} - History</h1>
+                    <p className="text-white/70 text-sm">View your historical progress and achievements</p>
                 </div>
 
                 {/* Stats Content */}

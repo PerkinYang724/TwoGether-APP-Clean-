@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import BallFill from './BallFill';
-import SessionHistory from './SessionHistory';
 import { t } from '../lib/i18n';
 
 interface TimerCardProps {
@@ -222,10 +221,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
                     ))}
                 </div>
 
-                {/* Session History */}
-                <div className="mt-8">
-                    <SessionHistory />
-                </div>
+
             </motion.div>
         </>
     );

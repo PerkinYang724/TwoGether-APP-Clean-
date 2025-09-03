@@ -12,8 +12,8 @@ export default function TasksPage({ className = '' }: TasksPageProps) {
             <div className="max-w-2xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
-                    <h1 className="text-2xl font-semibold">{t('tasks')}</h1>
-                    <p className="text-white/70 text-sm">{t('manageYourTasks')}</p>
+                    <h1 className="text-2xl font-semibold">{t('tasks')} - History</h1>
+                    <p className="text-white/70 text-sm">View and manage all your tasks from previous days</p>
                 </div>
 
                 {/* Tasks Content */}
