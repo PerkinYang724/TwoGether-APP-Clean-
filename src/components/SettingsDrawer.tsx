@@ -8,8 +8,12 @@ export default function SettingsDrawer({ settings, setSettings }: { settings: Po
     useLanguage() // Make component reactive to language changes
     const [isExpanded, setIsExpanded] = useState(false)
     const update = (k: keyof PomodoroSettings, v: number | boolean) => {
-        console.log('SettingsDrawer: Updating setting', { key: k, value: v, currentSettings: settings })
-        setSettings({ ...settings, [k]: v as any })
+        const newSettings = { ...settings, [k]: v as any }
+        console.log('SettingsDrawer: Updating setting', { key: k, value: v, currentSettings: settings, newSettings })
+        setSettings(newSettings)
+        
+        // Dispatch custom event to notify other components
+        window.dispatchEvent(new CustomEvent('pomodoro:settings-change', { detail: newSettings }))
     }
 
     return (

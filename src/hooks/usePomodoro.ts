@@ -35,6 +35,17 @@ export function usePomodoro() {
     useEffect(() => localStorage.setItem('settings', JSON.stringify(settings)), [settings])
     useEffect(() => localStorage.setItem('focusCount', String(completedFocusSessions)), [completedFocusSessions])
 
+    // Listen for settings changes from other components in the same tab
+    useEffect(() => {
+        const handleSettingsChange = (e: CustomEvent) => {
+            console.log('usePomodoro: Received settings change event:', e.detail)
+            setSettings(e.detail)
+        }
+
+        window.addEventListener('pomodoro:settings-change', handleSettingsChange as EventListener)
+        return () => window.removeEventListener('pomodoro:settings-change', handleSettingsChange as EventListener)
+    }, [])
+
     const phaseSeconds = useMemo(() => ({
         focus: settings.focusMinutes * 60,
         short_break: settings.shortBreakMinutes * 60,
