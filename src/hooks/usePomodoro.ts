@@ -41,11 +41,30 @@ export function usePomodoro() {
         long_break: settings.longBreakMinutes * 60,
     }), [settings])
 
-    // Update secondsLeft when settings change (but only if timer is not running)
+    const prevPhaseSecondsRef = useRef(phaseSeconds)
+
+    // Update secondsLeft when settings change (live update even when running)
     useEffect(() => {
-        if (!isRunning) {
-            setSecondsLeft(phaseSeconds[phase])
+        const prevPhaseSeconds = prevPhaseSecondsRef.current
+        const currentPhaseSeconds = phaseSeconds[phase]
+
+        // Check if the duration for current phase has changed
+        if (prevPhaseSeconds[phase] !== currentPhaseSeconds) {
+            if (!isRunning) {
+                // If timer is stopped, set to full duration
+                setSecondsLeft(currentPhaseSeconds)
+            } else {
+                // If timer is running, maintain the same progress percentage
+                setSecondsLeft(prevSeconds => {
+                    const currentProgress = (prevPhaseSeconds[phase] - prevSeconds) / prevPhaseSeconds[phase]
+                    const newSecondsLeft = Math.max(0, currentPhaseSeconds - (currentProgress * currentPhaseSeconds))
+                    return Math.ceil(newSecondsLeft)
+                })
+            }
         }
+
+        // Update the ref for next comparison
+        prevPhaseSecondsRef.current = phaseSeconds
     }, [phaseSeconds, phase, isRunning])
 
     const stop = useCallback(() => {
