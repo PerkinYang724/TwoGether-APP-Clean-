@@ -88,7 +88,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
     return (
         <>
             <motion.div
-                className="relative bg-white/5 backdrop-blur-xl rounded-2xl p-8 text-center border border-white/10"
+                className="relative bg-white/5 backdrop-blur-xl rounded-2xl p-4 sm:p-6 md:p-8 text-center border border-white/10 overflow-hidden"
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.3 }}
@@ -113,7 +113,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
                     </div>
                 )}
                 <motion.div
-                    className="text-9xl font-mono font-bold text-white mb-8"
+                    className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-mono font-bold text-white mb-8 break-all"
                     key={secondsLeft}
                     initial={{ scale: 0.95 }}
                     animate={{ scale: 1 }}
