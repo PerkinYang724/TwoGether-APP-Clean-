@@ -128,6 +128,14 @@ export interface Translations {
     trackYourProgress: string
     manageYourTasks: string
     theme: string
+    // Welcome page translations
+    welcomeToFlowFocus: string
+    welcomeDescription: string
+    startFocusing: string
+    feature1: string
+    feature2: string
+    feature3: string
+    swipeToNavigate: string
 }
 
 const translations: Record<Language, Translations> = {
@@ -258,7 +266,15 @@ const translations: Record<Language, Translations> = {
         statsAndGoals: 'Stats & Goals',
         trackYourProgress: 'Track your progress',
         manageYourTasks: 'Manage your tasks',
-        theme: 'Theme'
+        theme: 'Theme',
+        // Welcome page translations
+        welcomeToFlowFocus: 'Welcome to Flow Focus',
+        welcomeDescription: 'Start your journey to deep focus and productivity with our minimal Pomodoro timer. Swipe to navigate between different sections.',
+        startFocusing: 'Start Focusing',
+        feature1: 'Swipe-based navigation',
+        feature2: 'Task management',
+        feature3: 'Progress tracking',
+        swipeToNavigate: 'Swipe to navigate'
     },
     zh: {
         appName: '專注流',
@@ -387,7 +403,15 @@ const translations: Record<Language, Translations> = {
         statsAndGoals: '統計與目標',
         trackYourProgress: '追蹤您的進度',
         manageYourTasks: '管理您的任務',
-        theme: '主題'
+        theme: '主題',
+        // Welcome page translations
+        welcomeToFlowFocus: '歡迎使用專注流',
+        welcomeDescription: '開始您的深度專注和生產力之旅，使用我們簡約的番茄工作法計時器。滑動即可在不同部分間導航。',
+        startFocusing: '開始專注',
+        feature1: '滑動導航',
+        feature2: '任務管理',
+        feature3: '進度追蹤',
+        swipeToNavigate: '滑動導航'
     }
 }
 

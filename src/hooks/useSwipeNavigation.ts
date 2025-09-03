@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
 
-export type Page = 'timer' | 'settings' | 'stats' | 'tasks'
+export type Page = 'welcome' | 'timer' | 'settings' | 'stats' | 'tasks'
 
 export function useSwipeNavigation() {
-    const [currentPage, setCurrentPage] = useState<Page>('timer')
+    const [currentPage, setCurrentPage] = useState<Page>('welcome')
     const [isTransitioning, setIsTransitioning] = useState(false)
+    const [hasStarted, setHasStarted] = useState(false)
     const touchStartRef = useRef<{ x: number; y: number } | null>(null)
     const touchEndRef = useRef<{ x: number; y: number } | null>(null)
 
@@ -44,6 +45,11 @@ export function useSwipeNavigation() {
         }
     }
 
+    const startApp = () => {
+        setHasStarted(true)
+        // Stay on welcome page, but it will show the timer
+    }
+
     const handleTouchStart = (e: TouchEvent) => {
         touchStartRef.current = {
             x: e.touches[0].clientX,
@@ -65,6 +71,13 @@ export function useSwipeNavigation() {
         const deltaY = touchEndRef.current.y - touchStartRef.current.y
         const absDeltaX = Math.abs(deltaX)
         const absDeltaY = Math.abs(deltaY)
+
+        // Don't allow swiping from welcome page unless started
+        if (currentPage === 'welcome' && !hasStarted) {
+            touchStartRef.current = null
+            touchEndRef.current = null
+            return
+        }
 
         // Determine if it's a horizontal or vertical swipe
         if (absDeltaX > absDeltaY) {
@@ -126,19 +139,31 @@ export function useSwipeNavigation() {
                 break
             case '1':
                 e.preventDefault()
-                navigateToPage('timer')
+                if (currentPage === 'welcome' && !hasStarted) {
+                    startApp()
+                } else if (currentPage === 'welcome' && hasStarted) {
+                    // Already on timer (welcome page showing timer)
+                } else {
+                    navigateToPage('timer')
+                }
                 break
             case '2':
                 e.preventDefault()
-                navigateToPage('settings')
+                if (hasStarted) {
+                    navigateToPage('settings')
+                }
                 break
             case '3':
                 e.preventDefault()
-                navigateToPage('stats')
+                if (hasStarted) {
+                    navigateToPage('stats')
+                }
                 break
             case '4':
                 e.preventDefault()
-                navigateToPage('tasks')
+                if (hasStarted) {
+                    navigateToPage('tasks')
+                }
                 break
         }
     }
@@ -164,11 +189,13 @@ export function useSwipeNavigation() {
 
     return {
         currentPage,
+        hasStarted,
         navigateToPage,
         navigateNext,
         navigatePrevious,
         navigateToTasks,
         navigateToTimer,
+        startApp,
         isTransitioning
     }
 }

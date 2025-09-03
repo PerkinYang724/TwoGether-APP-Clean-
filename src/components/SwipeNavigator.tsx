@@ -1,4 +1,6 @@
+import React from 'react'
 import { useSwipeNavigation, Page } from '../hooks/useSwipeNavigation'
+import WelcomePage from './pages/WelcomePage'
 import TimerPage from './pages/TimerPage'
 import SettingsPage from './pages/SettingsPage'
 import StatsPage from './pages/StatsPage'
@@ -7,12 +9,14 @@ import TasksPage from './pages/TasksPage'
 export default function SwipeNavigator() {
     const {
         currentPage,
+        hasStarted,
         isTransitioning,
         navigateToPage,
         navigateNext,
         navigatePrevious,
         navigateToTasks,
-        navigateToTimer
+        navigateToTimer,
+        startApp
     } = useSwipeNavigation()
 
     const pageOrder: Page[] = ['timer', 'settings', 'stats']
@@ -20,6 +24,8 @@ export default function SwipeNavigator() {
 
     const getPageComponent = (page: Page) => {
         switch (page) {
+            case 'welcome':
+                return <WelcomePage onStart={startApp} hasStarted={hasStarted} />
             case 'timer':
                 return <TimerPage />
             case 'settings':
@@ -29,7 +35,7 @@ export default function SwipeNavigator() {
             case 'tasks':
                 return <TasksPage />
             default:
-                return <TimerPage />
+                return <WelcomePage onStart={startApp} hasStarted={hasStarted} />
         }
     }
 
@@ -38,6 +44,10 @@ export default function SwipeNavigator() {
     }
 
     const getTransformStyle = () => {
+        if (currentPage === 'welcome') {
+            return 'translateX(0)'
+        }
+
         if (currentPage === 'tasks') {
             return 'translateY(100vh)'
         }
@@ -54,10 +64,15 @@ export default function SwipeNavigator() {
                     }`}
                 style={{
                     transform: getTransformStyle(),
-                    width: currentPage === 'tasks' ? '100vw' : '300vw',
+                    width: currentPage === 'tasks' ? '100vw' : currentPage === 'welcome' ? '100vw' : '300vw',
                     height: currentPage === 'tasks' ? '200vh' : '100vh'
                 }}
             >
+                {/* Welcome Page */}
+                <div className="w-screen h-screen flex-shrink-0">
+                    {getPageComponent('welcome')}
+                </div>
+
                 {/* Timer Page */}
                 <div className="w-screen h-screen flex-shrink-0">
                     {getPageComponent('timer')}
@@ -83,94 +98,100 @@ export default function SwipeNavigator() {
             </div>
 
             {/* Navigation Controls - Desktop/Mac */}
-            <div className="hidden md:block">
-                {/* Top navigation bar */}
-                <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex items-center gap-2 bg-black/50 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
-                    {['timer', 'settings', 'stats'].map((page, index) => (
+            {hasStarted && (
+                <div className="hidden md:block">
+                    {/* Top navigation bar */}
+                    <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex items-center gap-2 bg-black/50 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
+                        {['timer', 'settings', 'stats'].map((page, index) => (
+                            <button
+                                key={page}
+                                onClick={() => navigateToPage(page as Page)}
+                                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200 ${currentPage === page
+                                    ? 'bg-white text-black'
+                                    : 'text-white/70 hover:text-white hover:bg-white/10'
+                                    }`}
+                            >
+                                {page === 'timer' ? 'Timer' : page === 'settings' ? 'Settings' : 'Stats'}
+                            </button>
+                        ))}
                         <button
-                            key={page}
-                            onClick={() => navigateToPage(page as Page)}
-                            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200 ${currentPage === page
+                            onClick={() => navigateToPage('tasks')}
+                            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200 ${currentPage === 'tasks'
                                 ? 'bg-white text-black'
                                 : 'text-white/70 hover:text-white hover:bg-white/10'
                                 }`}
                         >
-                            {page === 'timer' ? 'Timer' : page === 'settings' ? 'Settings' : 'Stats'}
-                        </button>
-                    ))}
-                    <button
-                        onClick={() => navigateToPage('tasks')}
-                        className={`px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200 ${currentPage === 'tasks'
-                            ? 'bg-white text-black'
-                            : 'text-white/70 hover:text-white hover:bg-white/10'
-                            }`}
-                    >
-                        Tasks
-                    </button>
-                </div>
-
-                {/* Arrow navigation */}
-                <div className="absolute top-1/2 left-4 transform -translate-y-1/2 flex flex-col gap-2">
-                    <button
-                        onClick={navigatePrevious}
-                        disabled={currentIndex === 0}
-                        className="p-2 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 text-white/70 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors duration-200"
-                    >
-                        ←
-                    </button>
-                </div>
-
-                <div className="absolute top-1/2 right-4 transform -translate-y-1/2 flex flex-col gap-2">
-                    <button
-                        onClick={navigateNext}
-                        disabled={currentIndex === pageOrder.length - 1}
-                        className="p-2 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 text-white/70 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors duration-200"
-                    >
-                        →
-                    </button>
-                </div>
-
-                {/* Tasks navigation */}
-                {currentPage !== 'tasks' && (
-                    <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2">
-                        <button
-                            onClick={navigateToTasks}
-                            className="p-2 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 text-white/70 hover:text-white hover:bg-white/10 transition-colors duration-200"
-                        >
-                            ↓ Tasks
+                            Tasks
                         </button>
                     </div>
-                )}
 
-                {currentPage === 'tasks' && (
-                    <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2">
+                    {/* Arrow navigation */}
+                    <div className="absolute top-1/2 left-4 transform -translate-y-1/2 flex flex-col gap-2">
                         <button
-                            onClick={navigateToTimer}
-                            className="p-2 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 text-white/70 hover:text-white hover:bg-white/10 transition-colors duration-200"
+                            onClick={navigatePrevious}
+                            disabled={currentIndex === 0}
+                            className="p-2 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 text-white/70 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors duration-200"
                         >
-                            ↑ Timer
+                            ←
                         </button>
                     </div>
-                )}
-            </div>
+
+                    <div className="absolute top-1/2 right-4 transform -translate-y-1/2 flex flex-col gap-2">
+                        <button
+                            onClick={navigateNext}
+                            disabled={currentIndex === pageOrder.length - 1}
+                            className="p-2 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 text-white/70 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors duration-200"
+                        >
+                            →
+                        </button>
+                    </div>
+
+                    {/* Tasks navigation */}
+                    {currentPage !== 'tasks' && (
+                        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2">
+                            <button
+                                onClick={navigateToTasks}
+                                className="p-2 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 text-white/70 hover:text-white hover:bg-white/10 transition-colors duration-200"
+                            >
+                                ↓ Tasks
+                            </button>
+                        </div>
+                    )}
+
+                    {currentPage === 'tasks' && (
+                        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2">
+                            <button
+                                onClick={navigateToTimer}
+                                className="p-2 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 text-white/70 hover:text-white hover:bg-white/10 transition-colors duration-200"
+                            >
+                                ↑ Timer
+                            </button>
+                        </div>
+                    )}
+                </div>
+            )}
 
             {/* Page indicator dots - Mobile */}
-            <div className="md:hidden absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center gap-2">
-                {['timer', 'settings', 'stats'].map((page, index) => (
-                    <div
-                        key={page}
-                        className={`w-2 h-2 rounded-full transition-colors duration-200 ${currentPage === page ? 'bg-white' : 'bg-white/30'
-                            }`}
-                    />
-                ))}
-            </div>
+            {hasStarted && (
+                <div className="md:hidden absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center gap-2">
+                    {['timer', 'settings', 'stats'].map((page, index) => (
+                        <div
+                            key={page}
+                            className={`w-2 h-2 rounded-full transition-colors duration-200 ${currentPage === page ? 'bg-white' : 'bg-white/30'
+                                }`}
+                        />
+                    ))}
+                </div>
+            )}
 
             {/* Keyboard shortcuts hint - Desktop/Mac */}
-            <div className="hidden md:block absolute bottom-4 left-4 text-xs text-white/40">
-                <div>← → Navigate</div>
-                <div>↑ ↓ Tasks</div>
-                <div>1-4 Quick jump</div>
-            </div>
+            {hasStarted && (
+                <div className="hidden md:block absolute bottom-4 left-4 text-xs text-white/40">
+                    <div>← → Navigate</div>
+                    <div>↑ ↓ Tasks</div>
+                    <div>1-4 Quick jump</div>
+                </div>
+            )}
         </div>
     )
 }
