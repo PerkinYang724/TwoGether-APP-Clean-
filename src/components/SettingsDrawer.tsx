@@ -7,7 +7,10 @@ import { useLanguage } from '../hooks/useLanguage'
 export default function SettingsDrawer({ settings, setSettings }: { settings: PomodoroSettings, setSettings: (s: PomodoroSettings) => void }) {
     useLanguage() // Make component reactive to language changes
     const [isExpanded, setIsExpanded] = useState(false)
-    const update = (k: keyof PomodoroSettings, v: number | boolean) => setSettings({ ...settings, [k]: v as any })
+    const update = (k: keyof PomodoroSettings, v: number | boolean) => {
+        console.log('SettingsDrawer: Updating setting', { key: k, value: v, currentSettings: settings })
+        setSettings({ ...settings, [k]: v as any })
+    }
 
     return (
         <div className="bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10">

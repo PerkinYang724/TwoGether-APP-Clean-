@@ -48,16 +48,32 @@ export function usePomodoro() {
         const prevPhaseSeconds = prevPhaseSecondsRef.current
         const currentPhaseSeconds = phaseSeconds[phase]
 
+        console.log('usePomodoro: Settings change detected', {
+            phase,
+            prevDuration: prevPhaseSeconds[phase],
+            newDuration: currentPhaseSeconds,
+            isRunning,
+            currentSecondsLeft: secondsLeft
+        })
+
         // Check if the duration for current phase has changed
         if (prevPhaseSeconds[phase] !== currentPhaseSeconds) {
+            console.log('usePomodoro: Duration changed, updating timer')
             if (!isRunning) {
                 // If timer is stopped, set to full duration
+                console.log('usePomodoro: Timer stopped, setting to full duration:', currentPhaseSeconds)
                 setSecondsLeft(currentPhaseSeconds)
             } else {
                 // If timer is running, maintain the same progress percentage
+                console.log('usePomodoro: Timer running, maintaining progress percentage')
                 setSecondsLeft(prevSeconds => {
                     const currentProgress = (prevPhaseSeconds[phase] - prevSeconds) / prevPhaseSeconds[phase]
                     const newSecondsLeft = Math.max(0, currentPhaseSeconds - (currentProgress * currentPhaseSeconds))
+                    console.log('usePomodoro: Progress calculation', {
+                        prevSeconds,
+                        currentProgress,
+                        newSecondsLeft
+                    })
                     return Math.ceil(newSecondsLeft)
                 })
             }
