@@ -63,8 +63,9 @@ export function usePomodoro() {
     }, [isRunning])
 
     const reset = useCallback((p: Phase = phase) => {
+        stop() // Stop the timer first
         setSecondsLeft(phaseSeconds[p])
-    }, [phase, phaseSeconds])
+    }, [phase, phaseSeconds, stop])
 
     const nextPhase = useCallback(() => {
         if (phase === 'focus') {

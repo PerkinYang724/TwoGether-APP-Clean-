@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import SwipeNavigator from './components/SwipeNavigator'
 import InstallPrompt from './components/InstallPrompt'
 import AuthModal from './components/AuthModal'
+import LanguageToggle from './components/LanguageToggle'
+import AnimatedFlakes from './components/AnimatedFlakes'
 import { usePomodoroWithSync } from './hooks/usePomodoroWithSync'
 import { ensurePermission, notifySessionComplete } from './lib/notifications'
 import { t } from './lib/i18n'
@@ -43,6 +45,9 @@ export default function App() {
 
     return (
         <div className="relative">
+            {/* Animated Flakes Background */}
+            <AnimatedFlakes />
+
             {/* Main App Header - Fixed at top */}
             <div className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-white/10">
                 <div className="px-6 py-4">
@@ -51,7 +56,8 @@ export default function App() {
                             <h1 className="text-xl font-semibold">{t('appName')}</h1>
                             <p className="text-white/70 text-xs">{t('tagline')}</p>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3">
+                            <LanguageToggle />
                             {user ? (
                                 <div className="flex items-center gap-2">
                                     <div className="text-sm text-white/70">
@@ -72,7 +78,7 @@ export default function App() {
             </div>
 
             {/* Main Content with Swipe Navigation */}
-            <div className="pt-20">
+            <div className="pt-20 relative z-10">
                 <SwipeNavigator />
             </div>
 

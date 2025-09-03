@@ -8,6 +8,7 @@ export interface Session {
     ended_at?: string
     phase: Phase
     minutes: number
+    tag?: string
 }
 
 export async function saveSession(session: Omit<Session, 'id'>) {

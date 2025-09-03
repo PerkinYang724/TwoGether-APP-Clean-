@@ -45,7 +45,7 @@ export function usePomodoroWithSync() {
     }, [user, isOnline])
 
     // Start session tracking
-    const startWithSync = useCallback(async () => {
+    const startWithSync = useCallback(async (tag?: string) => {
         pomodoro.start()
 
         if (user && isOnline) {
@@ -54,7 +54,8 @@ export function usePomodoroWithSync() {
                     user_id: user.id,
                     started_at: new Date().toISOString(),
                     phase: pomodoro.phase,
-                    minutes: 0
+                    minutes: 0,
+                    tag: tag
                 })
                 setCurrentSessionId(session.id)
             } catch (error) {

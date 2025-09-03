@@ -1,7 +1,6 @@
 import SettingsDrawer from '../SettingsDrawer'
 import ThemeSelector from '../ThemeSelector'
 import NotificationSettings from '../NotificationSettings'
-import LanguageToggle from '../LanguageToggle'
 import { usePomodoroWithSync } from '../../hooks/usePomodoroWithSync'
 import { signOut } from '../../lib/auth'
 import { t } from '../../lib/i18n'
@@ -22,7 +21,7 @@ export default function SettingsPage({ className = '' }: SettingsPageProps) {
     }
 
     return (
-        <div className={`min-h-screen px-6 py-10 ${className}`}>
+        <div className={`px-6 py-10 pb-20 ${className}`}>
             <div className="max-w-2xl mx-auto">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
@@ -31,7 +30,6 @@ export default function SettingsPage({ className = '' }: SettingsPageProps) {
                         <p className="text-white/70 text-sm">{t('customizeYourExperience')}</p>
                     </div>
                     <div className="flex items-center gap-2">
-                        <LanguageToggle />
                         {user ? (
                             <div className="flex items-center gap-2">
                                 <div className="text-sm text-white/70">
@@ -73,8 +71,8 @@ export default function SettingsPage({ className = '' }: SettingsPageProps) {
             {/* Swipe indicators - Mobile only */}
             <div className="md:hidden mt-8 flex items-center justify-center gap-4 text-white/40 text-sm">
                 <div className="flex items-center gap-1">
-                    <span>→</span>
-                    <span>Stats</span>
+                    <span>← →</span>
+                    <span>Navigate</span>
                 </div>
             </div>
         </div>

@@ -25,12 +25,8 @@ export default function TimerPage({ className = '' }: TimerPageProps) {
             {/* Swipe indicators - Mobile only */}
             <div className="md:hidden mt-8 flex items-center gap-4 text-white/40 text-sm">
                 <div className="flex items-center gap-1">
-                    <span>←</span>
-                    <span>Settings</span>
-                </div>
-                <div className="flex items-center gap-1">
-                    <span>↓</span>
-                    <span>Tasks</span>
+                    <span>← →</span>
+                    <span>Navigate</span>
                 </div>
             </div>
         </div>

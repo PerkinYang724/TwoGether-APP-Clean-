@@ -9,13 +9,30 @@ export function useSwipeNavigation() {
     const touchStartRef = useRef<{ x: number; y: number } | null>(null)
     const touchEndRef = useRef<{ x: number; y: number } | null>(null)
 
-    const minSwipeDistance = 50
+    const minSwipeDistance = 100
 
-    const pageOrder: Page[] = ['timer', 'settings', 'stats']
+    // Linear page order - everything accessible by left/right swipes
+    const pageOrder: Page[] = ['welcome', 'timer', 'settings', 'stats', 'tasks']
     const currentIndex = pageOrder.indexOf(currentPage)
 
     const navigateToPage = (page: Page) => {
         if (isTransitioning) return
+        console.log('Navigation: navigateToPage called - attempting to navigate to page:', page, 'from:', currentPage)
+        console.trace('Navigation: Call stack for navigateToPage')
+
+        // Check if this navigation is happening during tag submission
+        if (document.querySelector('[data-modal="tag-input"]')) {
+            console.log('Navigation: BLOCKED - Modal is still open during navigation attempt')
+            return
+        }
+
+        // Check global navigation prevention flag
+        if ((window as any).__preventNavigation) {
+            console.log('Navigation: BLOCKED - Global navigation prevention flag is set')
+            return
+        }
+
+        console.log('Navigation: PROCEEDING with navigation to page:', page)
         setIsTransitioning(true)
         setCurrentPage(page)
         setTimeout(() => setIsTransitioning(false), 300)
@@ -34,23 +51,40 @@ export function useSwipeNavigation() {
     }
 
     const navigateToTasks = () => {
-        if (currentPage !== 'tasks') {
-            navigateToPage('tasks')
-        }
+        navigateToPage('tasks')
     }
 
     const navigateToTimer = () => {
-        if (currentPage === 'tasks') {
-            navigateToPage('timer')
-        }
+        navigateToPage('timer')
     }
 
     const startApp = () => {
+        console.log('Navigation: startApp called, current page:', currentPage)
         setHasStarted(true)
-        // Stay on welcome page, but it will show the timer
+        // Navigate to the timer page
+        console.log('Navigation: Navigating to timer page from startApp')
+        navigateToPage('timer')
     }
 
     const handleTouchStart = (e: TouchEvent) => {
+        // Don't handle touch events if any modal is open
+        if (document.querySelector('[data-modal="tag-input"]')) {
+            console.log('Navigation: Ignoring touchstart - modal is open')
+            return
+        }
+
+        // Check if tag submission is in progress
+        if (document.querySelector('[data-submitting-tag="true"]')) {
+            console.log('Navigation: Ignoring touchstart - tag submission in progress')
+            return
+        }
+
+        // Check global navigation prevention flag
+        if ((window as any).__preventNavigation) {
+            console.log('Navigation: Ignoring touchstart - global navigation prevention flag is set')
+            return
+        }
+
         touchStartRef.current = {
             x: e.touches[0].clientX,
             y: e.touches[0].clientY
@@ -67,6 +101,30 @@ export function useSwipeNavigation() {
     const handleTouchEnd = () => {
         if (!touchStartRef.current || !touchEndRef.current || isTransitioning) return
 
+        // Don't handle touch events if any modal is open
+        if (document.querySelector('[data-modal="tag-input"]')) {
+            console.log('Navigation: Ignoring touchend - modal is open')
+            touchStartRef.current = null
+            touchEndRef.current = null
+            return
+        }
+
+        // Check if tag submission is in progress
+        if (document.querySelector('[data-submitting-tag="true"]')) {
+            console.log('Navigation: Ignoring touchend - tag submission in progress')
+            touchStartRef.current = null
+            touchEndRef.current = null
+            return
+        }
+
+        // Check global navigation prevention flag
+        if ((window as any).__preventNavigation) {
+            console.log('Navigation: Ignoring touchend - global navigation prevention flag is set')
+            touchStartRef.current = null
+            touchEndRef.current = null
+            return
+        }
+
         const deltaX = touchEndRef.current.x - touchStartRef.current.x
         const deltaY = touchEndRef.current.y - touchStartRef.current.y
         const absDeltaX = Math.abs(deltaX)
@@ -79,35 +137,21 @@ export function useSwipeNavigation() {
             return
         }
 
-        // Determine if it's a horizontal or vertical swipe
-        if (absDeltaX > absDeltaY) {
-            // Horizontal swipe
-            if (absDeltaX > minSwipeDistance) {
-                if (deltaX > 0) {
-                    // Swipe right - go to previous page
-                    if (currentIndex > 0) {
-                        navigateToPage(pageOrder[currentIndex - 1])
-                    }
-                } else {
-                    // Swipe left - go to next page
-                    if (currentIndex < pageOrder.length - 1) {
-                        navigateToPage(pageOrder[currentIndex + 1])
-                    }
+        // Only horizontal swipes - left/right navigation
+        // Ensure it's more horizontal than vertical (ratio > 2:1)
+        if (absDeltaX > minSwipeDistance && absDeltaX > absDeltaY * 2) {
+            console.log('Navigation: Swipe detected, deltaX:', deltaX, 'absDeltaX:', absDeltaX, 'absDeltaY:', absDeltaY)
+            if (deltaX > 0) {
+                // Swipe right - go to previous page
+                if (currentIndex > 0) {
+                    console.log('Navigation: Swiping right to previous page')
+                    navigateToPage(pageOrder[currentIndex - 1])
                 }
-            }
-        } else {
-            // Vertical swipe
-            if (absDeltaY > minSwipeDistance) {
-                if (deltaY > 0) {
-                    // Swipe down - go to tasks page
-                    if (currentPage !== 'tasks') {
-                        navigateToPage('tasks')
-                    }
-                } else {
-                    // Swipe up - go back to timer from tasks
-                    if (currentPage === 'tasks') {
-                        navigateToPage('timer')
-                    }
+            } else {
+                // Swipe left - go to next page
+                if (currentIndex < pageOrder.length - 1) {
+                    console.log('Navigation: Swiping left to next page')
+                    navigateToPage(pageOrder[currentIndex + 1])
                 }
             }
         }
@@ -120,47 +164,88 @@ export function useSwipeNavigation() {
     const handleKeyDown = (e: KeyboardEvent) => {
         if (isTransitioning) return
 
+        console.log('Navigation: handleKeyDown called with key:', e.key, 'target:', e.target)
+
+        // Don't handle navigation if user is typing in an input field
+        if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+            console.log('Navigation: Ignoring keydown - user is typing in input field')
+            return
+        }
+
+        // Don't handle navigation if any modal is open
+        if (document.querySelector('[data-modal="tag-input"]')) {
+            console.log('Navigation: Ignoring keydown - modal is open')
+            return
+        }
+
+        // Don't handle navigation if we're in a form or modal context
+        if (e.target && ((e.target as Element).closest('form') || (e.target as Element).closest('[data-modal]'))) {
+            console.log('Navigation: Ignoring keydown - in form or modal context')
+            return
+        }
+
+        // Additional check: if the event target is within the tag input modal
+        if (e.target && (e.target as Element).closest('[data-modal="tag-input"]')) {
+            console.log('Navigation: Ignoring keydown - target is within tag input modal')
+            return
+        }
+
+        // Check if tag submission is in progress
+        if (document.querySelector('[data-submitting-tag="true"]')) {
+            console.log('Navigation: Ignoring keydown - tag submission in progress')
+            return
+        }
+
+        // Check global navigation prevention flag
+        if ((window as any).__preventNavigation) {
+            console.log('Navigation: Ignoring keydown - global navigation prevention flag is set')
+            return
+        }
+
         switch (e.key) {
             case 'ArrowLeft':
                 e.preventDefault()
+                console.log('Navigation: ArrowLeft key pressed - navigating to previous page')
                 navigatePrevious()
                 break
             case 'ArrowRight':
                 e.preventDefault()
+                console.log('Navigation: ArrowRight key pressed - navigating to next page')
                 navigateNext()
-                break
-            case 'ArrowDown':
-                e.preventDefault()
-                navigateToTasks()
-                break
-            case 'ArrowUp':
-                e.preventDefault()
-                navigateToTimer()
                 break
             case '1':
                 e.preventDefault()
+                console.log('Navigation: Key 1 pressed')
                 if (currentPage === 'welcome' && !hasStarted) {
                     startApp()
-                } else if (currentPage === 'welcome' && hasStarted) {
-                    // Already on timer (welcome page showing timer)
                 } else {
-                    navigateToPage('timer')
+                    navigateToPage('welcome')
                 }
                 break
             case '2':
                 e.preventDefault()
+                console.log('Navigation: Key 2 pressed - navigating to timer')
                 if (hasStarted) {
-                    navigateToPage('settings')
+                    navigateToPage('timer')
                 }
                 break
             case '3':
                 e.preventDefault()
+                console.log('Navigation: Key 3 pressed - navigating to settings')
                 if (hasStarted) {
-                    navigateToPage('stats')
+                    navigateToPage('settings')
                 }
                 break
             case '4':
                 e.preventDefault()
+                console.log('Navigation: Key 4 pressed - navigating to stats')
+                if (hasStarted) {
+                    navigateToPage('stats')
+                }
+                break
+            case '5':
+                e.preventDefault()
+                console.log('Navigation: Key 5 pressed - navigating to tasks')
                 if (hasStarted) {
                     navigateToPage('tasks')
                 }

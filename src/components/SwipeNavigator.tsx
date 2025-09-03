@@ -19,10 +19,13 @@ export default function SwipeNavigator() {
         startApp
     } = useSwipeNavigation()
 
-    const pageOrder: Page[] = ['timer', 'settings', 'stats']
+    const pageOrder: Page[] = ['welcome', 'timer', 'settings', 'stats', 'tasks']
     const currentIndex = pageOrder.indexOf(currentPage)
 
+    console.log('SwipeNavigator: currentPage:', currentPage, 'currentIndex:', currentIndex)
+
     const getPageComponent = (page: Page) => {
+        console.log('SwipeNavigator: getPageComponent called for page:', page)
         switch (page) {
             case 'welcome':
                 return <WelcomePage onStart={startApp} hasStarted={hasStarted} />
@@ -44,57 +47,47 @@ export default function SwipeNavigator() {
     }
 
     const getTransformStyle = () => {
-        if (currentPage === 'welcome') {
-            return 'translateX(0)'
-        }
-
-        if (currentPage === 'tasks') {
-            return 'translateY(100vh)'
-        }
-
         const pageIndex = getPageIndex(currentPage)
-        return `translateX(-${pageIndex * 100}vw)`
+        const transform = `translateX(-${pageIndex * 100}vw)`
+        console.log('SwipeNavigator: getTransformStyle - currentPage:', currentPage, 'pageIndex:', pageIndex, 'transform:', transform)
+        return transform
     }
 
     return (
-        <div className="relative w-full h-screen overflow-hidden">
+        <div className="relative w-full min-h-screen overflow-x-hidden overflow-y-auto">
             {/* Main pages container */}
             <div
-                className={`flex transition-transform duration-300 ease-in-out ${currentPage === 'tasks' ? 'flex-col' : 'flex-row'
-                    }`}
+                className="flex transition-transform duration-300 ease-in-out flex-row"
                 style={{
                     transform: getTransformStyle(),
-                    width: currentPage === 'tasks' ? '100vw' : currentPage === 'welcome' ? '100vw' : '300vw',
-                    height: currentPage === 'tasks' ? '200vh' : '100vh'
+                    width: '500vw', // 5 pages * 100vw each
+                    minHeight: '100vh'
                 }}
             >
                 {/* Welcome Page */}
-                <div className="w-screen h-screen flex-shrink-0">
+                <div className="w-screen min-h-screen flex-shrink-0">
                     {getPageComponent('welcome')}
                 </div>
 
                 {/* Timer Page */}
-                <div className="w-screen h-screen flex-shrink-0">
+                <div className="w-screen min-h-screen flex-shrink-0">
                     {getPageComponent('timer')}
                 </div>
 
                 {/* Settings Page */}
-                <div className="w-screen h-screen flex-shrink-0">
+                <div className="w-screen min-h-screen flex-shrink-0">
                     {getPageComponent('settings')}
                 </div>
 
                 {/* Stats Page */}
-                <div className="w-screen h-screen flex-shrink-0">
+                <div className="w-screen min-h-screen flex-shrink-0">
                     {getPageComponent('stats')}
                 </div>
-            </div>
 
-            {/* Tasks Page - positioned absolutely */}
-            <div
-                className={`absolute top-0 left-0 w-full h-full transition-transform duration-300 ease-in-out ${currentPage === 'tasks' ? 'translate-y-0' : 'translate-y-full'
-                    }`}
-            >
-                {getPageComponent('tasks')}
+                {/* Tasks Page */}
+                <div className="w-screen min-h-screen flex-shrink-0">
+                    {getPageComponent('tasks')}
+                </div>
             </div>
 
             {/* Navigation Controls - Desktop/Mac */}
@@ -102,27 +95,20 @@ export default function SwipeNavigator() {
                 <div className="hidden md:block">
                     {/* Top navigation bar */}
                     <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex items-center gap-2 bg-black/50 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
-                        {['timer', 'settings', 'stats'].map((page, index) => (
+                        {pageOrder.filter(page => page !== 'welcome').map((page, index) => (
                             <button
                                 key={page}
-                                onClick={() => navigateToPage(page as Page)}
+                                onClick={() => navigateToPage(page)}
                                 className={`px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200 ${currentPage === page
                                     ? 'bg-white text-black'
                                     : 'text-white/70 hover:text-white hover:bg-white/10'
                                     }`}
                             >
-                                {page === 'timer' ? 'Timer' : page === 'settings' ? 'Settings' : 'Stats'}
+                                {page === 'timer' ? 'Timer' :
+                                    page === 'settings' ? 'Settings' :
+                                        page === 'stats' ? 'Stats' : 'Tasks'}
                             </button>
                         ))}
-                        <button
-                            onClick={() => navigateToPage('tasks')}
-                            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200 ${currentPage === 'tasks'
-                                ? 'bg-white text-black'
-                                : 'text-white/70 hover:text-white hover:bg-white/10'
-                                }`}
-                        >
-                            Tasks
-                        </button>
                     </div>
 
                     {/* Arrow navigation */}
@@ -146,35 +132,14 @@ export default function SwipeNavigator() {
                         </button>
                     </div>
 
-                    {/* Tasks navigation */}
-                    {currentPage !== 'tasks' && (
-                        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2">
-                            <button
-                                onClick={navigateToTasks}
-                                className="p-2 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 text-white/70 hover:text-white hover:bg-white/10 transition-colors duration-200"
-                            >
-                                ↓ Tasks
-                            </button>
-                        </div>
-                    )}
 
-                    {currentPage === 'tasks' && (
-                        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2">
-                            <button
-                                onClick={navigateToTimer}
-                                className="p-2 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 text-white/70 hover:text-white hover:bg-white/10 transition-colors duration-200"
-                            >
-                                ↑ Timer
-                            </button>
-                        </div>
-                    )}
                 </div>
             )}
 
             {/* Page indicator dots - Mobile */}
             {hasStarted && (
                 <div className="md:hidden absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center gap-2">
-                    {['timer', 'settings', 'stats'].map((page, index) => (
+                    {pageOrder.filter(page => page !== 'welcome').map((page, index) => (
                         <div
                             key={page}
                             className={`w-2 h-2 rounded-full transition-colors duration-200 ${currentPage === page ? 'bg-white' : 'bg-white/30'
@@ -188,8 +153,7 @@ export default function SwipeNavigator() {
             {hasStarted && (
                 <div className="hidden md:block absolute bottom-4 left-4 text-xs text-white/40">
                     <div>← → Navigate</div>
-                    <div>↑ ↓ Tasks</div>
-                    <div>1-4 Quick jump</div>
+                    <div>1-5 Quick jump</div>
                 </div>
             )}
         </div>

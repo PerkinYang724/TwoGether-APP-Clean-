@@ -136,6 +136,24 @@ export interface Translations {
     feature2: string
     feature3: string
     swipeToNavigate: string
+    // Pomodoro settings descriptions
+    timerDurations: string
+    behaviorSettings: string
+    focusMinutesDesc: string
+    shortBreakMinutesDesc: string
+    longBreakMinutesDesc: string
+    sessionsUntilLongBreakDesc: string
+    autoStartNextDesc: string
+    soundDesc: string
+    notificationsDesc: string
+    // Tag feature translations
+    enterSubjectTag: string
+    subjectTag: string
+    subjectTagPlaceholder: string
+    sessionHistory: string
+    recentSessions: string
+    noSessionsYet: string
+    startFirstSession: string
 }
 
 const translations: Record<Language, Translations> = {
@@ -274,7 +292,25 @@ const translations: Record<Language, Translations> = {
         feature1: 'Swipe-based navigation',
         feature2: 'Task management',
         feature3: 'Progress tracking',
-        swipeToNavigate: 'Swipe to navigate'
+        swipeToNavigate: 'Swipe to navigate',
+        // Pomodoro settings descriptions
+        timerDurations: 'Timer Durations',
+        behaviorSettings: 'Behavior Settings',
+        focusMinutesDesc: 'Duration for focus sessions',
+        shortBreakMinutesDesc: 'Duration for short breaks',
+        longBreakMinutesDesc: 'Duration for long breaks',
+        sessionsUntilLongBreakDesc: 'Sessions before long break',
+        autoStartNextDesc: 'Automatically start next session',
+        soundDesc: 'Play sound notifications',
+        notificationsDesc: 'Show desktop notifications',
+        // Tag feature translations
+        enterSubjectTag: 'Enter Subject/Task Tag',
+        subjectTag: 'Subject/Task Tag',
+        subjectTagPlaceholder: 'e.g., Math, Essay, Coding...',
+        sessionHistory: 'Session History',
+        recentSessions: 'Recent Sessions',
+        noSessionsYet: 'No sessions yet',
+        startFirstSession: 'Start your first session to see history'
     },
     zh: {
         appName: '專注流',
@@ -411,7 +447,25 @@ const translations: Record<Language, Translations> = {
         feature1: '滑動導航',
         feature2: '任務管理',
         feature3: '進度追蹤',
-        swipeToNavigate: '滑動導航'
+        swipeToNavigate: '滑動導航',
+        // Pomodoro settings descriptions
+        timerDurations: '計時器時長',
+        behaviorSettings: '行為設定',
+        focusMinutesDesc: '專注時段的時長',
+        shortBreakMinutesDesc: '短休息的時長',
+        longBreakMinutesDesc: '長休息的時長',
+        sessionsUntilLongBreakDesc: '長休息前的時段數',
+        autoStartNextDesc: '自動開始下一個時段',
+        soundDesc: '播放聲音通知',
+        notificationsDesc: '顯示桌面通知',
+        // Tag feature translations
+        enterSubjectTag: '輸入科目/任務標籤',
+        subjectTag: '科目/任務標籤',
+        subjectTagPlaceholder: '例如：數學、作文、編程...',
+        sessionHistory: '學習記錄',
+        recentSessions: '最近學習',
+        noSessionsYet: '還沒有學習記錄',
+        startFirstSession: '開始第一次學習來查看記錄'
     }
 }
 

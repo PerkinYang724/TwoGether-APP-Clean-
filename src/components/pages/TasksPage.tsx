@@ -8,7 +8,7 @@ interface TasksPageProps {
 
 export default function TasksPage({ className = '' }: TasksPageProps) {
     return (
-        <div className={`min-h-screen px-6 py-10 ${className}`}>
+        <div className={`px-6 py-10 pb-20 ${className}`}>
             <div className="max-w-2xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
@@ -25,8 +25,8 @@ export default function TasksPage({ className = '' }: TasksPageProps) {
             {/* Swipe indicators - Mobile only */}
             <div className="md:hidden mt-8 flex items-center justify-center gap-4 text-white/40 text-sm">
                 <div className="flex items-center gap-1">
-                    <span>↑</span>
-                    <span>Back to Timer</span>
+                    <span>← →</span>
+                    <span>Navigate</span>
                 </div>
             </div>
         </div>
