@@ -113,7 +113,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
                     </div>
                 )}
                 <motion.div
-                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-mono font-bold text-white mb-8 whitespace-nowrap overflow-hidden"
+                    className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-sans font-light text-white mb-8 whitespace-nowrap overflow-hidden tracking-wider"
                     key={secondsLeft}
                     initial={{ scale: 0.95 }}
                     animate={{ scale: 1 }}
