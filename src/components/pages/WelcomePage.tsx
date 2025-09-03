@@ -1,4 +1,4 @@
-import * as React from 'react'
+
 import { t } from '../../lib/i18n'
 
 interface WelcomePageProps {
@@ -7,7 +7,7 @@ interface WelcomePageProps {
     hasStarted: boolean
 }
 
-export default function WelcomePage({ className = '', onStart, hasStarted }: WelcomePageProps) {
+export default function WelcomePage({ className = '', onStart }: WelcomePageProps) {
 
     // Show welcome page when not started
     return (

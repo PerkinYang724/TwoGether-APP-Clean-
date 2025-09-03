@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { useSwipeNavigation, Page } from '../hooks/useSwipeNavigation'
 import WelcomePage from './pages/WelcomePage'
 import TimerPage from './pages/TimerPage'
@@ -10,12 +10,9 @@ export default function SwipeNavigator() {
     const {
         currentPage,
         hasStarted,
-        isTransitioning,
         navigateToPage,
         navigateNext,
         navigatePrevious,
-        navigateToTasks,
-        navigateToTimer,
         startApp
     } = useSwipeNavigation()
 
@@ -95,7 +92,7 @@ export default function SwipeNavigator() {
                 <div className="hidden md:block">
                     {/* Top navigation bar */}
                     <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex items-center gap-2 bg-black/50 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
-                        {pageOrder.filter(page => page !== 'welcome').map((page, index) => (
+                        {pageOrder.filter(page => page !== 'welcome').map((page) => (
                             <button
                                 key={page}
                                 onClick={() => navigateToPage(page)}
@@ -139,7 +136,7 @@ export default function SwipeNavigator() {
             {/* Page indicator dots - Mobile */}
             {hasStarted && (
                 <div className="md:hidden absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center gap-2">
-                    {pageOrder.filter(page => page !== 'welcome').map((page, index) => (
+                    {pageOrder.filter(page => page !== 'welcome').map((page) => (
                         <div
                             key={page}
                             className={`w-2 h-2 rounded-full transition-colors duration-200 ${currentPage === page ? 'bg-white' : 'bg-white/30'

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Clock, Tag } from 'lucide-react'
 import { t } from '../lib/i18n'
 import { getSessions, type Session } from '../lib/sessions'

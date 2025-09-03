@@ -2,6 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { Tag, X } from 'lucide-react'
 import { t } from '../lib/i18n'
 
+// Extend Window interface for our custom property
+declare global {
+    interface Window {
+        __preventNavigation?: boolean
+    }
+}
+
 interface TagInputProps {
     onTagSubmit: (tag: string) => void
     onCancel: () => void

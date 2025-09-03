@@ -11,6 +11,7 @@ export interface Translations {
     reset: string
     settings: string
     close: string
+    cancel: string
     focusMinutes: string
     shortBreakMinutes: string
     longBreakMinutes: string
@@ -168,6 +169,7 @@ const translations: Record<Language, Translations> = {
         reset: 'Reset',
         settings: 'Settings',
         close: 'Close',
+        cancel: 'Cancel',
         focusMinutes: 'Focus (min)',
         shortBreakMinutes: 'Short Break',
         longBreakMinutes: 'Long Break',
@@ -323,6 +325,7 @@ const translations: Record<Language, Translations> = {
         reset: '重置',
         settings: '設定',
         close: '關閉',
+        cancel: '取消',
         focusMinutes: '專注時間（分鐘）',
         shortBreakMinutes: '短休息',
         longBreakMinutes: '長休息',
