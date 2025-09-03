@@ -3,6 +3,7 @@ import { Settings, ChevronDown, ChevronUp, Clock, Play, Volume2, Bell } from 'lu
 import type { PomodoroSettings } from '../hooks/usePomodoro'
 import { t } from '../lib/i18n'
 import { useLanguage } from '../hooks/useLanguage'
+import { settingsStore } from '../lib/settingsStore'
 
 export default function SettingsDrawer({ settings, setSettings }: { settings: PomodoroSettings, setSettings: (s: PomodoroSettings) => void }) {
     useLanguage() // Make component reactive to language changes
@@ -10,18 +11,12 @@ export default function SettingsDrawer({ settings, setSettings }: { settings: Po
     const update = (k: keyof PomodoroSettings, v: number | boolean) => {
         const newSettings = { ...settings, [k]: v as any }
         console.log('SettingsDrawer: Updating setting', { key: k, value: v, currentSettings: settings, newSettings })
+        
+        // Update local state
         setSettings(newSettings)
-
-        // Dispatch custom event to notify other components
-        // Use setTimeout to ensure the state update completes first (important for mobile)
-        setTimeout(() => {
-            const event = new CustomEvent('pomodoro:settings-change', { detail: newSettings })
-            console.log('SettingsDrawer: Dispatching settings change event:', event)
-            
-            // Dispatch on both window and document for better mobile compatibility
-            window.dispatchEvent(event)
-            document.dispatchEvent(event)
-        }, 0)
+        
+        // Update global store (this will notify all subscribers)
+        settingsStore.setSettings(newSettings)
     }
 
     return (

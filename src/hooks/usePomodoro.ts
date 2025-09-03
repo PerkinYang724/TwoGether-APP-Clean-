@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { settingsStore } from '../lib/settingsStore'
 
 export type Phase = 'focus' | 'short_break' | 'long_break'
 export interface PomodoroSettings {
@@ -11,65 +12,29 @@ export interface PomodoroSettings {
     notifications: boolean
 }
 
-const defaultSettings: PomodoroSettings = {
-    focusMinutes: 25,
-    shortBreakMinutes: 5,
-    longBreakMinutes: 15,
-    sessionsUntilLongBreak: 4,
-    autoStartNext: true,
-    sound: true,
-    notifications: true,
-}
+
 
 export function usePomodoro() {
-    const [settings, setSettings] = useState<PomodoroSettings>(() => {
-        const raw = localStorage.getItem('settings')
-        return raw ? { ...defaultSettings, ...JSON.parse(raw) } : defaultSettings
-    })
+    const [settings, setSettings] = useState<PomodoroSettings>(() => settingsStore.getSettings())
     const [phase, setPhase] = useState<Phase>('focus')
     const [isRunning, setIsRunning] = useState(false)
     const [secondsLeft, setSecondsLeft] = useState(settings.focusMinutes * 60)
     const [completedFocusSessions, setCompletedFocusSessions] = useState<number>(() => Number(localStorage.getItem('focusCount') || 0))
     const tickRef = useRef<number | null>(null)
 
-    useEffect(() => localStorage.setItem('settings', JSON.stringify(settings)), [settings])
     useEffect(() => localStorage.setItem('focusCount', String(completedFocusSessions)), [completedFocusSessions])
 
-    // Listen for settings changes from other components in the same tab
+    // Subscribe to global settings changes
     useEffect(() => {
-        const handleSettingsChange = (e: CustomEvent) => {
-            console.log('usePomodoro: Received settings change event:', e.detail)
-            setSettings(e.detail)
-        }
-
-        // Also listen for the event on document for better mobile compatibility
-        const handleDocumentSettingsChange = (e: CustomEvent) => {
-            console.log('usePomodoro: Received settings change event on document:', e.detail)
-            setSettings(e.detail)
-        }
-
-        window.addEventListener('pomodoro:settings-change', handleSettingsChange as EventListener)
-        document.addEventListener('pomodoro:settings-change', handleDocumentSettingsChange as EventListener)
-        
-        // Fallback polling mechanism for mobile devices
-        const pollInterval = setInterval(() => {
-            try {
-                const storedSettings = localStorage.getItem('settings')
-                if (storedSettings && storedSettings !== lastSettingsRef.current) {
-                    const newSettings = JSON.parse(storedSettings)
-                    console.log('usePomodoro: Polling detected settings change:', newSettings)
-                    setSettings(newSettings)
-                    lastSettingsRef.current = storedSettings
-                }
-            } catch (error) {
-                console.error('Error polling settings:', error)
-            }
-        }, 500) // Check every 500ms
+        console.log('usePomodoro: Subscribing to settings store')
+        const unsubscribe = settingsStore.subscribe((newSettings: PomodoroSettings) => {
+            console.log('usePomodoro: Received settings update from store:', newSettings)
+            setSettings(newSettings)
+        })
 
         return () => {
-            window.removeEventListener('pomodoro:settings-change', handleSettingsChange as EventListener)
-            document.removeEventListener('pomodoro:settings-change', handleDocumentSettingsChange as EventListener)
-            clearInterval(pollInterval)
+            console.log('usePomodoro: Unsubscribing from settings store')
+            unsubscribe()
         }
     }, [])
 
@@ -80,7 +45,6 @@ export function usePomodoro() {
     }), [settings])
 
     const prevPhaseSecondsRef = useRef(phaseSeconds)
-    const lastSettingsRef = useRef(JSON.stringify(settings))
 
     // Update secondsLeft when settings change (live update even when running)
     useEffect(() => {
