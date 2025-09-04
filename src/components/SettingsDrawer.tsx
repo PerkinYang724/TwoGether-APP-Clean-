@@ -11,10 +11,10 @@ export default function SettingsDrawer({ settings, setSettings }: { settings: Po
     const update = (k: keyof PomodoroSettings, v: number | boolean) => {
         const newSettings = { ...settings, [k]: v as any }
         console.log('SettingsDrawer: Updating setting', { key: k, value: v, currentSettings: settings, newSettings })
-        
+
         // Update local state
         setSettings(newSettings)
-        
+
         // Update global store (this will notify all subscribers)
         settingsStore.setSettings(newSettings)
     }
