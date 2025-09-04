@@ -133,38 +133,28 @@ export default function SwipeNavigator() {
                 </div>
             )}
 
-make            {/* Mobile Navigation Bar */}
+            {/* Mobile Navigation Bar */}
             {hasStarted && (
-                    <div className="block md:hidden">
-                        {/* Top navigation bar - Mobile */}
-                        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 flex items-center gap-1 bg-black/80 backdrop-blur-sm rounded-full px-3 py-2 border border-white/20 max-w-xs z-40">
-                            {pageOrder.filter(page => page !== 'welcome').map((page) => (
-                                <button
-                                    key={page}
-                                                                    onClick={() => navigateToPage(page)}
-                                    className={`px-2 py-1 rounded-full text-xs font-medium transition-colors duration-200 flex-1 ${currentPage === page
-                                        ? 'bg-white text-black'
-                                        : 'text-white/70 hover:text-white hover:bg-white/10'
-                                        }`}
-                                >
-                                    {page === 'timer' ? 'Timer' :
-                                        page === 'settings' ? 'Settings' :
-                                            page === 'stats' ? 'Stats' : 'Tasks'}
-                                </button>
-                            ))}
-                        </div>
-
-                        {/* Page indicator dots - Mobile */}
-                        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center gap-2">
-                            {pageOrder.filter(page => page !== 'welcome').map((page) => (
-                                <div
-                                    key={page}
-                                    className={`w-2 h-2 rounded-full transition-colors duration-200 ${currentPage === page ? 'bg-white' : 'bg-white/30'
-                                        }`}
-                                />
-                            ))}
-                        </div>
+                <div className="block md:hidden">
+                    {/* Bottom navigation bar - Mobile */}
+                    <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 flex items-center gap-1 bg-black/80 backdrop-blur-sm rounded-full px-3 py-2 border border-white/20 max-w-xs z-40">
+                        {pageOrder.filter(page => page !== 'welcome').map((page) => (
+                            <button
+                                key={page}
+                                onClick={() => navigateToPage(page)}
+                                className={`px-2 py-1 rounded-full text-xs font-medium transition-colors duration-200 flex-1 ${currentPage === page
+                                    ? 'bg-white text-black'
+                                    : 'text-white/70 hover:text-white hover:bg-white/10'
+                                    }`}
+                            >
+                                {page === 'timer' ? 'Timer' :
+                                    page === 'settings' ? 'Settings' :
+                                        page === 'stats' ? 'Stats' : 'Tasks'}
+                            </button>
+                        ))}
                     </div>
+
+                </div>
             )}
 
             {/* Keyboard shortcuts hint - Desktop/Mac */}
