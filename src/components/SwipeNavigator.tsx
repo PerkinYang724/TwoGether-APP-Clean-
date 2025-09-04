@@ -137,8 +137,9 @@ export default function SwipeNavigator() {
             {hasStarted && (
                 <div className="block md:hidden">
                     {/* Bottom navigation bar - Mobile */}
-                    <div 
+                    <div
                         className="mobile-nav-bar"
+                        data-timestamp={Date.now()}
                         style={{
                             position: 'fixed',
                             bottom: '100px',
@@ -147,7 +148,7 @@ export default function SwipeNavigator() {
                             display: 'flex',
                             alignItems: 'center',
                             gap: '4px',
-                            backgroundColor: 'rgba(0, 0, 0, 0.85) !important',
+                            backgroundColor: '#000000 !important',
                             backdropFilter: 'blur(8px)',
                             borderRadius: '9999px',
                             padding: '12px 16px',
