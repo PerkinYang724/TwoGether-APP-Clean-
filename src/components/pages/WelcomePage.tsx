@@ -16,11 +16,11 @@ export default function WelcomePage({ className = '', onStart }: WelcomePageProp
         // Show title first, then fade it out and show welcome content
         const timer1 = setTimeout(() => {
             setShowTitle(false)
-        }, 2000) // Show title for 2 seconds
+        }, 3000) // Show title for 3 seconds
 
         const timer2 = setTimeout(() => {
             setShowWelcome(true)
-        }, 3000) // Show welcome content after 3 seconds
+        }, 4000) // Show welcome content after 4 seconds
 
         return () => {
             clearTimeout(timer1)
@@ -30,16 +30,16 @@ export default function WelcomePage({ className = '', onStart }: WelcomePageProp
 
     return (
         <div className={`flex flex-col min-h-screen px-6 ${className}`}>
-            {/* Animated Title Section */}
-            <div className="flex-1 flex flex-col justify-center items-center text-center">
-                <div className="max-w-lg">
-                    <div 
-                        className={`mb-6 transition-all duration-1000 ease-in-out ${
-                            showTitle 
-                                ? 'opacity-100 transform translate-y-0' 
-                                : 'opacity-0 transform -translate-y-4'
+            {/* Centered Animation Container */}
+            <div className="flex-1 flex flex-col justify-center items-center text-center relative">
+                {/* Animated Title Section - Centered */}
+                <div
+                    className={`absolute inset-0 flex flex-col justify-center items-center transition-all duration-1000 ease-in-out ${showTitle
+                            ? 'opacity-100 transform translate-y-0'
+                            : 'opacity-0 transform -translate-y-4'
                         }`}
-                    >
+                >
+                    <div className="max-w-lg">
                         <h1 className="text-5xl md:text-6xl font-bold mb-3 bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
                             {t('appName')}
                         </h1>
@@ -48,45 +48,43 @@ export default function WelcomePage({ className = '', onStart }: WelcomePageProp
                         </p>
                     </div>
                 </div>
-            </div>
 
-            {/* Animated Welcome Content */}
-            <div className="flex-1 flex flex-col justify-center items-center">
-                <div 
-                    className={`text-center max-w-md transition-all duration-1000 ease-in-out ${
-                        showWelcome 
-                            ? 'opacity-100 transform translate-y-0' 
+                {/* Animated Welcome Content - Centered */}
+                <div
+                    className={`absolute inset-0 flex flex-col justify-center items-center transition-all duration-1000 ease-in-out ${showWelcome
+                            ? 'opacity-100 transform translate-y-0'
                             : 'opacity-0 transform translate-y-4'
-                    }`}
+                        }`}
                 >
-                    {/* Welcome Message */}
-                    <div className="mb-8">
-                        <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-white/90">
-                            {t('welcomeToFlowFocus')}
-                        </h2>
-                        <p className="text-white/60 text-base md:text-lg leading-relaxed">
-                            {t('welcomeDescription')}
-                        </p>
-                    </div>
+                    <div className="text-center max-w-md">
+                        {/* Welcome Message */}
+                        <div className="mb-8">
+                            <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-white/90">
+                                {t('welcomeToFlowFocus')}
+                            </h2>
+                            <p className="text-white/60 text-base md:text-lg leading-relaxed">
+                                {t('welcomeDescription')}
+                            </p>
+                        </div>
 
-                    {/* Start Button */}
-                    <button
-                        onClick={onStart}
-                        className="w-full max-w-xs bg-white text-black font-semibold py-4 px-8 rounded-2xl text-lg hover:bg-white/90 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"
-                    >
-                        {t('startFocusing')}
-                    </button>
+                        {/* Start Button */}
+                        <button
+                            onClick={onStart}
+                            className="w-full max-w-xs bg-white text-black font-semibold py-4 px-8 rounded-2xl text-lg hover:bg-white/90 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"
+                        >
+                            {t('startFocusing')}
+                        </button>
+                    </div>
                 </div>
             </div>
 
             {/* Features Section - Bottom 1/3 */}
             <div className="flex-1 flex flex-col justify-end items-center pb-8">
-                <div 
-                    className={`text-center max-w-md transition-all duration-1000 ease-in-out delay-500 ${
-                        showWelcome 
-                            ? 'opacity-100 transform translate-y-0' 
+                <div
+                    className={`text-center max-w-md transition-all duration-1000 ease-in-out delay-500 ${showWelcome
+                            ? 'opacity-100 transform translate-y-0'
                             : 'opacity-0 transform translate-y-4'
-                    }`}
+                        }`}
                 >
                     {/* Features Preview */}
                     <div className="grid grid-cols-1 gap-3 text-sm text-white/50 mb-6">
