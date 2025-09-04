@@ -137,7 +137,22 @@ export default function SwipeNavigator() {
             {hasStarted && (
                 <div className="block md:hidden">
                     {/* Bottom navigation bar - Mobile */}
-                    <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 flex items-center gap-1 bg-black/80 backdrop-blur-sm rounded-full px-3 py-2 border border-white/20 max-w-xs z-40">
+                    <div style={{
+                        position: 'fixed',
+                        bottom: '24px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        backgroundColor: 'red',
+                        borderRadius: '9999px',
+                        padding: '8px 12px',
+                        border: '2px solid white',
+                        maxWidth: '320px',
+                        zIndex: 9999
+                    }}>
+                        <div className="text-white text-xs mr-2">BOTTOM</div>
                         {pageOrder.filter(page => page !== 'welcome').map((page) => (
                             <button
                                 key={page}
