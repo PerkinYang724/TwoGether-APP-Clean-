@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import BallFill from './BallFill';
 import { t } from '../lib/i18n';
 
 interface TimerCardProps {
@@ -61,19 +60,6 @@ const TimerCard: React.FC<TimerCardProps> = ({
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     };
 
-    const getProgress = () => {
-        const totalSeconds = phase === 'focus' ? 25 * 60 : phase === 'short_break' ? 5 * 60 : 15 * 60;
-        return (totalSeconds - secondsLeft) / totalSeconds;
-    };
-
-    const getAccent = () => {
-        switch (phase) {
-            case 'focus': return '#EF4444';
-            case 'short_break': return '#10B981';
-            case 'long_break': return '#3B82F6';
-            default: return '#A855F7';
-        }
-    };
 
     const getLabel = () => {
         switch (phase) {
@@ -92,10 +78,6 @@ const TimerCard: React.FC<TimerCardProps> = ({
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.3 }}
             >
-                {/* background animation */}
-                <div className="absolute inset-0 -z-10 overflow-hidden rounded-2xl">
-                    <BallFill progress={getProgress()} accent={getAccent()} bgBlur={10} isRunning={isRunning} />
-                </div>
 
                 {/* Timer content */}
                 <div className="text-sm uppercase tracking-widest text-white/70 mb-4">
