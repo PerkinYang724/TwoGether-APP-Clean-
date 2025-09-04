@@ -134,10 +134,13 @@ export default function SwipeNavigator() {
             )}
 
             {/* Mobile Navigation Bar */}
-            {hasStarted && (
+            {hasStarted && (() => {
+                console.log('Mobile nav rendering, hasStarted:', hasStarted, 'currentPage:', currentPage)
+                return (
                 <div className="md:hidden">
                     {/* Top navigation bar - Mobile */}
-                    <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex items-center gap-1 bg-black/50 backdrop-blur-sm rounded-full px-3 py-2 border border-white/20 max-w-xs">
+                    <div className="fixed top-4 left-1/2 transform -translate-x-1/2 flex items-center gap-1 bg-red-500/90 backdrop-blur-sm rounded-full px-3 py-2 border border-white/30 max-w-xs z-50">
+                        <div className="text-white text-xs mr-2">MOBILE NAV</div>
                         {pageOrder.filter(page => page !== 'welcome').map((page) => (
                             <button
                                 key={page}
@@ -165,7 +168,8 @@ export default function SwipeNavigator() {
                         ))}
                     </div>
                 </div>
-            )}
+                )
+            })()}
 
             {/* Keyboard shortcuts hint - Desktop/Mac */}
             {hasStarted && (
