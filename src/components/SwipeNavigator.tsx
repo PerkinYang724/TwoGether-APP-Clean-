@@ -145,15 +145,15 @@ export default function SwipeNavigator() {
                         display: 'flex',
                         alignItems: 'center',
                         gap: '4px',
-                        backgroundColor: 'red',
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        backdropFilter: 'blur(8px)',
                         borderRadius: '9999px',
                         padding: '12px 16px',
-                        border: '2px solid white',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
                         maxWidth: '320px',
                         zIndex: 9999,
                         marginBottom: '20px'
                     }}>
-                        <div className="text-white text-xs mr-2">BOTTOM</div>
                         {pageOrder.filter(page => page !== 'welcome').map((page) => (
                             <button
                                 key={page}
