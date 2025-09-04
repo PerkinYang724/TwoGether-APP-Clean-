@@ -160,7 +160,7 @@ export interface Translations {
 const translations: Record<Language, Translations> = {
     en: {
         appName: 'Flow Focus',
-        tagline: 'Minimal Pomodoro PWA for deep work',
+        tagline: 'Minimal Pomodoro for deep work',
         focus: 'Focus',
         shortBreak: 'Short Break',
         longBreak: 'Long Break',
@@ -316,7 +316,7 @@ const translations: Record<Language, Translations> = {
     },
     zh: {
         appName: '專注流',
-        tagline: '簡約番茄工作法 PWA 應用',
+        tagline: '簡約番茄工作法應用',
         focus: '專注',
         shortBreak: '短休息',
         longBreak: '長休息',
