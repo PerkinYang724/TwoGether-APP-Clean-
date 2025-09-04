@@ -137,23 +137,25 @@ export default function SwipeNavigator() {
             {hasStarted && (
                 <div className="block md:hidden">
                     {/* Bottom navigation bar - Mobile */}
-                    <div style={{
-                        position: 'fixed',
-                        bottom: '100px',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        backdropFilter: 'blur(8px)',
-                        borderRadius: '9999px',
-                        padding: '12px 16px',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
-                        maxWidth: '320px',
-                        zIndex: 9999,
-                        marginBottom: '20px'
-                    }}>
+                    <div 
+                        className="mobile-nav-bar"
+                        style={{
+                            position: 'fixed',
+                            bottom: '100px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px',
+                            backgroundColor: 'rgba(0, 0, 0, 0.85) !important',
+                            backdropFilter: 'blur(8px)',
+                            borderRadius: '9999px',
+                            padding: '12px 16px',
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            maxWidth: '320px',
+                            zIndex: 9999,
+                            marginBottom: '20px'
+                        }}>
                         {pageOrder.filter(page => page !== 'welcome').map((page) => (
                             <button
                                 key={page}
