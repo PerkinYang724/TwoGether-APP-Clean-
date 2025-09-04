@@ -51,7 +51,7 @@ export default function SwipeNavigator() {
     }
 
     return (
-        <div className="relative w-full min-h-screen overflow-x-hidden overflow-y-auto">
+        <div className="relative w-full min-h-screen overflow-x-hidden overflow-y-auto pb-20 md:pb-0">
             {/* Main pages container */}
             <div
                 className="flex transition-transform duration-300 ease-in-out flex-row"
@@ -139,7 +139,7 @@ export default function SwipeNavigator() {
                     {/* Bottom navigation bar - Mobile */}
                     <div style={{
                         position: 'fixed',
-                        bottom: '24px',
+                        bottom: '40px',
                         left: '50%',
                         transform: 'translateX(-50%)',
                         display: 'flex',
@@ -147,10 +147,11 @@ export default function SwipeNavigator() {
                         gap: '4px',
                         backgroundColor: 'red',
                         borderRadius: '9999px',
-                        padding: '8px 12px',
+                        padding: '12px 16px',
                         border: '2px solid white',
                         maxWidth: '320px',
-                        zIndex: 9999
+                        zIndex: 9999,
+                        marginBottom: '20px'
                     }}>
                         <div className="text-white text-xs mr-2">BOTTOM</div>
                         {pageOrder.filter(page => page !== 'welcome').map((page) => (
