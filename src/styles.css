@@ -432,10 +432,12 @@ body {
     transition: width 0.3s ease;
     background: linear-gradient(90deg, var(--theme-primary), var(--theme-accent));
 }
+
 /* Mobile Navigation Bar */
 .mobile-nav-bar {
     background-color: rgba(0, 0, 0, 0.85) !important;
 }
+
 
 /* Respect users who prefer less motion */
 @media (prefers-reduced-motion: reduce) {

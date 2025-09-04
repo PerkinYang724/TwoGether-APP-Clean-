@@ -32,12 +32,15 @@ export default function WelcomePage({ className = '', onStart }: WelcomePageProp
         <div className={`flex flex-col min-h-screen px-6 ${className}`}>
             {/* Centered Animation Container */}
             <div className="flex-1 flex flex-col justify-center items-center text-center relative">
-                {/* Animated Title Section - Centered */}
+                {/* Animated Title Section - Responsive positioning */}
                 <div
-                    className={`absolute inset-0 flex flex-col justify-center items-center transition-all duration-1000 ease-in-out ${showTitle
-                            ? 'opacity-100 transform translate-y-0'
-                            : 'opacity-0 transform -translate-y-4'
+                    className={`absolute left-1/2 transition-all duration-1000 ease-in-out ${showTitle
+                        ? 'opacity-100 transform -translate-x-1/2 translate-y-0'
+                        : 'opacity-0 transform -translate-x-1/2 -translate-y-4'
                         }`}
+                    style={{
+                        top: '35%', // Move down from center
+                    }}
                 >
                     <div className="max-w-lg">
                         <h1 className="text-5xl md:text-6xl font-bold mb-3 bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
@@ -49,12 +52,15 @@ export default function WelcomePage({ className = '', onStart }: WelcomePageProp
                     </div>
                 </div>
 
-                {/* Animated Welcome Content - Centered */}
+                {/* Animated Welcome Content - Centered positioning */}
                 <div
-                    className={`absolute inset-0 flex flex-col justify-center items-center transition-all duration-1000 ease-in-out ${showWelcome
-                            ? 'opacity-100 transform translate-y-0'
-                            : 'opacity-0 transform translate-y-4'
+                    className={`absolute left-1/2 transition-all duration-1000 ease-in-out ${showWelcome
+                        ? 'opacity-100 transform -translate-x-1/2 translate-y-0'
+                        : 'opacity-0 transform -translate-x-1/2 translate-y-4'
                         }`}
+                    style={{
+                        top: '50%', // Center for welcome content
+                    }}
                 >
                     <div className="text-center max-w-md">
                         {/* Welcome Message */}
@@ -82,8 +88,8 @@ export default function WelcomePage({ className = '', onStart }: WelcomePageProp
             <div className="flex-1 flex flex-col justify-end items-center pb-8">
                 <div
                     className={`text-center max-w-md transition-all duration-1000 ease-in-out delay-500 ${showWelcome
-                            ? 'opacity-100 transform translate-y-0'
-                            : 'opacity-0 transform translate-y-4'
+                        ? 'opacity-100 transform translate-y-0'
+                        : 'opacity-0 transform translate-y-4'
                         }`}
                 >
                     {/* Features Preview */}
