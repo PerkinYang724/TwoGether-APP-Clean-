@@ -289,11 +289,11 @@ const translations: Record<Language, Translations> = {
         theme: 'Theme',
         // Welcome page translations
         welcomeToFlowFocus: 'Welcome to Flow Focus',
-        welcomeDescription: 'Start your journey to deep focus and productivity with our minimal Pomodoro timer. Swipe to navigate between different sections.',
+        welcomeDescription: 'A minimal Pomodoro timer for deep focus. Swipe to navigate.',
         startFocusing: 'Start Focusing',
-        feature1: 'Swipe-based navigation',
-        feature2: 'Task management',
-        feature3: 'Progress tracking',
+        feature1: 'Swipe navigation',
+        feature2: 'Task tracking',
+        feature3: 'Progress stats',
         swipeToNavigate: 'Swipe to navigate',
         // Pomodoro settings descriptions
         timerDurations: 'Timer Durations',
@@ -445,11 +445,11 @@ const translations: Record<Language, Translations> = {
         theme: '主題',
         // Welcome page translations
         welcomeToFlowFocus: '歡迎使用專注流',
-        welcomeDescription: '開始您的深度專注和生產力之旅，使用我們簡約的番茄工作法計時器。滑動即可在不同部分間導航。',
+        welcomeDescription: '簡約番茄工作法計時器，專注深度學習。滑動導航。',
         startFocusing: '開始專注',
         feature1: '滑動導航',
-        feature2: '任務管理',
-        feature3: '進度追蹤',
+        feature2: '任務追蹤',
+        feature3: '進度統計',
         swipeToNavigate: '滑動導航',
         // Pomodoro settings descriptions
         timerDurations: '計時器時長',
