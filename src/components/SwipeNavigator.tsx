@@ -134,14 +134,21 @@ export default function SwipeNavigator() {
             )}
 
             {/* Mobile Navigation Bar */}
-            {hasStarted && (
-                <div className="md:hidden">
+            {hasStarted && (() => {
+                console.log('Mobile nav rendering, hasStarted:', hasStarted, 'currentPage:', currentPage)
+                console.log('Page order for mobile nav:', pageOrder.filter(page => page !== 'welcome'))
+                return (
+                <div className="block">
                     {/* Top navigation bar - Mobile */}
-                    <div className="fixed top-20 left-1/2 transform -translate-x-1/2 flex items-center gap-1 bg-black/80 backdrop-blur-sm rounded-full px-3 py-2 border border-white/20 max-w-xs z-40">
+                    <div className="fixed top-20 left-1/2 transform -translate-x-1/2 flex items-center gap-1 bg-red-500/90 backdrop-blur-sm rounded-full px-3 py-2 border-2 border-white max-w-xs z-50 shadow-lg">
+                        <div className="text-white text-xs mr-2">MOBILE</div>
                         {pageOrder.filter(page => page !== 'welcome').map((page) => (
                             <button
                                 key={page}
-                                onClick={() => navigateToPage(page)}
+                                onClick={() => {
+                                    console.log('Mobile nav button clicked:', page)
+                                    navigateToPage(page)
+                                }}
                                 className={`px-2 py-1 rounded-full text-xs font-medium transition-colors duration-200 flex-1 ${currentPage === page
                                     ? 'bg-white text-black'
                                     : 'text-white/70 hover:text-white hover:bg-white/10'
@@ -165,7 +172,8 @@ export default function SwipeNavigator() {
                         ))}
                     </div>
                 </div>
-            )}
+                )
+            })()}
 
             {/* Keyboard shortcuts hint - Desktop/Mac */}
             {hasStarted && (
