@@ -45,58 +45,58 @@ export default function App() {
 
     return (
         <div className="relative">
-            {/* Animated Flakes Background */}
-            <AnimatedFlakes />
+                {/* Animated Flakes Background */}
+                <AnimatedFlakes />
 
-            {/* Main App Header - Fixed at top */}
-            <div className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-white/10">
-                <div className="px-6 py-4">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h1 className="text-xl font-semibold">{t('appName')}</h1>
-                            <p className="text-white/70 text-xs">{t('tagline')}</p>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <LanguageToggle />
-                            {user ? (
-                                <div className="flex items-center gap-2">
-                                    <div className="text-sm text-white/70">
-                                        {user.display_name || user.email}
+                {/* Main App Header - Fixed at top */}
+                <div className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-white/10">
+                    <div className="px-6 py-4">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h1 className="text-xl font-semibold">{t('appName')}</h1>
+                                <p className="text-white/70 text-xs">{t('tagline')}</p>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <LanguageToggle />
+                                {user ? (
+                                    <div className="flex items-center gap-2">
+                                        <div className="text-sm text-white/70">
+                                            {user.display_name || user.email}
+                                        </div>
                                     </div>
-                                </div>
-                            ) : (
-                                <button
-                                    onClick={() => setShowAuthModal(true)}
-                                    className="text-sm text-white/70 hover:text-white underline"
-                                >
-                                    {t('signIn')}
-                                </button>
-                            )}
+                                ) : (
+                                    <button
+                                        onClick={() => setShowAuthModal(true)}
+                                        className="text-sm text-white/70 hover:text-white underline"
+                                    >
+                                        {t('signIn')}
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Main Content with Swipe Navigation */}
-            <div className="pt-20 relative z-10">
-                <SwipeNavigator />
-            </div>
+                {/* Main Content with Swipe Navigation */}
+                <div className="pt-20 relative z-10">
+                    <SwipeNavigator />
+                </div>
 
-            {/* Global Components */}
-            <InstallPrompt />
+                {/* Global Components */}
+                <InstallPrompt />
 
-            {/* Footer */}
-            <footer className="fixed bottom-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-sm border-t border-white/10 text-center text-white/40 text-xs py-2">
-                {t('madeWithLove')} — {t('offlineReady')}
-                {syncStatus === 'synced' && ` • ${t('synced')}`}
-                {syncStatus === 'offline' && ` • ${t('offline')}`}
-            </footer>
+                {/* Footer */}
+                <footer className="fixed bottom-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-sm border-t border-white/10 text-center text-white/40 text-xs py-2">
+                    {t('madeWithLove')} — {t('offlineReady')}
+                    {syncStatus === 'synced' && ` • ${t('synced')}`}
+                    {syncStatus === 'offline' && ` • ${t('offline')}`}
+                </footer>
 
-            <AuthModal
-                isOpen={showAuthModal}
-                onClose={() => setShowAuthModal(false)}
-                onSuccess={() => setShowAuthModal(false)}
-            />
+                <AuthModal
+                    isOpen={showAuthModal}
+                    onClose={() => setShowAuthModal(false)}
+                    onSuccess={() => setShowAuthModal(false)}
+                />
         </div>
     )
 }
