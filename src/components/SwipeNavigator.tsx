@@ -142,7 +142,7 @@ export default function SwipeNavigator() {
                         data-timestamp={Date.now()}
                         style={{
                             position: 'fixed',
-                            bottom: '100px',
+                            bottom: '80px',
                             left: '50%',
                             transform: 'translateX(-50%)',
                             display: 'flex',
