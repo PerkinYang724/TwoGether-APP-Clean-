@@ -51,7 +51,7 @@ export default function SwipeNavigator() {
     }
 
     return (
-        <div className="relative w-full min-h-screen overflow-x-hidden overflow-y-auto pb-32 md:pb-0">
+        <div className="relative w-full min-h-screen overflow-x-hidden overflow-y-auto pb-48 md:pb-0">
             {/* Main pages container */}
             <div
                 className="flex transition-transform duration-300 ease-in-out flex-row"
@@ -139,7 +139,7 @@ export default function SwipeNavigator() {
                     {/* Bottom navigation bar - Mobile */}
                     <div style={{
                         position: 'fixed',
-                        bottom: '60px',
+                        bottom: '100px',
                         left: '50%',
                         transform: 'translateX(-50%)',
                         display: 'flex',
