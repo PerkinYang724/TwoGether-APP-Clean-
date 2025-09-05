@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Audio Test</title>
+</head>
+
+<body>
+    <h1>Audio Test</h1>
+    <audio controls>
+        <source src="/audio/zero-distractions.mp3" type="audio/mpeg">
+        <source src="/audio/brown-noise.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <h2>Test URLs:</h2>
+    <ul>
+        <li><a href="/audio/zero-distractions.mp3" target="_blank">Zero Distractions</a></li>
+        <li><a href="/audio/brown-noise.mp3" target="_blank">Brown Noise</a></li>
+    </ul>
+
+    <script>
+        const audio = document.querySelector('audio');
+        audio.addEventListener('loadstart', () => console.log('Load start'));
+        audio.addEventListener('loadedmetadata', () => console.log('Loaded metadata'));
+        audio.addEventListener('canplay', () => console.log('Can play'));
+        audio.addEventListener('error', (e) => console.error('Error:', e));
+        audio.addEventListener('play', () => console.log('Playing'));
+        audio.addEventListener('pause', () => console.log('Paused'));
+    </script>
+</body>
+
+</html>

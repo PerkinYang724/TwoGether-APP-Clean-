@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react'
 import { t } from '../../lib/i18n'
+import { useMusic } from '../../context/MusicContext'
 
 interface WelcomePageProps {
     className?: string
@@ -11,6 +12,21 @@ interface WelcomePageProps {
 export default function WelcomePage({ className = '', onStart }: WelcomePageProps) {
     const [showTitle, setShowTitle] = useState(true)
     const [showWelcome, setShowWelcome] = useState(false)
+    const { playIntroMusic } = useMusic()
+
+    const handleStart = async () => {
+        console.log('🎯 Welcome page: Start Focus button clicked')
+        console.log('🎯 Welcome page: playIntroMusic function available:', typeof playIntroMusic)
+        try {
+            console.log('🎯 Welcome page: Calling playIntroMusic...')
+            await playIntroMusic()
+            console.log('🎯 Welcome page: Intro music triggered successfully')
+        } catch (error) {
+            console.error('🎯 Welcome page: Failed to play intro music:', error)
+        }
+        console.log('🎯 Welcome page: Calling onStart...')
+        onStart()
+    }
 
     useEffect(() => {
         // Show title first, then fade it out and show welcome content
@@ -75,7 +91,7 @@ export default function WelcomePage({ className = '', onStart }: WelcomePageProp
 
                         {/* Start Button */}
                         <button
-                            onClick={onStart}
+                            onClick={handleStart}
                             className="w-full max-w-xs bg-white text-black font-semibold py-4 px-8 rounded-2xl text-lg hover:bg-white/90 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"
                         >
                             {t('startFocusing')}

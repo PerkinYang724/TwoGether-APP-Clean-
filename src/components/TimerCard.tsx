@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { t } from '../lib/i18n';
+import { ensurePermission } from '../lib/notifications';
 
 interface TimerCardProps {
     phase: 'focus' | 'short_break' | 'long_break';
@@ -30,6 +31,9 @@ const TimerCard: React.FC<TimerCardProps> = ({
         e?.stopPropagation()
 
         console.log('TimerCard: handleStartClick called, phase:', phase)
+
+        // Request notification permission on user gesture
+        ensurePermission()
 
         if (phase === 'focus') {
             console.log('TimerCard: Showing inline tag input')
@@ -81,7 +85,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
 
                 {/* Timer content */}
                 <div className="text-sm uppercase tracking-widest text-white/70 mb-4">
-                    {getLabel()} v2.0
+                    {getLabel()}
                 </div>
 
                 {/* Current tag display */}

@@ -92,9 +92,11 @@ export function usePomodoro() {
         setIsRunning(false)
     }, [])
 
-    const start = useCallback(() => {
+    const start = useCallback(async () => {
+        console.log('🎯 Pomodoro start called', { isRunning, phase })
         if (isRunning) return
         setIsRunning(true)
+
         let last = performance.now()
         const loop = (now: number) => {
             const delta = Math.floor((now - last) / 1000)

@@ -184,20 +184,20 @@ export default function SessionStats() {
             </div>
 
             {/* Tab Navigation */}
-            <div className="flex bg-white/5 rounded-xl p-1 mb-4">
+            <div className="flex bg-white/5 rounded-xl p-1 mb-4 overflow-x-auto">
                 {tabs.map(tab => {
                     const Icon = tab.icon
                     return (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
-                            className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-medium transition-colors ${activeTab === tab.id
+                            className={`flex-shrink-0 flex items-center justify-center gap-1 sm:gap-2 py-2 px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-medium transition-colors min-w-0 ${activeTab === tab.id
                                 ? 'bg-white/10 text-white'
                                 : 'text-white/70 hover:text-white/90'
                                 }`}
                         >
-                            <Icon className="size-4" />
-                            {tab.label}
+                            <Icon className="size-3 sm:size-4" />
+                            <span className="truncate">{tab.label}</span>
                         </button>
                     )
                 })}

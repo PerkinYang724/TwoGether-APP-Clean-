@@ -5,7 +5,7 @@ import AuthModal from './components/AuthModal'
 import LanguageToggle from './components/LanguageToggle'
 import AnimatedFlakes from './components/AnimatedFlakes'
 import { usePomodoroWithSync } from './hooks/usePomodoroWithSync'
-import { ensurePermission, notifySessionComplete } from './lib/notifications'
+import { notifySessionComplete } from './lib/notifications'
 import { t } from './lib/i18n'
 import { useLanguage } from './hooks/useLanguage'
 import { useGoalTracking } from './hooks/useGoalTracking'
@@ -38,7 +38,7 @@ export default function App() {
             }
         }
         console.log('⏰ Setting up phase change listener')
-        ensurePermission()
+        // Don't request notification permission on app load - wait for user gesture
         window.addEventListener('pomodoro:phase-change', onChange as any)
         return () => window.removeEventListener('pomodoro:phase-change', onChange as any)
     }, [settings, incrementCompleted, addSession])

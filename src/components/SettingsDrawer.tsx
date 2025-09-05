@@ -4,6 +4,7 @@ import type { PomodoroSettings } from '../hooks/usePomodoro'
 import { t } from '../lib/i18n'
 import { useLanguage } from '../hooks/useLanguage'
 import { settingsStore } from '../lib/settingsStore'
+import MusicBar from './MusicBar'
 
 export default function SettingsDrawer({ settings, setSettings }: { settings: PomodoroSettings, setSettings: (s: PomodoroSettings) => void }) {
     useLanguage() // Make component reactive to language changes
@@ -183,6 +184,11 @@ export default function SettingsDrawer({ settings, setSettings }: { settings: Po
                                 <div className="w-11 h-6 bg-white/20 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-white/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-sky/50"></div>
                             </label>
                         </div>
+                    </div>
+
+                    {/* Focus Music Section */}
+                    <div className="border-t border-white/10 pt-4">
+                        <MusicBar />
                     </div>
                 </div>
             )}
