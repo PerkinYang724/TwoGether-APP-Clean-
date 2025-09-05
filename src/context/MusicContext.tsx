@@ -694,40 +694,72 @@ export function MusicProvider({ children }: { children: ReactNode }) {
   // Play intro music function
   const playIntroMusic = useCallback(async () => {
     console.log('🎵 ===== PLAY INTRO MUSIC START =====')
-    console.log('🎵 playIntroMusic called', {
+    console.log('🎵 playIntroMusic called', { 
       currentTrack: state.track?.id,
       hasAudio: !!audioRef.current,
       audioSrc: audioRef.current?.src,
       audioReadyState: audioRef.current?.readyState,
-      audioContextState: audioContextRef.current?.state
+      audioContextState: audioContextRef.current?.state,
+      userAgent: navigator.userAgent
     })
-
+    
+    // Check if we're on mobile
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+    console.log('🎵 Mobile device detected:', isMobile)
+    
+    // For mobile, we need to ensure user interaction has happened
+    if (isMobile) {
+      console.log('🎵 Mobile device: Checking for user interaction...')
+      // Mobile browsers require user interaction before playing audio
+      // Since this is called from a button click, it should work
+    }
+    
     // Test direct audio immediately
     console.log('🎵 Testing direct audio creation...')
     try {
       const testAudio = new Audio('/music/music-for-intro.mp3')
       testAudio.volume = 0.5
+      testAudio.preload = 'auto'
+      
       console.log('🎵 Test audio created:', {
         src: testAudio.src,
-        volume: testAudio.volume
+        volume: testAudio.volume,
+        preload: testAudio.preload
       })
-
+      
+      // Add event listeners for debugging
+      testAudio.addEventListener('loadstart', () => console.log('🎵 Mobile: Audio loadstart'))
+      testAudio.addEventListener('loadedmetadata', () => console.log('🎵 Mobile: Audio loadedmetadata'))
+      testAudio.addEventListener('canplay', () => console.log('🎵 Mobile: Audio canplay'))
+      testAudio.addEventListener('error', (e) => console.error('🎵 Mobile: Audio error', e))
+      
+      // Try to play with a small delay for mobile
+      if (isMobile) {
+        await new Promise(resolve => setTimeout(resolve, 100))
+      }
+      
       await testAudio.play()
       console.log('🎵 Test audio playing successfully!')
-
+      
       // Keep the test audio playing
       testAudio.loop = true
       if (audioRef.current) {
         audioRef.current.pause()
       }
       audioRef.current = testAudio
-
+      
       setState(prev => ({ ...prev, playing: true, enabled: true }))
       saveState({ playing: true, enabled: true })
       console.log('🎵 ===== PLAY INTRO MUSIC SUCCESS (DIRECT TEST) =====')
       return
     } catch (error) {
       console.error('🎵 Test audio failed:', error)
+      
+      // For mobile, show a user-friendly message
+      if (isMobile) {
+        console.log('🎵 Mobile: Audio play failed, this is likely due to autoplay restrictions')
+        // Don't show alert as it might be annoying, just log it
+      }
     }
 
     const introTrack = BUILT_IN_TRACKS.find(t => t.id === 'intro')

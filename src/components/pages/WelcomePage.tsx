@@ -17,13 +17,40 @@ export default function WelcomePage({ className = '', onStart }: WelcomePageProp
     const handleStart = async () => {
         console.log('🎯 Welcome page: Start Focus button clicked')
         console.log('🎯 Welcome page: playIntroMusic function available:', typeof playIntroMusic)
+        
+        // Check if we're on mobile
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+        console.log('🎯 Mobile device detected:', isMobile)
+        
         try {
             console.log('🎯 Welcome page: Calling playIntroMusic...')
             await playIntroMusic()
             console.log('🎯 Welcome page: Intro music triggered successfully')
         } catch (error) {
             console.error('🎯 Welcome page: Failed to play intro music:', error)
+            
+            // For mobile, try a different approach
+            if (isMobile) {
+                console.log('🎯 Mobile: Trying alternative audio approach...')
+                try {
+                    // Create audio element and try to play immediately after user interaction
+                    const audio = new Audio('/music/music-for-intro.mp3')
+                    audio.volume = 0.5
+                    audio.loop = true
+                    
+                    // Try to play with user interaction
+                    const playPromise = audio.play()
+                    if (playPromise !== undefined) {
+                        await playPromise
+                        console.log('🎯 Mobile: Alternative audio approach successful!')
+                    }
+                } catch (mobileError) {
+                    console.log('🎯 Mobile: Alternative approach also failed:', mobileError)
+                    console.log('🎯 Mobile: This is normal - mobile browsers often block autoplay')
+                }
+            }
         }
+        
         console.log('🎯 Welcome page: Calling onStart...')
         onStart()
     }
