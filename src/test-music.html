@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Test</title>
+</head>
+
+<body>
+    <h1>Music Test Page</h1>
+    <button id="playBtn">Play Intro Music</button>
+    <button id="pauseBtn">Pause</button>
+    <div id="status">Ready to test</div>
+
+    <script>
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const status = document.getElementById('status');
+        let audio = null;
+
+        playBtn.addEventListener('click', async () => {
+            try {
+                status.textContent = 'Creating audio...';
+                audio = new Audio('/music/music-for-intro.mp3');
+                audio.volume = 0.5;
+                audio.loop = true;
+
+                status.textContent = 'Playing audio...';
+                await audio.play();
+                status.textContent = 'Audio playing successfully!';
+            } catch (error) {
+                status.textContent = `Error: ${error.message}`;
+                console.error('Audio error:', error);
+            }
+        });
+
+        pauseBtn.addEventListener('click', () => {
+            if (audio) {
+                audio.pause();
+                status.textContent = 'Audio paused';
+            }
+        });
+    </script>
+</body>
+
+</html>

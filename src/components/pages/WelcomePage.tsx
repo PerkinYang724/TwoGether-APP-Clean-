@@ -17,40 +17,58 @@ export default function WelcomePage({ className = '', onStart }: WelcomePageProp
     const handleStart = async () => {
         console.log('🎯 Welcome page: Start Focus button clicked')
         console.log('🎯 Welcome page: playIntroMusic function available:', typeof playIntroMusic)
-        
+
         // Check if we're on mobile
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
         console.log('🎯 Mobile device detected:', isMobile)
-        
-        try {
-            console.log('🎯 Welcome page: Calling playIntroMusic...')
-            await playIntroMusic()
-            console.log('🎯 Welcome page: Intro music triggered successfully')
-        } catch (error) {
-            console.error('🎯 Welcome page: Failed to play intro music:', error)
-            
-            // For mobile, try a different approach
-            if (isMobile) {
-                console.log('🎯 Mobile: Trying alternative audio approach...')
-                try {
-                    // Create audio element and try to play immediately after user interaction
-                    const audio = new Audio('/music/music-for-intro.mp3')
-                    audio.volume = 0.5
-                    audio.loop = true
-                    
-                    // Try to play with user interaction
-                    const playPromise = audio.play()
-                    if (playPromise !== undefined) {
-                        await playPromise
-                        console.log('🎯 Mobile: Alternative audio approach successful!')
+
+        // For mobile, use direct audio approach immediately after user interaction
+        if (isMobile) {
+            console.log('🎯 Mobile: Using direct audio approach...')
+            try {
+                // Create audio element and try to play immediately after user interaction
+                const audio = new Audio('/music/music-for-intro.mp3')
+                audio.volume = 0.5
+                audio.loop = true
+                audio.preload = 'auto'
+
+                console.log('🎯 Mobile: Audio created, attempting to play...')
+
+                // Try to play with user interaction
+                const playPromise = audio.play()
+                if (playPromise !== undefined) {
+                    await playPromise
+                    console.log('🎯 Mobile: Direct audio approach successful!')
+
+                    // Update the music context state
+                    try {
+                        await playIntroMusic()
+                    } catch (contextError) {
+                        console.log('🎯 Mobile: Context update failed, but direct audio works:', contextError)
                     }
-                } catch (mobileError) {
-                    console.log('🎯 Mobile: Alternative approach also failed:', mobileError)
-                    console.log('🎯 Mobile: This is normal - mobile browsers often block autoplay')
+                }
+            } catch (mobileError) {
+                console.log('🎯 Mobile: Direct approach failed, trying context approach:', mobileError)
+
+                // Fallback to context approach
+                try {
+                    await playIntroMusic()
+                    console.log('🎯 Mobile: Context approach successful!')
+                } catch (contextError) {
+                    console.error('🎯 Mobile: Both approaches failed:', contextError)
                 }
             }
+        } else {
+            // Desktop approach
+            try {
+                console.log('🎯 Desktop: Calling playIntroMusic...')
+                await playIntroMusic()
+                console.log('🎯 Desktop: Intro music triggered successfully')
+            } catch (error) {
+                console.error('🎯 Desktop: Failed to play intro music:', error)
+            }
         }
-        
+
         console.log('🎯 Welcome page: Calling onStart...')
         onStart()
     }

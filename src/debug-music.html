@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Debug Test</title>
+</head>
+
+<body>
+    <h1>Music Debug Test</h1>
+    <button id="testBtn">Test Music Files</button>
+    <div id="results"></div>
+
+    <script>
+        const testBtn = document.getElementById('testBtn');
+        const results = document.getElementById('results');
+
+        const musicFiles = [
+            '/music/music-for-intro.mp3',
+            '/music/lofi-hiphop-mix.mp3',
+            '/music/Rainy Lofi Vibes 🌧️ Chill Balcony Beats for Study & Sleep.mp3',
+            '/music/Jazz music ROYALTY FREE Background Cafe Music [Jazz no copyright] - Creative Commons Music.mp3'
+        ];
+
+        testBtn.addEventListener('click', async () => {
+            results.innerHTML = '<h3>Testing music files...</h3>';
+
+            for (const file of musicFiles) {
+                try {
+                    results.innerHTML += `<p>Testing: ${file}</p>`;
+
+                    // Test with fetch first
+                    const response = await fetch(file, { method: 'HEAD' });
+                    results.innerHTML += `<p>✅ Fetch test: ${response.status} ${response.statusText}</p>`;
+
+                    // Test with audio element
+                    const audio = new Audio(file);
+                    audio.preload = 'metadata';
+
+                    await new Promise((resolve, reject) => {
+                        audio.addEventListener('loadedmetadata', () => {
+                            results.innerHTML += `<p>✅ Audio metadata loaded: ${file}</p>`;
+                            resolve();
+                        });
+                        audio.addEventListener('error', (e) => {
+                            results.innerHTML += `<p>❌ Audio error: ${file} - ${e.message}</p>`;
+                            reject(e);
+                        });
+                        audio.load();
+                    });
+
+                } catch (error) {
+                    results.innerHTML += `<p>❌ Error testing ${file}: ${error.message}</p>`;
+                }
+            }
+
+            results.innerHTML += '<h3>Test complete!</h3>';
+        });
+    </script>
+</body>
+
+</html>

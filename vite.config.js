@@ -2,11 +2,12 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 export default defineConfig({
+    publicDir: 'public',
     plugins: [
         react(),
         VitePWA({
             registerType: 'autoUpdate',
-            includeAssets: ['favicon.svg', 'robots.txt'],
+            includeAssets: ['favicon.svg', 'robots.txt', 'music/**/*.mp3'],
             manifest: {
                 name: 'Flow Focus — Pomodoro',
                 short_name: 'Flow Focus',
@@ -38,6 +39,14 @@ export default defineConfig({
                         },
                         handler: 'CacheFirst',
                         options: { cacheName: 'images', expiration: { maxEntries: 60, maxAgeSeconds: 60 * 60 * 24 * 30 } }
+                    },
+                    {
+                        urlPattern: function (_a) {
+                            var url = _a.url;
+                            return url.pathname.startsWith('/music/');
+                        },
+                        handler: 'CacheFirst',
+                        options: { cacheName: 'music', expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 7 } }
                     }
                 ]
             }
