@@ -43,28 +43,32 @@ const BUILT_IN_TRACKS: Track[] = [
     title: 'Rainy Lofi Vibes 🌧️ Chill Balcony Beats for Study',
     artist: 'Lofi Vibes',
     duration: 3600, // 60 minutes
-    url: '/music/rainy-lofi-vibes.mp3'
+    url: '/music/rainy-lofi-vibes.mp3',
+    warning: 'Music files not available in deployed version'
   },
   {
     id: '002',
     title: 'Jazz background music for deep focus',
     artist: 'Cafe Music',
     duration: 10800, // 3 hours
-    url: '/music/jazz-background-music.mp3'
+    url: '/music/jazz-background-music.mp3',
+    warning: 'Music files not available in deployed version'
   },
   {
     id: '003',
     title: 'Lofi music hippop mix & Chillhop',
     artist: 'Chill Lofi Mix to Study and Relax',
     duration: 10800, // 3 hours
-    url: '/music/lofi-hiphop-mix.mp3'
+    url: '/music/lofi-hiphop-mix.mp3',
+    warning: 'Music files not available in deployed version'
   },
   {
     id: 'intro',
     title: 'Music for Intro',
     artist: 'Focus Starter',
     duration: 300, // 5 minutes
-    url: '/music/music-for-intro.mp3'
+    url: '/music/music-for-intro.mp3',
+    warning: 'Music files not available in deployed version'
   }
 ]
 
@@ -230,6 +234,15 @@ export function MusicProvider({ children }: { children: ReactNode }) {
 
     if (!track) {
       console.warn('🎵 Cannot play: no track selected')
+      return
+    }
+
+    // Check if this is a deployed version without music files
+    if (track.warning) {
+      console.log('🎵 Music files not available in deployed version')
+      // Still update state to show "playing" but don't actually play audio
+      setState(prev => ({ ...prev, playing: true, enabled: true }))
+      saveState({ playing: true, enabled: true })
       return
     }
 
