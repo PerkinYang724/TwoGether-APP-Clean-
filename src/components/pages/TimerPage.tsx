@@ -1,6 +1,7 @@
 import TimerCard from '../TimerCard'
 import TodayTasks from '../TodayTasks'
 import TodayStats from '../TodayStats'
+import QuickAddTask from '../QuickAddTask'
 import { usePomodoroWithSync } from '../../hooks/usePomodoroWithSync'
 
 interface TimerPageProps {
@@ -44,6 +45,9 @@ export default function TimerPage({ className = '' }: TimerPageProps) {
                     <span>Navigate</span>
                 </div>
             </div>
+
+            {/* Quick Add Task Floating Button */}
+            <QuickAddTask />
         </div>
     )
 }

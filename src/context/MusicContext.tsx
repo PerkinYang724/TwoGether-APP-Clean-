@@ -22,7 +22,7 @@ interface MusicState {
 
 // Music actions interface
 interface MusicActions {
-  play: () => Promise<void>
+  play: (trackToPlay?: Track) => Promise<void>
   pause: () => void
   toggle: () => Promise<void>
   setTrack: (id: string) => void
@@ -36,21 +36,21 @@ interface MusicActions {
 // Combined context type
 type MusicContextType = MusicState & MusicActions
 
-// Built-in tracks - Working audio sources
+// Built-in tracks - Mobile-optimized with simple filenames
 const BUILT_IN_TRACKS: Track[] = [
   {
     id: '001',
     title: 'Rainy Lofi Vibes 🌧️ Chill Balcony Beats for Study',
     artist: 'Lofi Vibes',
     duration: 3600, // 60 minutes
-    url: '/music/Rainy Lofi Vibes 🌧️ Chill Balcony Beats for Study & Sleep.mp3'
+    url: '/music/rainy-lofi-vibes.mp3'
   },
   {
     id: '002',
     title: 'Jazz background music for deep focus',
     artist: 'Cafe Music',
     duration: 10800, // 3 hours
-    url: '/music/Jazz music ROYALTY FREE Background Cafe Music [Jazz no copyright] - Creative Commons Music.mp3'
+    url: '/music/jazz-background-music.mp3'
   },
   {
     id: '003',
@@ -89,53 +89,64 @@ export function MusicProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    const saved = localStorage.getItem('music')
-    console.log('🎵 Saved music state from localStorage:', saved)
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved)
-        console.log('🎵 Parsed music state:', parsed)
-        const track = BUILT_IN_TRACKS.find(t => t.id === parsed.trackId) || BUILT_IN_TRACKS[0]
-        console.log('🎵 Selected track:', track)
+    try {
+      const saved = localStorage.getItem('music')
+      console.log('🎵 Saved music state from localStorage:', saved)
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved)
+          console.log('🎵 Parsed music state:', parsed)
+          const track = BUILT_IN_TRACKS.find(t => t.id === parsed.trackId) || BUILT_IN_TRACKS[0]
+          console.log('🎵 Selected track:', track)
 
-        // Check if the track is valid (not a Google Drive URL that causes CORS errors)
-        if (track && track.url && track.url.includes('drive.google.com')) {
-          console.log('🎵 Clearing invalid Google Drive track from localStorage')
-          localStorage.removeItem('music')
-          return {
-            enabled: false,
-            playing: false,
-            volume: 0.3,
-            muted: false,
-            track: BUILT_IN_TRACKS[0]
+          // Check if the track is valid (not a Google Drive URL that causes CORS errors)
+          if (track && track.url && track.url.includes('drive.google.com')) {
+            console.log('🎵 Clearing invalid Google Drive track from localStorage')
+            localStorage.removeItem('music')
+            return {
+              enabled: false,
+              playing: false,
+              volume: 0.3,
+              muted: false,
+              track: BUILT_IN_TRACKS[0]
+            }
           }
-        }
 
-        const finalState = {
-          enabled: parsed.enabled || false,
-          playing: false,
-          volume: parsed.volume || 0.3,
-          muted: parsed.muted || false,
-          track
+          const finalState = {
+            enabled: parsed.enabled || false,
+            playing: false,
+            volume: parsed.volume || 0.3,
+            muted: parsed.muted || false,
+            track
+          }
+          console.log('🎵 Final music state:', finalState)
+          return finalState
+        } catch (error) {
+          console.log('🎵 Error parsing saved music state:', error)
+          // Fallback to defaults
+          localStorage.removeItem('music')
         }
-        console.log('🎵 Final music state:', finalState)
-        return finalState
-      } catch (error) {
-        console.log('🎵 Error parsing saved music state:', error)
-        // Fallback to defaults
-        localStorage.removeItem('music')
+      }
+
+      const defaultState = {
+        enabled: false,
+        playing: false,
+        volume: 0.3,
+        muted: false,
+        track: BUILT_IN_TRACKS[0]
+      }
+      console.log('🎵 Using default music state:', defaultState)
+      return defaultState
+    } catch (error) {
+      console.error('🎵 Error initializing music state:', error)
+      return {
+        enabled: false,
+        playing: false,
+        volume: 0.3,
+        muted: false,
+        track: BUILT_IN_TRACKS[0]
       }
     }
-
-    const defaultState = {
-      enabled: false,
-      playing: false,
-      volume: 0.3,
-      muted: false,
-      track: BUILT_IN_TRACKS[0]
-    }
-    console.log('🎵 Using default music state:', defaultState)
-    return defaultState
   })
 
   // Save state to localStorage
@@ -144,12 +155,16 @@ export function MusicProvider({ children }: { children: ReactNode }) {
     setState(updatedState)
 
     if (typeof window !== 'undefined') {
-      localStorage.setItem('music', JSON.stringify({
-        enabled: updatedState.enabled,
-        trackId: updatedState.track?.id,
-        volume: updatedState.volume,
-        muted: updatedState.muted
-      }))
+      try {
+        localStorage.setItem('music', JSON.stringify({
+          enabled: updatedState.enabled,
+          trackId: updatedState.track?.id,
+          volume: updatedState.volume,
+          muted: updatedState.muted
+        }))
+      } catch (error) {
+        console.error('🎵 Error saving music state to localStorage:', error)
+      }
     }
   }, [state])
 
@@ -198,7 +213,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
   }, [state.volume, state.muted])
 
 
-  // Play function - Simplified for mobile compatibility
+  // Play function - Mobile-optimized with better error handling
   const play = useCallback(async (trackToPlay?: Track) => {
     const track = trackToPlay || state.track
     console.log('🎵 ===== PLAY FUNCTION START =====')
@@ -209,7 +224,8 @@ export function MusicProvider({ children }: { children: ReactNode }) {
       audioSrc: audioRef.current?.src,
       audioReadyState: audioRef.current?.readyState,
       currentState: state,
-      usingProvidedTrack: !!trackToPlay
+      usingProvidedTrack: !!trackToPlay,
+      userAgent: navigator.userAgent
     })
 
     if (!track) {
@@ -217,73 +233,120 @@ export function MusicProvider({ children }: { children: ReactNode }) {
       return
     }
 
-    // Use direct audio approach for better mobile compatibility
+    // Detect mobile device
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+    console.log('🎵 Mobile device detected:', isMobile)
+
     try {
-      console.log('🎵 Using direct audio approach for better mobile compatibility')
+      console.log('🎵 Using mobile-optimized audio approach')
       console.log('🎵 Track URL:', track.url)
       console.log('🎵 Current location:', window.location.href)
 
-      // Test URL accessibility first
-      try {
-        const response = await fetch(track.url, { method: 'HEAD' })
-        console.log('🎵 URL accessibility test:', response.status, response.statusText)
-        if (!response.ok) {
-          console.error('🎵 URL not accessible:', response.status, response.statusText)
-          throw new Error(`URL not accessible: ${response.status} ${response.statusText}`)
+      // For mobile, skip the fetch test as it might cause CORS issues
+      if (!isMobile) {
+        // Test URL accessibility first (desktop only)
+        try {
+          const response = await fetch(track.url, { method: 'HEAD' })
+          console.log('🎵 URL accessibility test:', response.status, response.statusText)
+          if (!response.ok) {
+            console.error('🎵 URL not accessible:', response.status, response.statusText)
+            throw new Error(`URL not accessible: ${response.status} ${response.statusText}`)
+          }
+        } catch (fetchError) {
+          console.error('🎵 URL test failed:', fetchError)
+          const errorMessage = fetchError instanceof Error ? fetchError.message : 'Unknown error'
+          throw new Error(`Cannot access audio file: ${errorMessage}`)
         }
-      } catch (fetchError) {
-        console.error('🎵 URL test failed:', fetchError)
-        const errorMessage = fetchError instanceof Error ? fetchError.message : 'Unknown error'
-        throw new Error(`Cannot access audio file: ${errorMessage}`)
       }
 
       // Create a new audio element for this track
       const directAudio = new Audio(track.url)
       directAudio.volume = state.muted ? 0 : state.volume
       directAudio.loop = true
-      directAudio.preload = 'auto'
+      directAudio.preload = isMobile ? 'metadata' : 'auto' // Use metadata for mobile to avoid loading issues
 
       console.log('🎵 Direct audio created:', {
         src: directAudio.src,
         volume: directAudio.volume,
         loop: directAudio.loop,
-        preload: directAudio.preload
+        preload: directAudio.preload,
+        isMobile
       })
 
-      // Add event listeners for debugging
+      // Add comprehensive event listeners for debugging
       directAudio.addEventListener('loadstart', () => console.log('🎵 Audio loadstart'))
       directAudio.addEventListener('loadedmetadata', () => console.log('🎵 Audio loadedmetadata'))
       directAudio.addEventListener('canplay', () => console.log('🎵 Audio canplay'))
+      directAudio.addEventListener('canplaythrough', () => console.log('🎵 Audio canplaythrough'))
+      directAudio.addEventListener('play', () => console.log('🎵 Audio play event fired'))
       directAudio.addEventListener('error', (e) => {
         console.error('🎵 Audio error:', e)
         console.error('🎵 Audio error details:', {
           error: e,
           src: directAudio.src,
           networkState: directAudio.networkState,
-          readyState: directAudio.readyState
+          readyState: directAudio.readyState,
+          errorCode: directAudio.error?.code,
+          errorMessage: directAudio.error?.message
         })
       })
 
-      await directAudio.play()
-      console.log('🎵 Direct audio playing successfully!')
+      // For mobile, wait for canplay event before attempting to play
+      if (isMobile) {
+        await new Promise<void>((resolve, reject) => {
+          const playWhenReady = () => {
+            directAudio.play()
+              .then(() => {
+                console.log('🎵 Mobile audio playing successfully!')
+                // Update the main audio ref
+                if (audioRef.current) {
+                  audioRef.current.pause()
+                }
+                audioRef.current = directAudio
 
-      // Update the main audio ref to use this direct audio
-      if (audioRef.current) {
-        audioRef.current.pause()
+                setState(prev => ({ ...prev, playing: true, enabled: true }))
+                saveState({ playing: true, enabled: true })
+                console.log('🎵 ===== PLAY FUNCTION SUCCESS (MOBILE) =====')
+                resolve()
+              })
+              .catch((playError) => {
+                console.error('🎵 Mobile play failed:', playError)
+                reject(playError)
+              })
+          }
+
+          if (directAudio.readyState >= 3) { // HAVE_FUTURE_DATA
+            playWhenReady()
+          } else {
+            directAudio.addEventListener('canplay', playWhenReady, { once: true })
+            directAudio.addEventListener('error', (e) => {
+              console.error('🎵 Mobile audio load error:', e)
+              reject(e)
+            }, { once: true })
+          }
+        })
+      } else {
+        // Desktop approach
+        await directAudio.play()
+        console.log('🎵 Desktop audio playing successfully!')
+
+        // Update the main audio ref
+        if (audioRef.current) {
+          audioRef.current.pause()
+        }
+        audioRef.current = directAudio
+
+        setState(prev => ({ ...prev, playing: true, enabled: true }))
+        saveState({ playing: true, enabled: true })
+        console.log('🎵 ===== PLAY FUNCTION SUCCESS (DESKTOP) =====')
       }
-      audioRef.current = directAudio
-
-      setState(prev => ({ ...prev, playing: true, enabled: true }))
-      saveState({ playing: true, enabled: true })
-      console.log('🎵 ===== PLAY FUNCTION SUCCESS (DIRECT) =====')
-      return
     } catch (error) {
-      console.error('🎵 Direct audio failed:', error)
+      console.error('🎵 Audio playback failed:', error)
 
       // Show user-friendly error message
       if (error instanceof Error) {
         if (error.message.includes('NotAllowedError')) {
-          console.log('🎵 Audio playback was blocked - this is normal on mobile without user interaction')
+          console.log('🎵 Audio playback was blocked - user interaction required')
         } else if (error.message.includes('404')) {
           console.error('🎵 Audio file not found (404) - check file paths and server configuration')
         } else {
@@ -359,7 +422,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
     saveState({ muted: !state.muted })
   }, [state.muted, saveState])
 
-  // Play intro music function - Simplified for mobile
+  // Play intro music function - Mobile-optimized
   const playIntroMusic = useCallback(async () => {
     console.log('🎵 ===== PLAY INTRO MUSIC START =====')
     console.log('🎵 playIntroMusic called', {
@@ -377,29 +440,86 @@ export function MusicProvider({ children }: { children: ReactNode }) {
     console.log('🎵 Found intro track:', introTrack)
     console.log('🎵 Playing intro music:', introTrack.title, 'URL:', introTrack.url)
 
-    // Set the intro track as current
-    console.log('🎵 Setting intro track as current track...')
-    setState(prev => ({ ...prev, track: introTrack }))
-    saveState({ track: introTrack })
-
-    // For mobile, try direct audio approach first
+    // Detect mobile device
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-    if (isMobile) {
-      console.log('🎵 Mobile: Using direct audio approach for intro music')
-      try {
-        const directAudio = new Audio(introTrack.url)
-        directAudio.volume = state.muted ? 0 : state.volume
-        directAudio.loop = true
-        directAudio.preload = 'auto'
+    console.log('🎵 Mobile device detected for intro music:', isMobile)
 
-        console.log('🎵 Mobile: Direct audio created for intro:', {
+    try {
+      // Create a new audio element for better compatibility
+      const directAudio = new Audio(introTrack.url)
+      directAudio.volume = state.muted ? 0 : state.volume
+      directAudio.loop = true
+      directAudio.preload = isMobile ? 'metadata' : 'auto' // Use metadata for mobile
+
+      console.log('🎵 Direct audio created for intro:', {
+        src: directAudio.src,
+        volume: directAudio.volume,
+        loop: directAudio.loop,
+        preload: directAudio.preload,
+        isMobile
+      })
+
+      // Add comprehensive error handling
+      directAudio.addEventListener('error', (e) => {
+        console.error('🎵 Intro audio error:', e)
+        console.error('🎵 Intro audio error details:', {
+          error: e,
           src: directAudio.src,
-          volume: directAudio.volume,
-          loop: directAudio.loop
+          networkState: directAudio.networkState,
+          readyState: directAudio.readyState,
+          errorCode: directAudio.error?.code,
+          errorMessage: directAudio.error?.message
         })
+      })
 
-        await directAudio.play()
-        console.log('🎵 Mobile: Direct intro audio playing successfully!')
+      // Add success event listeners
+      directAudio.addEventListener('canplay', () => console.log('🎵 Intro audio can play'))
+      directAudio.addEventListener('play', () => console.log('🎵 Intro audio play event fired'))
+
+      // For mobile, wait for canplay event before attempting to play
+      if (isMobile) {
+        await new Promise<void>((resolve, reject) => {
+          const playWhenReady = () => {
+            directAudio.play()
+              .then(() => {
+                console.log('🎵 Mobile intro audio playing successfully!')
+
+                // Update the main audio ref
+                if (audioRef.current) {
+                  audioRef.current.pause()
+                }
+                audioRef.current = directAudio
+
+                // Update state
+                setState(prev => ({ ...prev, track: introTrack, playing: true, enabled: true }))
+                saveState({ track: introTrack, playing: true, enabled: true })
+
+                console.log('🎵 ===== PLAY INTRO MUSIC SUCCESS (MOBILE) =====')
+                resolve()
+              })
+              .catch((playError) => {
+                console.error('🎵 Mobile intro play failed:', playError)
+                reject(playError)
+              })
+          }
+
+          if (directAudio.readyState >= 3) { // HAVE_FUTURE_DATA
+            playWhenReady()
+          } else {
+            directAudio.addEventListener('canplay', playWhenReady, { once: true })
+            directAudio.addEventListener('error', (e) => {
+              console.error('🎵 Mobile intro audio load error:', e)
+              reject(e)
+            }, { once: true })
+          }
+        })
+      } else {
+        // Desktop approach
+        const playPromise = directAudio.play()
+        if (playPromise !== undefined) {
+          await playPromise
+          console.log('🎵 Desktop intro audio playing successfully!')
+        }
 
         // Update the main audio ref
         if (audioRef.current) {
@@ -407,26 +527,29 @@ export function MusicProvider({ children }: { children: ReactNode }) {
         }
         audioRef.current = directAudio
 
-        setState(prev => ({ ...prev, playing: true, enabled: true }))
-        saveState({ playing: true, enabled: true })
-        console.log('🎵 ===== PLAY INTRO MUSIC SUCCESS (MOBILE DIRECT) =====')
-        return
-      } catch (error) {
-        console.error('🎵 Mobile: Direct intro audio failed:', error)
-        // Fall through to regular approach
+        // Update state
+        setState(prev => ({ ...prev, track: introTrack, playing: true, enabled: true }))
+        saveState({ track: introTrack, playing: true, enabled: true })
+
+        console.log('🎵 ===== PLAY INTRO MUSIC SUCCESS (DESKTOP) =====')
+      }
+    } catch (error) {
+      console.error('🎵 Failed to play intro music:', error)
+
+      // Show user-friendly error message
+      if (error instanceof Error) {
+        if (error.message.includes('NotAllowedError')) {
+          console.log('🎵 Audio playback was blocked - user interaction required')
+        } else if (error.message.includes('404')) {
+          console.error('🎵 Audio file not found (404) - check file paths')
+        } else {
+          console.error('🎵 Audio playback failed:', error.message)
+        }
       }
     }
 
-    // Regular approach (desktop or mobile fallback)
-    try {
-      console.log('🎵 Attempting to play intro music with regular approach...')
-      await play(introTrack)
-      console.log('🎵 Intro music started successfully')
-    } catch (error) {
-      console.error('🎵 Failed to play intro music:', error)
-    }
     console.log('🎵 ===== PLAY INTRO MUSIC END =====')
-  }, [state.track, state.volume, state.muted, saveState, play])
+  }, [state.volume, state.muted, saveState])
 
 
   const contextValue: MusicContextType = {

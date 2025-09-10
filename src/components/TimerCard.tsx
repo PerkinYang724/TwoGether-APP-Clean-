@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { t } from '../lib/i18n';
 import { ensurePermission } from '../lib/notifications';
@@ -26,7 +26,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
     const [currentTag, setCurrentTag] = useState<string>('')
     const [tagInputValue, setTagInputValue] = useState<string>('')
 
-    const handleStartClick = (e?: React.MouseEvent) => {
+    const handleStartClick = useCallback((e?: React.MouseEvent) => {
         e?.preventDefault()
         e?.stopPropagation()
 
@@ -42,9 +42,9 @@ const TimerCard: React.FC<TimerCardProps> = ({
             console.log('TimerCard: Starting timer directly')
             onStart()
         }
-    }
+    }, [phase, onStart])
 
-    const handleTagSubmit = () => {
+    const handleTagSubmit = useCallback(() => {
         if (tagInputValue.trim()) {
             console.log('TimerCard: Submitting tag:', tagInputValue.trim())
             setCurrentTag(tagInputValue.trim())
@@ -52,27 +52,31 @@ const TimerCard: React.FC<TimerCardProps> = ({
             setTagInputValue('')
             onStart(tagInputValue.trim())
         }
-    }
+    }, [tagInputValue, onStart])
 
-    const handleTagCancel = () => {
+    const handleTagCancel = useCallback(() => {
         setShowTagInput(false)
         setTagInputValue('')
-    }
-    const formatMMSS = (seconds: number) => {
+    }, [])
+
+    const formatMMSS = useCallback((seconds: number) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    };
+    }, []);
 
-
-    const getLabel = () => {
+    const getLabel = useCallback(() => {
         switch (phase) {
             case 'focus': return t('focus');
             case 'short_break': return t('shortBreak');
             case 'long_break': return t('longBreak');
             default: return '';
         }
-    };
+    }, [phase]);
+
+    // Memoized formatted time to prevent unnecessary re-renders
+    const formattedTime = useMemo(() => formatMMSS(secondsLeft), [secondsLeft, formatMMSS])
+    const label = useMemo(() => getLabel(), [getLabel])
 
     return (
         <>
@@ -85,7 +89,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
 
                 {/* Timer content */}
                 <div className="text-sm uppercase tracking-widest text-white/70 mb-4">
-                    {getLabel()}
+                    {label}
                 </div>
 
                 {/* Current tag display */}
@@ -104,7 +108,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
                     animate={{ scale: 1 }}
                     transition={{ duration: 0.2 }}
                 >
-                    {formatMMSS(secondsLeft)}
+                    {formattedTime}
                 </motion.div>
 
                 {/* Tag Input - Inline */}

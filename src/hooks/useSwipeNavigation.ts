@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
-export type Page = 'welcome' | 'timer' | 'settings' | 'stats' | 'tasks'
+export type Page = 'welcome' | 'timer' | 'settings' | 'stats' | 'tasks' | 'forum'
 
 export function useSwipeNavigation() {
     const [currentPage, setCurrentPage] = useState<Page>('welcome')
@@ -12,7 +12,7 @@ export function useSwipeNavigation() {
     const minSwipeDistance = 100
 
     // Linear page order - everything accessible by left/right swipes
-    const pageOrder: Page[] = ['welcome', 'timer', 'settings', 'stats', 'tasks']
+    const pageOrder: Page[] = ['welcome', 'timer', 'settings', 'stats', 'tasks', 'forum']
     const currentIndex = pageOrder.indexOf(currentPage)
 
     const navigateToPage = (page: Page) => {
@@ -248,6 +248,13 @@ export function useSwipeNavigation() {
                 console.log('Navigation: Key 5 pressed - navigating to tasks')
                 if (hasStarted) {
                     navigateToPage('tasks')
+                }
+                break
+            case '6':
+                e.preventDefault()
+                console.log('Navigation: Key 6 pressed - navigating to forum')
+                if (hasStarted) {
+                    navigateToPage('forum')
                 }
                 break
         }

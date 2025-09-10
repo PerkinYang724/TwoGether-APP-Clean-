@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Clock, Target, TrendingUp } from 'lucide-react'
 import { t } from '../lib/i18n'
 import { getSessions, type Session } from '../lib/sessions'
@@ -9,11 +9,57 @@ export default function TodayStats() {
     const [sessions, setSessions] = useState<Session[]>([])
     const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
-        if (user) {
-            loadTodaySessions()
+    const loadTodaySessions = useCallback(async () => {
+        try {
+            setLoading(true)
+
+            if (user) {
+                // Load from cloud database
+                const allSessions = await getSessions(user.id, 50) // Get more sessions to filter today's
+
+                // Filter sessions for today only
+                const today = new Date()
+                today.setHours(0, 0, 0, 0)
+
+                const todaySessions = allSessions.filter(session => {
+                    const sessionDate = new Date(session.started_at)
+                    sessionDate.setHours(0, 0, 0, 0)
+                    return sessionDate.getTime() === today.getTime()
+                })
+
+                setSessions(todaySessions)
+            } else {
+                // Load from local storage for unauthenticated users
+                const localSessions = localStorage.getItem('pomodoro-sessions')
+                if (localSessions) {
+                    const allSessions = JSON.parse(localSessions)
+
+                    // Filter sessions for today only
+                    const today = new Date()
+                    today.setHours(0, 0, 0, 0)
+
+                    const todaySessions = allSessions.filter((session: Session) => {
+                        const sessionDate = new Date(session.started_at)
+                        sessionDate.setHours(0, 0, 0, 0)
+                        return sessionDate.getTime() === today.getTime()
+                    })
+
+                    setSessions(todaySessions)
+                } else {
+                    setSessions([])
+                }
+            }
+        } catch (error) {
+            console.error('Error loading today sessions:', error)
+            setSessions([])
+        } finally {
+            setLoading(false)
         }
     }, [user])
+
+    useEffect(() => {
+        loadTodaySessions()
+    }, [loadTodaySessions])
 
     // Listen for session completion events to refresh the list
     useEffect(() => {
@@ -23,32 +69,7 @@ export default function TodayStats() {
 
         window.addEventListener('pomodoro:phase-change', handleSessionComplete)
         return () => window.removeEventListener('pomodoro:phase-change', handleSessionComplete)
-    }, [])
-
-    const loadTodaySessions = async () => {
-        if (!user) return
-
-        try {
-            setLoading(true)
-            const allSessions = await getSessions(user.id, 50) // Get more sessions to filter today's
-
-            // Filter sessions for today only
-            const today = new Date()
-            today.setHours(0, 0, 0, 0)
-
-            const todaySessions = allSessions.filter(session => {
-                const sessionDate = new Date(session.started_at)
-                sessionDate.setHours(0, 0, 0, 0)
-                return sessionDate.getTime() === today.getTime()
-            })
-
-            setSessions(todaySessions)
-        } catch (error) {
-            console.error('Error loading today sessions:', error)
-        } finally {
-            setLoading(false)
-        }
-    }
+    }, [loadTodaySessions])
 
     const formatTime = (dateString: string) => {
         const date = new Date(dateString)

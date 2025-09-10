@@ -5,6 +5,7 @@ import TimerPage from './pages/TimerPage'
 import SettingsPage from './pages/SettingsPage'
 import StatsPage from './pages/StatsPage'
 import TasksPage from './pages/TasksPage'
+import ForumPage from './pages/ForumPage'
 
 export default function SwipeNavigator() {
     const {
@@ -16,7 +17,7 @@ export default function SwipeNavigator() {
         startApp
     } = useSwipeNavigation()
 
-    const pageOrder: Page[] = ['welcome', 'timer', 'settings', 'stats', 'tasks']
+    const pageOrder: Page[] = ['welcome', 'timer', 'settings', 'stats', 'tasks', 'forum']
     const currentIndex = pageOrder.indexOf(currentPage)
 
     console.log('SwipeNavigator: currentPage:', currentPage, 'currentIndex:', currentIndex)
@@ -34,6 +35,8 @@ export default function SwipeNavigator() {
                 return <StatsPage />
             case 'tasks':
                 return <TasksPage />
+            case 'forum':
+                return <ForumPage />
             default:
                 return <WelcomePage onStart={startApp} hasStarted={hasStarted} />
         }
@@ -57,7 +60,7 @@ export default function SwipeNavigator() {
                 className="flex transition-transform duration-300 ease-in-out flex-row"
                 style={{
                     transform: getTransformStyle(),
-                    width: '500vw', // 5 pages * 100vw each
+                    width: '600vw', // 6 pages * 100vw each
                     minHeight: '100vh'
                 }}
             >
@@ -85,6 +88,11 @@ export default function SwipeNavigator() {
                 <div className="w-screen min-h-screen flex-shrink-0">
                     {getPageComponent('tasks')}
                 </div>
+
+                {/* Forum Page */}
+                <div className="w-screen min-h-screen flex-shrink-0">
+                    {getPageComponent('forum')}
+                </div>
             </div>
 
             {/* Navigation Controls - Desktop/Mac */}
@@ -103,7 +111,8 @@ export default function SwipeNavigator() {
                             >
                                 {page === 'timer' ? 'Timer' :
                                     page === 'settings' ? 'Settings' :
-                                        page === 'stats' ? 'Stats' : 'Tasks'}
+                                        page === 'stats' ? 'Stats' :
+                                            page === 'tasks' ? 'Tasks' : 'Forum'}
                             </button>
                         ))}
                     </div>
@@ -168,7 +177,8 @@ export default function SwipeNavigator() {
                             >
                                 {page === 'timer' ? 'Timer' :
                                     page === 'settings' ? 'Settings' :
-                                        page === 'stats' ? 'Stats' : 'Tasks'}
+                                        page === 'stats' ? 'Stats' :
+                                            page === 'tasks' ? 'Tasks' : 'Forum'}
                             </button>
                         ))}
                     </div>

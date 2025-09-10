@@ -26,7 +26,12 @@ export function usePomodoroWithSync() {
 
     // Get current user
     useEffect(() => {
-        getCurrentUser().then(setUser)
+        getCurrentUser()
+            .then(setUser)
+            .catch(error => {
+                console.error('Error getting current user:', error)
+                setUser(null)
+            })
     }, [])
 
     // Load cloud stats when user is available
@@ -61,6 +66,22 @@ export function usePomodoroWithSync() {
             } catch (error) {
                 console.error('Failed to save session:', error)
             }
+        } else {
+            // Save to local storage for unauthenticated users
+            const localSession = {
+                id: `local-${Date.now()}`,
+                user_id: 'local-user',
+                started_at: new Date().toISOString(),
+                phase: pomodoro.phase,
+                minutes: 0,
+                tag: tag
+            }
+            setCurrentSessionId(localSession.id)
+
+            // Save to localStorage
+            const existingSessions = JSON.parse(localStorage.getItem('pomodoro-sessions') || '[]')
+            existingSessions.push(localSession)
+            localStorage.setItem('pomodoro-sessions', JSON.stringify(existingSessions))
         }
     }, [pomodoro.start, user, isOnline, pomodoro.phase])
 
@@ -68,15 +89,31 @@ export function usePomodoroWithSync() {
     const stopWithSync = useCallback(async () => {
         pomodoro.stop()
 
-        if (currentSessionId && user && isOnline) {
-            try {
-                await updateSession(currentSessionId, {
-                    ended_at: new Date().toISOString(),
-                    minutes: Math.floor((pomodoro.settings.focusMinutes * 60 - pomodoro.secondsLeft) / 60)
-                })
+        if (currentSessionId) {
+            if (user && isOnline) {
+                try {
+                    await updateSession(currentSessionId, {
+                        ended_at: new Date().toISOString(),
+                        minutes: Math.floor((pomodoro.settings.focusMinutes * 60 - pomodoro.secondsLeft) / 60)
+                    })
+                    setCurrentSessionId(null)
+                } catch (error) {
+                    console.error('Failed to update session:', error)
+                }
+            } else {
+                // Update local storage for unauthenticated users
+                const existingSessions = JSON.parse(localStorage.getItem('pomodoro-sessions') || '[]')
+                const sessionIndex = existingSessions.findIndex((s: any) => s.id === currentSessionId)
+
+                if (sessionIndex !== -1) {
+                    existingSessions[sessionIndex] = {
+                        ...existingSessions[sessionIndex],
+                        ended_at: new Date().toISOString(),
+                        minutes: Math.floor((pomodoro.settings.focusMinutes * 60 - pomodoro.secondsLeft) / 60)
+                    }
+                    localStorage.setItem('pomodoro-sessions', JSON.stringify(existingSessions))
+                }
                 setCurrentSessionId(null)
-            } catch (error) {
-                console.error('Failed to update session:', error)
             }
         }
     }, [pomodoro.stop, currentSessionId, user, isOnline, pomodoro.settings.focusMinutes, pomodoro.secondsLeft])
