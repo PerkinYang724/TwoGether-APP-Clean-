@@ -69,11 +69,11 @@ export default function WelcomePage({ className = '', onStart, onVideoStart }: W
                         : 'opacity-0 transform -translate-y-4'
                         }`}
                 >
-                    <div className="max-w-lg mb-8">
-                        <h1 className="text-5xl md:text-6xl font-bold mb-3 bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
+                    <div className="max-w-lg mb-8 px-4">
+                        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3 bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
                             {t('appName')}
                         </h1>
-                        <p className="text-white/60 text-2xl md:text-3xl font-light">
+                        <p className="text-white/60 text-xl sm:text-2xl md:text-3xl font-light">
                             {t('tagline')}
                         </p>
                     </div>
@@ -86,13 +86,13 @@ export default function WelcomePage({ className = '', onStart, onVideoStart }: W
                         : 'opacity-0 transform translate-y-4'
                         }`}
                 >
-                    <div className="text-center max-w-md">
+                    <div className="text-center max-w-md px-4">
                         {/* Welcome Message */}
                         <div className="mb-8">
-                            <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-white/90">
+                            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-4 text-white/90">
                                 {t('welcomeToFlowFocus')}
                             </h2>
-                            <p className="text-white/60 text-base md:text-lg leading-relaxed">
+                            <p className="text-white/60 text-sm sm:text-base md:text-lg leading-relaxed">
                                 {t('welcomeDescription')}
                             </p>
                         </div>
@@ -100,7 +100,7 @@ export default function WelcomePage({ className = '', onStart, onVideoStart }: W
                         {/* Start Button */}
                         <button
                             onClick={handleStart}
-                            className="w-full max-w-xs bg-white text-black font-semibold py-4 px-8 rounded-2xl text-lg hover:bg-white/90 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"
+                            className="w-full max-w-xs bg-white text-black font-semibold py-4 px-8 rounded-2xl text-base sm:text-lg hover:bg-white/90 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 touch-manipulation"
                         >
                             {t('startFocusing')}
                         </button>

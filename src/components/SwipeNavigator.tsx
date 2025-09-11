@@ -166,28 +166,29 @@ export default function SwipeNavigator({ onVideoStart, onPageChange }: SwipeNavi
                         data-timestamp={Date.now()}
                         style={{
                             position: 'fixed',
-                            bottom: '80px',
+                            bottom: '20px',
                             left: '50%',
                             transform: 'translateX(-50%)',
                             display: 'flex',
                             alignItems: 'center',
-                            gap: '4px',
-                            backgroundColor: '#000000 !important',
-                            backdropFilter: 'blur(8px)',
+                            gap: '2px',
+                            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                            backdropFilter: 'blur(12px)',
                             borderRadius: '9999px',
-                            padding: '12px 16px',
+                            padding: '8px 12px',
                             border: '1px solid rgba(255, 255, 255, 0.2)',
-                            maxWidth: '320px',
+                            maxWidth: 'calc(100vw - 32px)',
+                            width: '320px',
                             zIndex: 9999,
-                            marginBottom: '20px'
+                            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
                         }}>
                         {pageOrder.filter(page => page !== 'welcome').map((page) => (
                             <button
                                 key={page}
                                 onClick={() => navigateToPage(page)}
-                                className={`px-2 py-1 rounded-full text-xs font-medium transition-colors duration-200 flex-1 ${currentPage === page
+                                className={`px-2 py-2 rounded-full text-xs font-medium transition-colors duration-200 flex-1 touch-manipulation ${currentPage === page
                                     ? 'bg-white text-black'
-                                    : 'text-white/70 hover:text-white hover:bg-white/10'
+                                    : 'text-white/70 hover:text-white hover:bg-white/10 active:bg-white/20'
                                     }`}
                             >
                                 {page === 'timer' ? 'Timer' :

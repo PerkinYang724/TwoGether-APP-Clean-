@@ -69,26 +69,26 @@ export default function App() {
 
             {/* Main App Header - Fixed at top */}
             <div className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-white/10">
-                <div className="px-6 py-4">
+                <div className="px-4 sm:px-6 py-3 sm:py-4">
                     <div className="flex items-center justify-between">
-                        <div>
-                            <h1 className="text-xl font-semibold">{t('appName')}</h1>
-                            <p className="text-white/70 text-xs">{t('tagline')}</p>
-                            {/* Debug info */}
-                            <p className="text-white/50 text-xs">Page: {currentPage} | Video: {currentPage === 'welcome' ? 'opening' : 'cafe'}</p>
+                        <div className="flex-1 min-w-0">
+                            <h1 className="text-lg sm:text-xl font-semibold truncate">{t('appName')}</h1>
+                            <p className="text-white/70 text-xs truncate">{t('tagline')}</p>
+                            {/* Debug info - hidden on mobile */}
+                            <p className="text-white/50 text-xs hidden sm:block">Page: {currentPage} | Video: {currentPage === 'welcome' ? 'opening' : 'cafe'}</p>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
                             <LanguageToggle />
                             {user ? (
-                                <div className="flex items-center gap-2">
-                                    <div className="text-sm text-white/70">
+                                <div className="flex items-center gap-1 sm:gap-2">
+                                    <div className="text-xs sm:text-sm text-white/70 truncate max-w-24 sm:max-w-none">
                                         {user.display_name || user.email}
                                     </div>
                                 </div>
                             ) : (
                                 <button
                                     onClick={() => setShowAuthModal(true)}
-                                    className="text-sm text-white/70 hover:text-white underline"
+                                    className="text-xs sm:text-sm text-white/70 hover:text-white underline touch-manipulation"
                                 >
                                     {t('signIn')}
                                 </button>

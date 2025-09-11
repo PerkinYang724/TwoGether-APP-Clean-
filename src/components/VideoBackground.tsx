@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 
 interface VideoBackgroundProps {
     videoSrc: string
@@ -22,6 +22,34 @@ export default function VideoBackground({
     shouldPlay = true // Enable shouldPlay by default
 }: VideoBackgroundProps) {
     const videoRef = useRef<HTMLVideoElement>(null)
+    const [userInteracted, setUserInteracted] = useState(false)
+
+    // Handle user interaction to enable video playback on mobile
+    useEffect(() => {
+        const handleUserInteraction = async () => {
+            if (!userInteracted && shouldPlay) {
+                setUserInteracted(true)
+                const video = videoRef.current
+                if (video && video.paused) {
+                    try {
+                        await video.play()
+                        console.log('VideoBackground: Video started after user interaction')
+                    } catch (error) {
+                        console.log('VideoBackground: Video play failed after user interaction:', error)
+                    }
+                }
+            }
+        }
+
+        // Listen for any user interaction
+        document.addEventListener('touchstart', handleUserInteraction, { once: true })
+        document.addEventListener('click', handleUserInteraction, { once: true })
+
+        return () => {
+            document.removeEventListener('touchstart', handleUserInteraction)
+            document.removeEventListener('click', handleUserInteraction)
+        }
+    }, [shouldPlay, userInteracted])
 
     // Immediate play attempt when component mounts
     useEffect(() => {
@@ -30,6 +58,10 @@ export default function VideoBackground({
             console.log('VideoBackground: Attempting immediate play on mount')
             video.play().catch(error => {
                 console.log('VideoBackground: Immediate play failed:', error)
+                // For iOS Safari, try playing after a user gesture
+                if (error.name === 'NotAllowedError') {
+                    console.log('VideoBackground: Autoplay blocked, will retry on user interaction')
+                }
             })
         }
     }, [shouldPlay])
@@ -171,6 +203,7 @@ export default function VideoBackground({
                 playsInline
                 preload="auto"
                 controls={false}
+                webkit-playsinline="true"
                 style={{ pointerEvents: 'none' }}
             >
                 <source src={videoSrc} type="video/mp4" />
