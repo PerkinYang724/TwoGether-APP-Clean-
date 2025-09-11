@@ -38,9 +38,9 @@ export default function App() {
 
     // Debug logging
     console.log('App: currentPage:', currentPage)
-    // Cloudinary video URLs with proper video delivery parameters
-    const welcomeVideoUrl = 'https://res.cloudinary.com/dblubqmip/video/upload/f_auto,q_auto/v1757593126/intro_h7yxev.mp4'
-    const cafeVideoUrl = 'https://res.cloudinary.com/dblubqmip/video/upload/f_auto,q_auto/v1757593138/cafe_vptuhf.mov'
+    // Cloudinary video URLs - Direct access format
+    const welcomeVideoUrl = 'https://res.cloudinary.com/dblubqmip/video/upload/v1757593126/intro_h7yxev.mp4'
+    const cafeVideoUrl = 'https://res.cloudinary.com/dblubqmip/video/upload/v1757593138/cafe_vptuhf.mov'
 
     console.log('App: videoSrc:', currentPage === 'welcome' ? welcomeVideoUrl : cafeVideoUrl)
     console.log('App: videoShouldPlay:', videoShouldPlay)
