@@ -38,9 +38,13 @@ export default function App() {
 
     // Debug logging
     console.log('App: currentPage:', currentPage)
-    console.log('App: videoSrc:', currentPage === 'welcome' ? "/videos/intro-welcome.mp4" : "/videos/cafe-study.mp4")
+    // Cloudinary video URLs
+    const welcomeVideoUrl = 'https://res.cloudinary.com/dblubqmip/video/upload/v1757593126/intro_h7yxev.mp4'
+    const cafeVideoUrl = 'https://res.cloudinary.com/dblubqmip/video/upload/v1757593138/cafe_vptuhf.mov'
+
+    console.log('App: videoSrc:', currentPage === 'welcome' ? welcomeVideoUrl : cafeVideoUrl)
     console.log('App: videoShouldPlay:', videoShouldPlay)
-    console.log('App: VideoBackground component should render with videoSrc:', currentPage === 'welcome' ? "/videos/intro-welcome.mp4" : "/videos/cafe-study.mp4")
+    console.log('App: VideoBackground component should render with videoSrc:', currentPage === 'welcome' ? welcomeVideoUrl : cafeVideoUrl)
 
 
 
@@ -70,7 +74,7 @@ export default function App() {
             {/* Welcome Page Video - Only shows on welcome page */}
             {currentPage === 'welcome' && (
                 <VideoBackground
-                    videoSrc="/videos/intro-welcome.mp4"
+                    videoSrc={welcomeVideoUrl}
                     overlay={true}
                     overlayOpacity={0.3}
                     shouldPlay={videoShouldPlay}
@@ -83,7 +87,7 @@ export default function App() {
             {/* Persistent Cafe Study Video - Shows on all other pages */}
             {currentPage !== 'welcome' && (
                 <VideoBackground
-                    videoSrc="/videos/cafe-study.mp4"
+                    videoSrc={cafeVideoUrl}
                     overlay={true}
                     overlayOpacity={0.3}
                     shouldPlay={true}

@@ -36,15 +36,15 @@ interface MusicActions {
 // Combined context type
 type MusicContextType = MusicState & MusicActions
 
-// Built-in tracks - Mobile-optimized with simple filenames
+// Built-in tracks - Hosted on Cloudinary
 const BUILT_IN_TRACKS: Track[] = [
   {
     id: 'intro',
     title: 'Background Music 🎵',
     artist: 'Flow Focus',
     duration: 3600, // 60 minutes - full length of your music
-    url: '/music/intro-music.mp3',
-    warning: 'Music will be available when files are hosted externally'
+    url: 'https://res.cloudinary.com/dblubqmip/video/upload/v1757593770/1_hour_v0r1hy.mp3',
+    warning: ''
   }
 ]
 
