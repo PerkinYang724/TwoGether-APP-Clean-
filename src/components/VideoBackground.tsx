@@ -30,6 +30,8 @@ export default function VideoBackground({
         if (!video) return
 
         console.log('VideoBackground: Setting up video:', videoSrc)
+        console.log('VideoBackground: Video element:', video)
+        console.log('VideoBackground: Video src will be set to:', videoSrc)
 
         const handleLoadedData = async () => {
             console.log('VideoBackground: Video data loaded for:', videoSrc)
@@ -66,14 +68,31 @@ export default function VideoBackground({
 
         const handleError = (e: any) => {
             console.error('VideoBackground: Video error for:', videoSrc, e)
+            console.error('VideoBackground: Error details:', {
+                error: e.target?.error,
+                networkState: e.target?.networkState,
+                readyState: e.target?.readyState
+            })
             setVideoError(true)
         }
 
+        const handleLoadStart = () => {
+            console.log('VideoBackground: Video load started for:', videoSrc)
+        }
+
+        const handleLoad = () => {
+            console.log('VideoBackground: Video load completed for:', videoSrc)
+        }
+
+        video.addEventListener('loadstart', handleLoadStart)
+        video.addEventListener('load', handleLoad)
         video.addEventListener('loadeddata', handleLoadedData)
         video.addEventListener('canplay', handleCanPlay)
         video.addEventListener('error', handleError)
 
         return () => {
+            video.removeEventListener('loadstart', handleLoadStart)
+            video.removeEventListener('load', handleLoad)
             video.removeEventListener('loadeddata', handleLoadedData)
             video.removeEventListener('canplay', handleCanPlay)
             video.removeEventListener('error', handleError)
@@ -129,7 +148,7 @@ export default function VideoBackground({
                         transition: 'none'
                     }}
                 >
-                    <source src={videoSrc} type="video/mp4" />
+                    <source src={videoSrc} type={videoSrc.endsWith('.mov') ? 'video/quicktime' : 'video/mp4'} />
                     Your browser does not support the video tag.
                 </video>
             ) : (
