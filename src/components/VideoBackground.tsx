@@ -23,12 +23,15 @@ export default function VideoBackground({
 }: VideoBackgroundProps) {
     const videoRef = useRef<HTMLVideoElement>(null)
     const [userInteracted, setUserInteracted] = useState(false)
+    const [videoError, setVideoError] = useState(false)
+    const [showPlayButton, setShowPlayButton] = useState(false)
 
     // Handle user interaction to enable video playback on mobile
     useEffect(() => {
         const handleUserInteraction = async () => {
             if (!userInteracted && shouldPlay) {
                 setUserInteracted(true)
+                setShowPlayButton(false)
                 const video = videoRef.current
                 if (video && video.paused) {
                     try {
@@ -36,6 +39,7 @@ export default function VideoBackground({
                         console.log('VideoBackground: Video started after user interaction')
                     } catch (error) {
                         console.log('VideoBackground: Video play failed after user interaction:', error)
+                        setShowPlayButton(true)
                     }
                 }
             }
@@ -50,6 +54,18 @@ export default function VideoBackground({
             document.removeEventListener('click', handleUserInteraction)
         }
     }, [shouldPlay, userInteracted])
+
+    // Show play button if video fails to autoplay
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            const video = videoRef.current
+            if (video && video.paused && shouldPlay) {
+                setShowPlayButton(true)
+            }
+        }, 3000) // Show play button after 3 seconds if video hasn't started
+
+        return () => clearTimeout(timer)
+    }, [shouldPlay])
 
     // Immediate play attempt when component mounts
     useEffect(() => {
@@ -205,10 +221,55 @@ export default function VideoBackground({
                 controls={false}
                 webkit-playsinline="true"
                 style={{ pointerEvents: 'none' }}
+                onLoadStart={() => console.log('Video: Load started')}
+                onLoadedData={() => console.log('Video: Data loaded')}
+                onCanPlay={() => console.log('Video: Can play')}
+                onPlay={() => console.log('Video: Playing')}
+                onPause={() => console.log('Video: Paused')}
+                onError={(e) => {
+                    console.error('Video: Error', e)
+                    setVideoError(true)
+                    setShowPlayButton(true)
+                }}
             >
                 <source src={videoSrc} type="video/mp4" />
                 Your browser does not support the video tag.
             </video>
+
+            {/* Debug info for mobile */}
+            <div className="absolute top-4 left-4 text-white text-xs bg-black/50 p-2 rounded z-10">
+                <div>Video: {videoSrc.split('/').pop()}</div>
+                <div>Should Play: {shouldPlay ? 'Yes' : 'No'}</div>
+                <div>User Interacted: {userInteracted ? 'Yes' : 'No'}</div>
+                <div>AutoPlay: {autoPlay ? 'Yes' : 'No'}</div>
+                <div>Video Error: {videoError ? 'Yes' : 'No'}</div>
+            </div>
+
+            {/* Play button overlay for mobile */}
+            {showPlayButton && (
+                <div 
+                    className="absolute inset-0 flex items-center justify-center bg-black/50 z-20"
+                    onClick={async () => {
+                        const video = videoRef.current
+                        if (video) {
+                            try {
+                                await video.play()
+                                setShowPlayButton(false)
+                                console.log('Video: Started via play button')
+                            } catch (error) {
+                                console.error('Video: Play button failed', error)
+                            }
+                        }
+                    }}
+                >
+                    <div className="bg-white/90 text-black px-8 py-4 rounded-full text-lg font-semibold cursor-pointer hover:bg-white transition-colors">
+                        ▶️ Tap to Play Video
+                    </div>
+                </div>
+            )}
+
+            {/* Fallback background for when video fails */}
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900" style={{ zIndex: -2 }} />
 
             {/* Optional overlay for better text readability */}
             {overlay && (
