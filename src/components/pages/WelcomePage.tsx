@@ -16,24 +16,17 @@ export default function WelcomePage({ className = '', onStart, onVideoStart }: W
     const { playIntroMusic } = useMusic()
 
     const handleStart = async () => {
-        console.log('🎯 Welcome page: Start Focus button clicked')
-        console.log('🎯 Welcome page: playIntroMusic function available:', typeof playIntroMusic)
-
         // Start the video background
         if (onVideoStart) {
-            console.log('🎯 Starting video background...')
             onVideoStart()
         }
 
         try {
-            console.log('🎯 Calling playIntroMusic...')
             await playIntroMusic()
-            console.log('🎯 Intro music triggered successfully')
         } catch (error) {
-            console.error('🎯 Failed to play intro music:', error)
+            console.error('Failed to play intro music:', error)
         }
 
-        console.log('🎯 Welcome page: Calling onStart...')
         onStart()
     }
 

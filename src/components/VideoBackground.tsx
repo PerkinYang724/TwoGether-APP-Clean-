@@ -250,15 +250,6 @@ export default function VideoBackground({
                 </video>
             )}
 
-            {/* Debug info for mobile */}
-            <div className="absolute top-4 left-4 text-white text-xs bg-black/50 p-2 rounded z-10">
-                <div>Video: {videoSrc.split('/').pop()}</div>
-                <div>Should Play: {shouldPlay ? 'Yes' : 'No'}</div>
-                <div>User Interacted: {userInteracted ? 'Yes' : 'No'}</div>
-                <div>AutoPlay: {autoPlay ? 'Yes' : 'No'}</div>
-                <div>Video Error: {videoError ? 'Yes' : 'No'}</div>
-                <div>Status: {videoError ? 'Using Fallback' : 'Loading Video'}</div>
-            </div>
 
             {/* Play button overlay for mobile */}
             {showPlayButton && !videoError && (

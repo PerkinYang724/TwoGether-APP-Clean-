@@ -38,7 +38,6 @@ export default function SwipeNavigator({ onVideoStart, onPageChange }: SwipeNavi
     }, [currentPage, onPageChange])
 
     const getPageComponent = (page: Page) => {
-        console.log('SwipeNavigator: getPageComponent called for page:', page)
         switch (page) {
             case 'welcome':
                 return <WelcomePage onStart={startApp} hasStarted={hasStarted} onVideoStart={onVideoStart} />
