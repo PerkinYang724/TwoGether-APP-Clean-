@@ -40,11 +40,11 @@ type MusicContextType = MusicState & MusicActions
 const BUILT_IN_TRACKS: Track[] = [
   {
     id: 'intro',
-    title: 'Rainy Lofi Vibes 🌧️ Chill Balcony Beats for Study & Sleep',
-    artist: 'Lofi Vibes',
+    title: 'Background Music 🎵',
+    artist: 'Flow Focus',
     duration: 3600, // 60 minutes - full length of your music
     url: '/music/intro-music.mp3',
-    warning: 'Music files not available in deployed version'
+    warning: 'Music will be available when files are hosted externally'
   }
 ]
 

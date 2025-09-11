@@ -8,7 +8,7 @@ export default defineConfig({
         react(),
         VitePWA({
             registerType: 'autoUpdate',
-            includeAssets: ['favicon.svg', 'robots.txt', 'music/**/*.mp3'],
+            includeAssets: ['favicon.svg', 'robots.txt', 'music/**/*.mp3', 'videos/**/*.mp4'],
             manifest: {
                 name: 'Flow Focus — Pomodoro',
                 short_name: 'Flow Focus',
@@ -39,6 +39,11 @@ export default defineConfig({
                         urlPattern: ({ url }) => url.pathname.startsWith('/music/'),
                         handler: 'CacheFirst',
                         options: { cacheName: 'music', expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 7 } }
+                    },
+                    {
+                        urlPattern: ({ url }) => url.pathname.startsWith('/videos/'),
+                        handler: 'CacheFirst',
+                        options: { cacheName: 'videos', expiration: { maxEntries: 5, maxAgeSeconds: 60 * 60 * 24 * 7 } }
                     }
                 ]
             }

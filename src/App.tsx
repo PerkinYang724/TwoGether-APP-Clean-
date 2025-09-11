@@ -38,9 +38,9 @@ export default function App() {
 
     // Debug logging
     console.log('App: currentPage:', currentPage)
-    console.log('App: videoSrc:', currentPage === 'welcome' ? "/videos/intro welcome.mp4" : "/videos/cafe study.mp4")
+    console.log('App: videoSrc:', currentPage === 'welcome' ? "/videos/intro-welcome.mp4" : "/videos/cafe-study.mp4")
     console.log('App: videoShouldPlay:', videoShouldPlay)
-    console.log('App: VideoBackground component should render with videoSrc:', currentPage === 'welcome' ? "/videos/intro welcome.mp4" : "/videos/cafe study.mp4")
+    console.log('App: VideoBackground component should render with videoSrc:', currentPage === 'welcome' ? "/videos/intro-welcome.mp4" : "/videos/cafe-study.mp4")
 
 
 
@@ -70,7 +70,7 @@ export default function App() {
             {/* Welcome Page Video - Only shows on welcome page */}
             {currentPage === 'welcome' && (
                 <VideoBackground
-                    videoSrc="/videos/intro welcome.mp4"
+                    videoSrc="/videos/intro-welcome.mp4"
                     overlay={true}
                     overlayOpacity={0.3}
                     shouldPlay={videoShouldPlay}
@@ -83,7 +83,7 @@ export default function App() {
             {/* Persistent Cafe Study Video - Shows on all other pages */}
             {currentPage !== 'welcome' && (
                 <VideoBackground
-                    videoSrc="/videos/cafe study.mp4"
+                    videoSrc="/videos/cafe-study.mp4"
                     overlay={true}
                     overlayOpacity={0.3}
                     shouldPlay={true}

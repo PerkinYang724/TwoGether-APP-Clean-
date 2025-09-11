@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 
 interface VideoBackgroundProps {
     videoSrc: string
@@ -22,6 +22,7 @@ export default function VideoBackground({
     shouldPlay = true
 }: VideoBackgroundProps) {
     const videoRef = useRef<HTMLVideoElement>(null)
+    const [videoError, setVideoError] = useState(false)
 
     // Handle video playback
     useEffect(() => {
@@ -65,6 +66,7 @@ export default function VideoBackground({
 
         const handleError = (e: any) => {
             console.error('VideoBackground: Video error for:', videoSrc, e)
+            setVideoError(true)
         }
 
         video.addEventListener('loadeddata', handleLoadedData)
@@ -110,25 +112,36 @@ export default function VideoBackground({
                 transition: 'none'
             }}
         >
-            <video
-                ref={videoRef}
-                className="absolute inset-0 w-full h-full object-cover"
-                loop={loop}
-                muted={muted}
-                autoPlay={autoPlay}
-                playsInline
-                preload="auto"
-                controls={false}
-                webkit-playsinline="true"
-                style={{
-                    pointerEvents: 'none',
-                    zIndex: 1,
-                    transition: 'none'
-                }}
-            >
-                <source src={videoSrc} type="video/mp4" />
-                Your browser does not support the video tag.
-            </video>
+            {!videoError ? (
+                <video
+                    ref={videoRef}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    loop={loop}
+                    muted={muted}
+                    autoPlay={autoPlay}
+                    playsInline
+                    preload="auto"
+                    controls={false}
+                    webkit-playsinline="true"
+                    style={{
+                        pointerEvents: 'none',
+                        zIndex: 1,
+                        transition: 'none'
+                    }}
+                >
+                    <source src={videoSrc} type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+            ) : (
+                /* Fallback gradient background when video fails to load */
+                <div
+                    className="absolute inset-0 w-full h-full"
+                    style={{
+                        background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 50%, #334155 100%)',
+                        zIndex: 1
+                    }}
+                />
+            )}
 
             {/* Optional overlay for better text readability */}
             {overlay && (
