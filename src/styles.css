@@ -4,35 +4,26 @@
 
 :root {
     color-scheme: dark;
-    /* Default theme variables - Night Owl style for maximum visibility */
-    --theme-primary: #A855F7;
-    --theme-secondary: #0891B2;
-    --theme-accent: #EA580C;
-    --theme-background: linear-gradient(135deg, #1E293B 0%, #0F172A 50%, #334155 100%);
-    --theme-surface: rgba(30, 41, 59, 0.95);
-    --theme-text: #F8FAFC;
-    --theme-text-secondary: #E2E8F0;
-    --theme-border: rgba(168, 85, 247, 0.7);
-    --theme-success: #0891B2;
-    --theme-warning: #EA580C;
-    --theme-error: #F87171;
-
-    /* Default timer colors */
+    /* Fixed theme - Night Owl style for maximum visibility */
     --timer-focus-color: #A855F7;
     --timer-short-break-color: #0891B2;
     --timer-long-break-color: #EA580C;
-
-    /* Default timer card colors */
-    --timer-card-background: rgba(30, 41, 59, 0.95);
-    --timer-card-border: rgba(168, 85, 247, 0.7);
-    --timer-label-color: #E2E8F0;
 }
 
 body {
-    background: var(--theme-background);
-    color: var(--theme-text);
+    background: black;
+    color: #F8FAFC;
     min-height: 100vh;
-    transition: background 0.5s ease, color 0.5s ease;
+}
+
+/* Override body background when video background is present */
+body.video-background-active {
+    background: black !important;
+}
+
+/* Global video background override */
+body {
+    background: black !important;
 }
 
 /* Timer phase-specific colors */
@@ -58,354 +49,9 @@ body {
     color: var(--timer-label-color) !important;
 }
 
-/* ---- CINEMATIC BACKGROUND ---- */
-.blob {
-    position: absolute;
-    border-radius: 9999px;
-    filter: blur(80px);
-    opacity: 0.55;
-    mix-blend-mode: screen;
-    will-change: transform, opacity, filter;
-}
 
-.blob-1 {
-    width: 48rem;
-    height: 48rem;
-    left: 50%;
-    top: 35%;
-    transform: translate(-50%, -50%);
-    background: radial-gradient(60% 60% at 40% 40%,
-            rgba(56, 189, 248, .65) 0%,
-            rgba(99, 102, 241, .40) 45%,
-            rgba(236, 72, 153, .35) 100%);
-    animation: floatA 26s ease-in-out infinite;
-}
 
-.blob-2 {
-    width: 42rem;
-    height: 42rem;
-    left: 18%;
-    top: 60%;
-    transform: translate(-50%, -50%);
-    background: radial-gradient(60% 60% at 50% 50%,
-            rgba(139, 92, 246, .55) 0%,
-            rgba(34, 197, 94, .35) 60%,
-            rgba(56, 189, 248, .25) 100%);
-    animation: floatB 22s ease-in-out infinite;
-}
 
-.blob-3 {
-    width: 36rem;
-    height: 36rem;
-    left: 82%;
-    top: 28%;
-    transform: translate(-50%, -50%);
-    background: radial-gradient(60% 60% at 50% 50%,
-            rgba(250, 204, 21, .35) 0%,
-            rgba(59, 130, 246, .35) 55%,
-            rgba(236, 72, 153, .25) 100%);
-    animation: floatC 18s ease-in-out infinite;
-}
-
-@keyframes floatA {
-    0% {
-        transform: translate(-50%, -50%) scale(1.00);
-    }
-
-    50% {
-        transform: translate(-48%, -52%) scale(1.06);
-    }
-
-    100% {
-        transform: translate(-50%, -50%) scale(1.00);
-    }
-}
-
-@keyframes floatB {
-    0% {
-        transform: translate(-50%, -50%) scale(1.00);
-    }
-
-    50% {
-        transform: translate(-52%, -48%) scale(1.08);
-    }
-
-    100% {
-        transform: translate(-50%, -50%) scale(1.00);
-    }
-}
-
-@keyframes floatC {
-    0% {
-        transform: translate(-50%, -50%) scale(1.00);
-    }
-
-    50% {
-        transform: translate(-49%, -52%) scale(1.10);
-    }
-
-    100% {
-        transform: translate(-50%, -50%) scale(1.00);
-    }
-}
-
-/* Theme-specific background animations */
-.bg-animation-study-zen::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image:
-        radial-gradient(circle at 20% 20%, rgba(79, 70, 229, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
-    animation: study-zen 30s ease-in-out infinite;
-    pointer-events: none;
-    z-index: -1;
-}
-
-.bg-animation-forest-breeze::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image:
-        radial-gradient(ellipse at 10% 90%, rgba(34, 197, 94, 0.08) 0%, transparent 40%),
-        radial-gradient(ellipse at 90% 10%, rgba(16, 185, 129, 0.08) 0%, transparent 40%);
-    animation: forest-breeze 25s ease-in-out infinite;
-    pointer-events: none;
-    z-index: -1;
-}
-
-.bg-animation-night-stars::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image:
-        radial-gradient(circle at 15% 25%, rgba(139, 92, 246, 0.1) 0%, transparent 2%),
-        radial-gradient(circle at 85% 75%, rgba(6, 182, 212, 0.1) 0%, transparent 2%),
-        radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 3%);
-    background-size: 100px 100px, 150px 150px, 200px 200px;
-    animation: night-stars 20s linear infinite;
-    pointer-events: none;
-    z-index: -1;
-}
-
-.bg-animation-ocean-calm::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image:
-        radial-gradient(ellipse at 0% 100%, rgba(14, 165, 233, 0.08) 0%, transparent 50%),
-        radial-gradient(ellipse at 100% 0%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
-    animation: ocean-calm 22s ease-in-out infinite;
-    pointer-events: none;
-    z-index: -1;
-}
-
-.bg-animation-golden-glow::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image:
-        radial-gradient(ellipse at 30% 70%, rgba(249, 115, 22, 0.1) 0%, transparent 40%),
-        radial-gradient(ellipse at 70% 30%, rgba(251, 191, 36, 0.1) 0%, transparent 40%);
-    animation: golden-glow 28s ease-in-out infinite;
-    pointer-events: none;
-    z-index: -1;
-}
-
-/* Animation keyframes */
-@keyframes study-zen {
-
-    0%,
-    100% {
-        transform: scale(1) translateY(0px);
-        opacity: 0.3;
-    }
-
-    50% {
-        transform: scale(1.02) translateY(-5px);
-        opacity: 0.5;
-    }
-}
-
-@keyframes forest-breeze {
-
-    0%,
-    100% {
-        transform: scale(1) translateX(0px);
-        opacity: 0.4;
-    }
-
-    25% {
-        transform: scale(1.01) translateX(2px);
-        opacity: 0.6;
-    }
-
-    75% {
-        transform: scale(1.01) translateX(-2px);
-        opacity: 0.6;
-    }
-}
-
-@keyframes night-stars {
-    0% {
-        transform: translate(0, 0) rotate(0deg);
-    }
-
-    25% {
-        transform: translate(10px, -10px) rotate(90deg);
-    }
-
-    50% {
-        transform: translate(-5px, 5px) rotate(180deg);
-    }
-
-    75% {
-        transform: translate(-10px, -5px) rotate(270deg);
-    }
-
-    100% {
-        transform: translate(0, 0) rotate(360deg);
-    }
-}
-
-@keyframes ocean-calm {
-
-    0%,
-    100% {
-        transform: scale(1) translateY(0px);
-        opacity: 0.3;
-    }
-
-    50% {
-        transform: scale(1.01) translateY(-3px);
-        opacity: 0.5;
-    }
-}
-
-@keyframes golden-glow {
-
-    0%,
-    100% {
-        transform: scale(1) rotate(0deg);
-        opacity: 0.4;
-    }
-
-    25% {
-        transform: scale(1.02) rotate(1deg);
-        opacity: 0.6;
-    }
-
-    75% {
-        transform: scale(1.02) rotate(-1deg);
-        opacity: 0.6;
-    }
-}
-
-/* Timer animations */
-.timer-zen-pulse {
-    animation: zen-pulse 3s ease-in-out infinite;
-}
-
-.timer-leaf-gentle {
-    animation: leaf-gentle 4s ease-in-out infinite;
-}
-
-.timer-neon-glow {
-    animation: neon-glow 2s ease-in-out infinite;
-}
-
-.timer-wave-gentle {
-    animation: wave-gentle 3.5s ease-in-out infinite;
-}
-
-.timer-warm-pulse {
-    animation: warm-pulse 2.5s ease-in-out infinite;
-}
-
-@keyframes zen-pulse {
-
-    0%,
-    100% {
-        box-shadow: 0 0 15px rgba(79, 70, 229, 0.2);
-    }
-
-    50% {
-        box-shadow: 0 0 25px rgba(79, 70, 229, 0.4);
-    }
-}
-
-@keyframes leaf-gentle {
-
-    0%,
-    100% {
-        transform: translateY(0px) rotate(0deg);
-    }
-
-    25% {
-        transform: translateY(-2px) rotate(0.5deg);
-    }
-
-    50% {
-        transform: translateY(-4px) rotate(0deg);
-    }
-
-    75% {
-        transform: translateY(-2px) rotate(-0.5deg);
-    }
-}
-
-@keyframes neon-glow {
-
-    0%,
-    100% {
-        box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
-    }
-
-    50% {
-        box-shadow: 0 0 35px rgba(139, 92, 246, 0.7);
-    }
-}
-
-@keyframes wave-gentle {
-
-    0%,
-    100% {
-        transform: scale(1);
-        box-shadow: 0 0 15px rgba(14, 165, 233, 0.2);
-    }
-
-    50% {
-        transform: scale(1.01);
-        box-shadow: 0 0 25px rgba(14, 165, 233, 0.4);
-    }
-}
-
-@keyframes warm-pulse {
-
-    0%,
-    100% {
-        box-shadow: 0 0 20px rgba(249, 115, 22, 0.4);
-    }
-
-    50% {
-        box-shadow: 0 0 40px rgba(249, 115, 22, 0.7);
-    }
-}
 
 /* Progress animations */
 .progress-smooth-fill {
@@ -414,23 +60,23 @@ body {
 
 .progress-tree-growth {
     transition: width 0.5s ease;
-    background: linear-gradient(90deg, var(--theme-secondary), var(--theme-primary));
+    background: linear-gradient(90deg, #0891B2, #A855F7);
 }
 
 .progress-neon-flow {
     transition: width 0.2s ease;
-    background: linear-gradient(90deg, var(--theme-primary), var(--theme-secondary));
-    box-shadow: 0 0 10px var(--theme-primary);
+    background: linear-gradient(90deg, #A855F7, #0891B2);
+    box-shadow: 0 0 10px #A855F7;
 }
 
 .progress-water-flow {
     transition: width 0.4s ease;
-    background: linear-gradient(90deg, var(--theme-primary), var(--theme-secondary));
+    background: linear-gradient(90deg, #A855F7, #0891B2);
 }
 
 .progress-sunset-fill {
     transition: width 0.3s ease;
-    background: linear-gradient(90deg, var(--theme-primary), var(--theme-accent));
+    background: linear-gradient(90deg, #A855F7, #EA580C);
 }
 
 /* Mobile Navigation Bar */
@@ -470,28 +116,43 @@ body {
 
 
 
+/* Video Background Styles */
+.video-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 0;
+}
+
+/* Ensure content appears above video */
+.video-content {
+    position: relative;
+    z-index: 10;
+}
+
+/* Video loading state */
+.video-loading {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 50%, #334155 100%);
+}
+
 /* Respect users who prefer less motion */
 @media (prefers-reduced-motion: reduce) {
 
-    .blob-1,
-    .blob-2,
-    .blob-3 {
-        animation: none;
-    }
-
-    .bg-animation-study-zen::before,
-    .bg-animation-forest-breeze::before,
-    .bg-animation-night-stars::before,
-    .bg-animation-ocean-calm::before,
-    .bg-animation-golden-glow::before {
-        animation: none;
-    }
-
-    .timer-zen-pulse,
-    .timer-leaf-gentle,
-    .timer-neon-glow,
-    .timer-wave-gentle,
-    .timer-warm-pulse {
-        animation: none;
+    /* Disable video autoplay for users who prefer reduced motion */
+    video {
+        animation-play-state: paused;
     }
 }

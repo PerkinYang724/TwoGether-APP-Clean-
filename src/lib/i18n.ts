@@ -101,34 +101,12 @@ export interface Translations {
     dingDescription: string
     none: string
     noneDescription: string
-    themeSettings: string
-    chooseTheme: string
-    currentTheme: string
-    // Theme names
-    studyZen: string
-    forestFocus: string
-    nightOwl: string
-    oceanBreeze: string
-    goldenHour: string
-    // Theme descriptions
-    studyZenDesc: string
-    forestFocusDesc: string
-    nightOwlDesc: string
-    oceanBreezeDesc: string
-    goldenHourDesc: string
-    // Theme moods
-    studyZenMood: string
-    forestFocusMood: string
-    nightOwlMood: string
-    oceanBreezeMood: string
-    goldenHourMood: string
     // New navigation translations
     customizeYourExperience: string
     pomodoroSettings: string
     statsAndGoals: string
     trackYourProgress: string
     manageYourTasks: string
-    theme: string
     // Welcome page translations
     welcomeToFlowFocus: string
     welcomeDescription: string
@@ -275,34 +253,12 @@ const translations: Record<Language, Translations> = {
         dingDescription: 'Short ding sound',
         none: 'None',
         noneDescription: 'No sound',
-        themeSettings: 'Theme Settings',
-        chooseTheme: 'Choose your preferred theme',
-        currentTheme: 'Current Theme',
-        // Theme names
-        studyZen: 'Study Zen',
-        forestFocus: 'Forest Focus',
-        nightOwl: 'Night Owl',
-        oceanBreeze: 'Ocean Breeze',
-        goldenHour: 'Golden Hour',
-        // Theme descriptions
-        studyZenDesc: 'Minimal white space with soft blue accents for ultimate focus',
-        forestFocusDesc: 'Calming greens inspired by nature to reduce study stress',
-        nightOwlDesc: 'Dark theme perfect for late-night coding and study sessions',
-        oceanBreezeDesc: 'Serene blue tones that calm the mind during intense study',
-        goldenHourDesc: 'Warm, energizing colors to boost motivation and creativity',
-        // Theme moods
-        studyZenMood: 'Calm and focused - perfect for deep concentration',
-        forestFocusMood: 'Peaceful and refreshing - like studying in a quiet forest',
-        nightOwlMood: 'Intense and productive - ideal for night owls and deep work',
-        oceanBreezeMood: 'Tranquil and refreshing - like studying by the ocean',
-        goldenHourMood: 'Energetic and inspiring - perfect for creative study sessions',
         // New navigation translations
         customizeYourExperience: 'Customize your experience',
         pomodoroSettings: 'Pomodoro Settings',
         statsAndGoals: 'Stats & Goals',
         trackYourProgress: 'Track your progress',
         manageYourTasks: 'Manage your tasks',
-        theme: 'Theme',
         // Welcome page translations
         welcomeToFlowFocus: 'Welcome to Flow Focus',
         welcomeDescription: 'A minimal Pomodoro timer for deep focus. Swipe to navigate.',
@@ -447,34 +403,12 @@ const translations: Record<Language, Translations> = {
         dingDescription: '短促的叮聲',
         none: '無',
         noneDescription: '無聲音',
-        themeSettings: '主題設定',
-        chooseTheme: '選擇您喜歡的主題',
-        currentTheme: '目前主題',
-        // Theme names
-        studyZen: '學習禪',
-        forestFocus: '森林專注',
-        nightOwl: '夜貓子',
-        oceanBreeze: '海洋微風',
-        goldenHour: '黃金時光',
-        // Theme descriptions
-        studyZenDesc: '極簡白色空間配柔和藍色點綴，專注力極致',
-        forestFocusDesc: '受自然啟發的舒緩綠色，減少學習壓力',
-        nightOwlDesc: '深色主題，完美適合深夜編程和學習',
-        oceanBreezeDesc: '寧靜藍色調，在緊張學習中平靜心靈',
-        goldenHourDesc: '溫暖激勵色彩，提升動力和創造力',
-        // Theme moods
-        studyZenMood: '平靜專注 - 深度專注的完美選擇',
-        forestFocusMood: '寧靜清新 - 如置身安靜森林中學習',
-        nightOwlMood: '強烈高效 - 夜貓子和深度工作的理想選擇',
-        oceanBreezeMood: '寧靜清新 - 如在海邊學習般舒適',
-        goldenHourMood: '充滿活力 - 創意學習時光的完美選擇',
         // New navigation translations
         customizeYourExperience: '自訂您的體驗',
         pomodoroSettings: '番茄工作法設定',
         statsAndGoals: '統計與目標',
         trackYourProgress: '追蹤您的進度',
         manageYourTasks: '管理您的任務',
-        theme: '主題',
         // Welcome page translations
         welcomeToFlowFocus: '歡迎使用專注流',
         welcomeDescription: '簡約番茄工作法計時器，專注深度學習。滑動導航。',
@@ -540,38 +474,3 @@ export function getTranslations(): Translations {
     return translations[currentLanguage]
 }
 
-export function getTranslatedTheme(themeKey: string) {
-    const themeTranslations = {
-        'study-zen': {
-            name: t('studyZen'),
-            description: t('studyZenDesc'),
-            mood: t('studyZenMood')
-        },
-        'forest-focus': {
-            name: t('forestFocus'),
-            description: t('forestFocusDesc'),
-            mood: t('forestFocusMood')
-        },
-        'night-owl': {
-            name: t('nightOwl'),
-            description: t('nightOwlDesc'),
-            mood: t('nightOwlMood')
-        },
-        'ocean-breeze': {
-            name: t('oceanBreeze'),
-            description: t('oceanBreezeDesc'),
-            mood: t('oceanBreezeMood')
-        },
-        'golden-hour': {
-            name: t('goldenHour'),
-            description: t('goldenHourDesc'),
-            mood: t('goldenHourMood')
-        }
-    }
-
-    return themeTranslations[themeKey as keyof typeof themeTranslations] || {
-        name: themeKey,
-        description: '',
-        mood: ''
-    }
-}

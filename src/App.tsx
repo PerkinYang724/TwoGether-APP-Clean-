@@ -3,23 +3,34 @@ import SwipeNavigator from './components/SwipeNavigator'
 import InstallPrompt from './components/InstallPrompt'
 import AuthModal from './components/AuthModal'
 import LanguageToggle from './components/LanguageToggle'
-import AnimatedFlakes from './components/AnimatedFlakes'
+import VideoBackground from './components/VideoBackground'
 import { usePomodoroWithSync } from './hooks/usePomodoroWithSync'
 import { notifySessionComplete } from './lib/notifications'
 import { t } from './lib/i18n'
 import { useLanguage } from './hooks/useLanguage'
 import { useGoalTracking } from './hooks/useGoalTracking'
 import { useSessionStats } from './hooks/useSessionStats'
-import { useTheme } from './hooks/useTheme'
 
 
 export default function App() {
     useLanguage() // Make component reactive to language changes
-    useTheme() // Initialize theme system
     const { settings, user, syncStatus } = usePomodoroWithSync()
     const { incrementCompleted } = useGoalTracking()
     const { addSession } = useSessionStats()
     const [showAuthModal, setShowAuthModal] = useState(false)
+    const [videoShouldPlay, setVideoShouldPlay] = useState(true)
+    const [currentPage, setCurrentPage] = useState('welcome')
+
+    // Ensure video plays when page changes
+    useEffect(() => {
+        console.log('App: Page changed to:', currentPage, 'Starting video playback')
+        setVideoShouldPlay(true)
+    }, [currentPage])
+
+    // Debug logging
+    console.log('App: currentPage:', currentPage)
+    console.log('App: videoSrc:', currentPage === 'welcome' ? "/videos/opening.mp4" : "/videos/cafe intro.mp4")
+    console.log('App: videoShouldPlay:', videoShouldPlay)
 
 
 
@@ -45,8 +56,16 @@ export default function App() {
 
     return (
         <div className="relative">
-            {/* Animated Flakes Background */}
-            <AnimatedFlakes />
+            {/* Global Video Background */}
+            <VideoBackground
+                videoSrc={currentPage === 'welcome' ? "/videos/opening.mp4" : "/videos/cafe intro.mp4"}
+                overlay={true}
+                overlayOpacity={0.2}
+                shouldPlay={videoShouldPlay}
+                autoPlay={true}
+                muted={true}
+                loop={true}
+            />
 
             {/* Main App Header - Fixed at top */}
             <div className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-white/10">
@@ -55,6 +74,8 @@ export default function App() {
                         <div>
                             <h1 className="text-xl font-semibold">{t('appName')}</h1>
                             <p className="text-white/70 text-xs">{t('tagline')}</p>
+                            {/* Debug info */}
+                            <p className="text-white/50 text-xs">Page: {currentPage} | Video: {currentPage === 'welcome' ? 'opening' : 'cafe'}</p>
                         </div>
                         <div className="flex items-center gap-3">
                             <LanguageToggle />
@@ -79,7 +100,12 @@ export default function App() {
 
             {/* Main Content with Swipe Navigation */}
             <div className="pt-20 relative z-10">
-                <SwipeNavigator />
+                <SwipeNavigator
+                    onPageChange={setCurrentPage}
+                    onVideoStart={() => {
+                        setVideoShouldPlay(true)
+                    }}
+                />
             </div>
 
             {/* Global Components */}

@@ -1,6 +1,7 @@
-# Exclude large music files from Vercel deployment
-public/music/
+# Include music files in Vercel deployment
+# public/music/
 node_modules/
 .git/
 .vercel/
 *.log
+

@@ -39,35 +39,11 @@ type MusicContextType = MusicState & MusicActions
 // Built-in tracks - Mobile-optimized with simple filenames
 const BUILT_IN_TRACKS: Track[] = [
   {
-    id: '001',
-    title: 'Rainy Lofi Vibes 🌧️ Chill Balcony Beats for Study',
-    artist: 'Lofi Vibes',
-    duration: 3600, // 60 minutes
-    url: '/music/rainy-lofi-vibes.mp3',
-    warning: 'Music files not available in deployed version'
-  },
-  {
-    id: '002',
-    title: 'Jazz background music for deep focus',
-    artist: 'Cafe Music',
-    duration: 10800, // 3 hours
-    url: '/music/jazz-background-music.mp3',
-    warning: 'Music files not available in deployed version'
-  },
-  {
-    id: '003',
-    title: 'Lofi music hippop mix & Chillhop',
-    artist: 'Chill Lofi Mix to Study and Relax',
-    duration: 10800, // 3 hours
-    url: '/music/lofi-hiphop-mix.mp3',
-    warning: 'Music files not available in deployed version'
-  },
-  {
     id: 'intro',
-    title: 'Music for Intro',
-    artist: 'Focus Starter',
-    duration: 300, // 5 minutes
-    url: '/music/music-for-intro.mp3',
+    title: 'Rainy Lofi Vibes 🌧️ Chill Balcony Beats for Study & Sleep',
+    artist: 'Lofi Vibes',
+    duration: 3600, // 60 minutes - full length of your music
+    url: '/music/intro-music.mp3',
     warning: 'Music files not available in deployed version'
   }
 ]
@@ -461,7 +437,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
       // Create a new audio element for better compatibility
       const directAudio = new Audio(introTrack.url)
       directAudio.volume = state.muted ? 0 : state.volume
-      directAudio.loop = true
+      directAudio.loop = false // Don't loop intro music - play once
       directAudio.preload = isMobile ? 'metadata' : 'auto' // Use metadata for mobile
 
       console.log('🎵 Direct audio created for intro:', {
@@ -534,15 +510,13 @@ export function MusicProvider({ children }: { children: ReactNode }) {
           console.log('🎵 Desktop intro audio playing successfully!')
         }
 
-        // Update the main audio ref
-        if (audioRef.current) {
-          audioRef.current.pause()
-        }
-        audioRef.current = directAudio
+        // Don't update the main audio ref for intro music
+        // Just play the intro and let it finish naturally
 
-        // Update state
-        setState(prev => ({ ...prev, track: introTrack, playing: true, enabled: true }))
-        saveState({ track: introTrack, playing: true, enabled: true })
+        // Let the music play for its full duration
+        directAudio.addEventListener('ended', () => {
+          console.log('🎵 Intro music finished naturally')
+        })
 
         console.log('🎵 ===== PLAY INTRO MUSIC SUCCESS (DESKTOP) =====')
       }

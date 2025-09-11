@@ -1,4 +1,5 @@
 
+import { useEffect } from 'react'
 import { useSwipeNavigation, Page } from '../hooks/useSwipeNavigation'
 import WelcomePage from './pages/WelcomePage'
 import TimerPage from './pages/TimerPage'
@@ -7,7 +8,12 @@ import StatsPage from './pages/StatsPage'
 import TasksPage from './pages/TasksPage'
 import ForumPage from './pages/ForumPage'
 
-export default function SwipeNavigator() {
+interface SwipeNavigatorProps {
+    onVideoStart?: () => void
+    onPageChange?: (page: string) => void
+}
+
+export default function SwipeNavigator({ onVideoStart, onPageChange }: SwipeNavigatorProps) {
     const {
         currentPage,
         hasStarted,
@@ -22,11 +28,20 @@ export default function SwipeNavigator() {
 
     console.log('SwipeNavigator: currentPage:', currentPage, 'currentIndex:', currentIndex)
 
+    // Notify parent component when page changes
+    useEffect(() => {
+        console.log('SwipeNavigator: Page changed to:', currentPage)
+        if (onPageChange) {
+            console.log('SwipeNavigator: Notifying parent of page change')
+            onPageChange(currentPage)
+        }
+    }, [currentPage, onPageChange])
+
     const getPageComponent = (page: Page) => {
         console.log('SwipeNavigator: getPageComponent called for page:', page)
         switch (page) {
             case 'welcome':
-                return <WelcomePage onStart={startApp} hasStarted={hasStarted} />
+                return <WelcomePage onStart={startApp} hasStarted={hasStarted} onVideoStart={onVideoStart} />
             case 'timer':
                 return <TimerPage />
             case 'settings':
@@ -38,7 +53,7 @@ export default function SwipeNavigator() {
             case 'forum':
                 return <ForumPage />
             default:
-                return <WelcomePage onStart={startApp} hasStarted={hasStarted} />
+                return <WelcomePage onStart={startApp} hasStarted={hasStarted} onVideoStart={onVideoStart} />
         }
     }
 
@@ -54,18 +69,18 @@ export default function SwipeNavigator() {
     }
 
     return (
-        <div className="relative w-full min-h-screen overflow-x-hidden overflow-y-auto pb-48 md:pb-0">
+        <div className={`relative w-full overflow-x-hidden overflow-y-auto ${currentPage === 'welcome' ? 'h-screen' : 'min-h-screen pb-48 md:pb-0'}`}>
             {/* Main pages container */}
             <div
                 className="flex transition-transform duration-300 ease-in-out flex-row"
                 style={{
                     transform: getTransformStyle(),
                     width: '600vw', // 6 pages * 100vw each
-                    minHeight: '100vh'
+                    minHeight: currentPage === 'welcome' ? '100vh' : '100vh'
                 }}
             >
                 {/* Welcome Page */}
-                <div className="w-screen min-h-screen flex-shrink-0">
+                <div className={`w-screen flex-shrink-0 ${currentPage === 'welcome' ? 'h-screen' : 'min-h-screen'}`}>
                     {getPageComponent('welcome')}
                 </div>
 

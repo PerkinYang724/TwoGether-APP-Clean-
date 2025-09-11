@@ -1,5 +1,4 @@
 import SettingsDrawer from '../SettingsDrawer'
-import ThemeSelector from '../ThemeSelector'
 import NotificationSettings from '../NotificationSettings'
 import { usePomodoroWithSync } from '../../hooks/usePomodoroWithSync'
 import { signOut } from '../../lib/auth'
@@ -48,12 +47,6 @@ export default function SettingsPage({ className = '' }: SettingsPageProps) {
 
                 {/* Settings Content */}
                 <div className="space-y-6">
-                    {/* Theme Settings */}
-                    <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                        <h2 className="text-lg font-medium mb-4">{t('theme')}</h2>
-                        <ThemeSelector />
-                    </div>
-
                     {/* Notification Settings */}
                     <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
                         <h2 className="text-lg font-medium mb-4">{t('notifications')}</h2>
