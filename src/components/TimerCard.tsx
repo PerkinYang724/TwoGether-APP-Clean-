@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { motion } from 'framer-motion';
 import { t } from '../lib/i18n';
 import { ensurePermission } from '../lib/notifications';
 
@@ -80,11 +79,8 @@ const TimerCard: React.FC<TimerCardProps> = ({
 
     return (
         <>
-            <motion.div
+            <div
                 className="relative bg-white/5 backdrop-blur-xl rounded-2xl p-4 sm:p-6 md:p-8 text-center border border-white/10 overflow-hidden w-full"
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.3 }}
             >
 
                 {/* Timer content */}
@@ -101,15 +97,12 @@ const TimerCard: React.FC<TimerCardProps> = ({
                         </div>
                     </div>
                 )}
-                <motion.div
+                <div
                     className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-sans font-light text-white mb-8 whitespace-nowrap overflow-hidden tracking-wider"
                     key={secondsLeft}
-                    initial={{ scale: 0.95 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.2 }}
                 >
                     {formattedTime}
-                </motion.div>
+                </div>
 
                 {/* Tag Input - Inline */}
                 {showTagInput && (
@@ -139,13 +132,13 @@ const TimerCard: React.FC<TimerCardProps> = ({
                             <button
                                 onClick={handleTagSubmit}
                                 disabled={!tagInputValue.trim()}
-                                className="px-4 py-2 bg-white/20 hover:bg-white/30 disabled:bg-white/10 disabled:text-white/30 text-white font-medium rounded-lg transition-colors text-sm"
+                                className="px-4 py-2 bg-white/20 hover:bg-white/30 disabled:bg-white/10 disabled:text-white/30 text-white font-medium rounded-lg text-sm"
                             >
                                 {t('start')}
                             </button>
                             <button
                                 onClick={handleTagCancel}
-                                className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white/70 rounded-lg transition-colors text-sm"
+                                className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white/70 rounded-lg text-sm"
                             >
                                 {t('cancel')}
                             </button>
@@ -177,7 +170,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
                         onTouchStart={(e) => e.stopPropagation()}
                         onTouchEnd={(e) => e.stopPropagation()}
                         onTouchMove={(e) => e.stopPropagation()}
-                        className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg text-white font-medium transition-colors"
+                        className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg text-white font-medium"
                     >
                         {isRunning ? t('pause') : t('start')}
                     </button>
@@ -186,7 +179,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
                         onTouchStart={(e) => e.stopPropagation()}
                         onTouchEnd={(e) => e.stopPropagation()}
                         onTouchMove={(e) => e.stopPropagation()}
-                        className="px-6 py-3 bg-white/5 hover:bg-white/10 rounded-lg text-white/70 font-medium transition-colors"
+                        className="px-6 py-3 bg-white/5 hover:bg-white/10 rounded-lg text-white/70 font-medium"
                     >
                         {t('reset')}
                     </button>
@@ -201,7 +194,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
                             onTouchStart={(e) => e.stopPropagation()}
                             onTouchEnd={(e) => e.stopPropagation()}
                             onTouchMove={(e) => e.stopPropagation()}
-                            className={`px-3 py-1 rounded text-xs font-medium transition-colors ${phase === p
+                            className={`px-3 py-1 rounded text-xs font-medium ${phase === p
                                 ? 'bg-white/20 text-white'
                                 : 'bg-white/5 text-white/50 hover:bg-white/10'
                                 }`}
@@ -212,7 +205,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
                 </div>
 
 
-            </motion.div>
+            </div>
         </>
     );
 };

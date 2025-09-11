@@ -133,21 +133,6 @@ export interface Translations {
     recentSessions: string
     noSessionsYet: string
     startFirstSession: string
-    // Quick add task translations
-    quickAddTask: string
-    suggestedSubtasks: string
-    addAllSuggestions: string
-    keyboardShortcut: string
-    addTask: string
-    // Forum translations
-    forum: string
-    communityForum: string
-    forumDescription: string
-    whatsOnYourMind: string
-    addComment: string
-    signInToPost: string
-    signInToComment: string
-    noPostsYet: string
     beFirstToShare: string
 }
 
@@ -285,21 +270,6 @@ const translations: Record<Language, Translations> = {
         recentSessions: 'Recent Sessions',
         noSessionsYet: 'No sessions yet',
         startFirstSession: 'Start your first session to see history',
-        // Quick add task translations
-        quickAddTask: 'Quick Add Task',
-        suggestedSubtasks: 'Suggested Subtasks',
-        addAllSuggestions: 'Add All Suggestions',
-        keyboardShortcut: 'Keyboard shortcut',
-        addTask: 'Add Task',
-        // Forum translations
-        forum: 'Forum',
-        communityForum: 'Community Forum',
-        forumDescription: 'Share your thoughts and connect with other Pomodoro users',
-        whatsOnYourMind: "What's on your mind?",
-        addComment: 'Add a comment...',
-        signInToPost: 'Please sign in to create posts and comments',
-        signInToComment: 'Sign in to comment',
-        noPostsYet: 'No posts yet. Be the first to share something!',
         beFirstToShare: 'Be the first to share something!'
     },
     zh: {
@@ -435,21 +405,6 @@ const translations: Record<Language, Translations> = {
         recentSessions: '最近學習',
         noSessionsYet: '還沒有學習記錄',
         startFirstSession: '開始第一次學習來查看記錄',
-        // Quick add task translations
-        quickAddTask: '快速添加任務',
-        suggestedSubtasks: '建議的子任務',
-        addAllSuggestions: '添加所有建議',
-        keyboardShortcut: '鍵盤快捷鍵',
-        addTask: '添加任務',
-        // Forum translations
-        forum: '論壇',
-        communityForum: '社群論壇',
-        forumDescription: '分享您的想法並與其他番茄工作法用戶交流',
-        whatsOnYourMind: '您在想什麼？',
-        addComment: '添加評論...',
-        signInToPost: '請登入以創建貼文和評論',
-        signInToComment: '登入以評論',
-        noPostsYet: '還沒有貼文。成為第一個分享的人！',
         beFirstToShare: '成為第一個分享的人！'
     }
 }

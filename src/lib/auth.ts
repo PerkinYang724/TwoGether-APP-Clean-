@@ -7,6 +7,8 @@ export interface User {
 }
 
 export async function signInWithGoogle() {
+    if (!supabase) throw new Error('Supabase not configured')
+
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -18,6 +20,8 @@ export async function signInWithGoogle() {
 }
 
 export async function signInWithEmail(email: string, password: string) {
+    if (!supabase) throw new Error('Supabase not configured')
+
     const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -27,6 +31,8 @@ export async function signInWithEmail(email: string, password: string) {
 }
 
 export async function signUpWithEmail(email: string, password: string, displayName?: string) {
+    if (!supabase) throw new Error('Supabase not configured')
+
     const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -41,11 +47,15 @@ export async function signUpWithEmail(email: string, password: string, displayNa
 }
 
 export async function signOut() {
+    if (!supabase) return
+
     const { error } = await supabase.auth.signOut()
     if (error) throw error
 }
 
 export async function getCurrentUser(): Promise<User | null> {
+    if (!supabase) return null
+
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return null
 
@@ -57,6 +67,11 @@ export async function getCurrentUser(): Promise<User | null> {
 }
 
 export function onAuthStateChange(callback: (user: User | null) => void) {
+    if (!supabase) {
+        callback(null)
+        return { data: { subscription: { unsubscribe: () => { } } } }
+    }
+
     return supabase.auth.onAuthStateChange((_event, session) => {
         if (session?.user) {
             callback({

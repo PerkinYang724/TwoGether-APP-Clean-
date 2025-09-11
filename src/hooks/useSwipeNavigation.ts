@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 
-export type Page = 'welcome' | 'timer' | 'settings' | 'stats' | 'tasks' | 'forum'
+export type Page = 'welcome' | 'timer' | 'settings' | 'stats' | 'tasks'
 
 export function useSwipeNavigation() {
     const [currentPage, setCurrentPage] = useState<Page>('welcome')
-    const [isTransitioning, setIsTransitioning] = useState(false)
     const [hasStarted, setHasStarted] = useState(false)
     const touchStartRef = useRef<{ x: number; y: number } | null>(null)
     const touchEndRef = useRef<{ x: number; y: number } | null>(null)
@@ -12,11 +11,10 @@ export function useSwipeNavigation() {
     const minSwipeDistance = 100
 
     // Linear page order - everything accessible by left/right swipes
-    const pageOrder: Page[] = ['welcome', 'timer', 'settings', 'stats', 'tasks', 'forum']
+    const pageOrder: Page[] = ['welcome', 'timer', 'settings', 'stats', 'tasks']
     const currentIndex = pageOrder.indexOf(currentPage)
 
     const navigateToPage = (page: Page) => {
-        if (isTransitioning) return
         console.log('Navigation: navigateToPage called - attempting to navigate to page:', page, 'from:', currentPage)
         console.trace('Navigation: Call stack for navigateToPage')
 
@@ -33,9 +31,7 @@ export function useSwipeNavigation() {
         }
 
         console.log('Navigation: PROCEEDING with navigation to page:', page)
-        setIsTransitioning(true)
         setCurrentPage(page)
-        setTimeout(() => setIsTransitioning(false), 300)
     }
 
     const navigateNext = () => {
@@ -99,7 +95,7 @@ export function useSwipeNavigation() {
     }
 
     const handleTouchEnd = () => {
-        if (!touchStartRef.current || !touchEndRef.current || isTransitioning) return
+        if (!touchStartRef.current || !touchEndRef.current) return
 
         // Don't handle touch events if any modal is open
         if (document.querySelector('[data-modal="tag-input"]')) {
@@ -162,7 +158,6 @@ export function useSwipeNavigation() {
 
     // Keyboard navigation for Mac/desktop
     const handleKeyDown = (e: KeyboardEvent) => {
-        if (isTransitioning) return
 
         console.log('Navigation: handleKeyDown called with key:', e.key, 'target:', e.target)
 
@@ -252,9 +247,9 @@ export function useSwipeNavigation() {
                 break
             case '6':
                 e.preventDefault()
-                console.log('Navigation: Key 6 pressed - navigating to forum')
+                console.log('Navigation: Key 6 pressed - navigating to tasks')
                 if (hasStarted) {
-                    navigateToPage('forum')
+                    navigateToPage('tasks')
                 }
                 break
         }
@@ -277,7 +272,7 @@ export function useSwipeNavigation() {
             element.removeEventListener('touchend', handleTouchEnd)
             element.removeEventListener('keydown', handleKeyDown)
         }
-    }, [currentPage, currentIndex, isTransitioning])
+    }, [currentPage, currentIndex])
 
     return {
         currentPage,
@@ -287,7 +282,6 @@ export function useSwipeNavigation() {
         navigatePrevious,
         navigateToTasks,
         navigateToTimer,
-        startApp,
-        isTransitioning
+        startApp
     }
 }

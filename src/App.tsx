@@ -27,10 +27,20 @@ export default function App() {
         setVideoShouldPlay(true)
     }, [currentPage])
 
+    // Ensure video background is always active
+    useEffect(() => {
+        document.body.classList.add('video-background-active')
+        document.body.style.background = 'black'
+        return () => {
+            document.body.classList.remove('video-background-active')
+        }
+    }, [])
+
     // Debug logging
     console.log('App: currentPage:', currentPage)
-    console.log('App: videoSrc:', currentPage === 'welcome' ? "/videos/opening.mp4" : "/videos/cafe intro.mp4")
+    console.log('App: videoSrc:', currentPage === 'welcome' ? "/videos/intro welcome.mp4" : "/videos/cafe study.mp4")
     console.log('App: videoShouldPlay:', videoShouldPlay)
+    console.log('App: VideoBackground component should render with videoSrc:', currentPage === 'welcome' ? "/videos/intro welcome.mp4" : "/videos/cafe study.mp4")
 
 
 
@@ -57,25 +67,41 @@ export default function App() {
     return (
         <div className="relative">
             {/* Global Video Background */}
-            <VideoBackground
-                videoSrc={currentPage === 'welcome' ? "/videos/opening.mp4" : "/videos/cafe intro.mp4"}
-                overlay={true}
-                overlayOpacity={0.3}
-                shouldPlay={videoShouldPlay}
-                autoPlay={true}
-                muted={true}
-                loop={true}
-            />
+            {/* Welcome Page Video - Only shows on welcome page */}
+            {currentPage === 'welcome' && (
+                <VideoBackground
+                    videoSrc="/videos/intro welcome.mp4"
+                    overlay={true}
+                    overlayOpacity={0.3}
+                    shouldPlay={videoShouldPlay}
+                    autoPlay={true}
+                    muted={true}
+                    loop={true}
+                />
+            )}
+
+            {/* Persistent Cafe Study Video - Shows on all other pages */}
+            {currentPage !== 'welcome' && (
+                <VideoBackground
+                    videoSrc="/videos/cafe study.mp4"
+                    overlay={true}
+                    overlayOpacity={0.3}
+                    shouldPlay={true}
+                    autoPlay={true}
+                    muted={true}
+                    loop={true}
+                />
+            )}
 
             {/* Main App Header - Fixed at top */}
-            <div className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-white/10">
+            <div className="fixed top-0 left-0 right-0 bg-black/80 backdrop-blur-sm border-b border-white/10" style={{ zIndex: 50 }}>
                 <div className="px-4 sm:px-6 py-3 sm:py-4">
                     <div className="flex items-center justify-between">
                         <div className="flex-1 min-w-0">
                             <h1 className="text-lg sm:text-xl font-semibold truncate">{t('appName')}</h1>
                             <p className="text-white/70 text-xs truncate">{t('tagline')}</p>
                             {/* Debug info - hidden on mobile */}
-                            <p className="text-white/50 text-xs hidden sm:block">Page: {currentPage} | Video: {currentPage === 'welcome' ? 'opening' : 'cafe'}</p>
+                            <p className="text-white/50 text-xs hidden sm:block">Page: {currentPage} | Video: {currentPage === 'welcome' ? 'intro welcome' : 'cafe study'}</p>
                         </div>
                         <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
                             <LanguageToggle />
@@ -99,7 +125,7 @@ export default function App() {
             </div>
 
             {/* Main Content with Swipe Navigation */}
-            <div className="pt-20 relative z-10">
+            <div className="pt-20 relative" style={{ zIndex: 10 }}>
                 <SwipeNavigator
                     onPageChange={setCurrentPage}
                     onVideoStart={() => {
@@ -112,7 +138,7 @@ export default function App() {
             <InstallPrompt />
 
             {/* Footer */}
-            <footer className="fixed bottom-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-sm border-t border-white/10 text-center text-white/40 text-xs py-2">
+            <footer className="fixed bottom-0 left-0 right-0 bg-black/80 backdrop-blur-sm border-t border-white/10 text-center text-white/40 text-xs py-2" style={{ zIndex: 40 }}>
                 {t('madeWithLove')} — {t('offlineReady')}
                 {syncStatus === 'synced' && ` • ${t('synced')}`}
                 {syncStatus === 'offline' && ` • ${t('offline')}`}

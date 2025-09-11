@@ -12,6 +12,8 @@ export interface Session {
 }
 
 export async function saveSession(session: Omit<Session, 'id'>) {
+    if (!supabase) throw new Error('Supabase not configured')
+
     const { data, error } = await supabase
         .from('sessions')
         .insert([session])
@@ -23,6 +25,8 @@ export async function saveSession(session: Omit<Session, 'id'>) {
 }
 
 export async function updateSession(id: string, updates: Partial<Session>) {
+    if (!supabase) throw new Error('Supabase not configured')
+
     const { data, error } = await supabase
         .from('sessions')
         .update(updates)
@@ -35,6 +39,8 @@ export async function updateSession(id: string, updates: Partial<Session>) {
 }
 
 export async function getSessions(userId: string, limit = 50) {
+    if (!supabase) return []
+
     const { data, error } = await supabase
         .from('sessions')
         .select('*')
@@ -47,6 +53,8 @@ export async function getSessions(userId: string, limit = 50) {
 }
 
 export async function getTodaySessions(userId: string) {
+    if (!supabase) return []
+
     const today = new Date()
     today.setHours(0, 0, 0, 0)
 
@@ -62,6 +70,8 @@ export async function getTodaySessions(userId: string) {
 }
 
 export async function getTotalSessions(userId: string) {
+    if (!supabase) return 0
+
     const { count, error } = await supabase
         .from('sessions')
         .select('*', { count: 'exact', head: true })

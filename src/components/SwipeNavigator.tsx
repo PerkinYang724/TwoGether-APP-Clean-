@@ -6,7 +6,6 @@ import TimerPage from './pages/TimerPage'
 import SettingsPage from './pages/SettingsPage'
 import StatsPage from './pages/StatsPage'
 import TasksPage from './pages/TasksPage'
-import ForumPage from './pages/ForumPage'
 
 interface SwipeNavigatorProps {
     onVideoStart?: () => void
@@ -23,7 +22,7 @@ export default function SwipeNavigator({ onVideoStart, onPageChange }: SwipeNavi
         startApp
     } = useSwipeNavigation()
 
-    const pageOrder: Page[] = ['welcome', 'timer', 'settings', 'stats', 'tasks', 'forum']
+    const pageOrder: Page[] = ['welcome', 'timer', 'settings', 'stats', 'tasks']
     const currentIndex = pageOrder.indexOf(currentPage)
 
     console.log('SwipeNavigator: currentPage:', currentPage, 'currentIndex:', currentIndex)
@@ -49,8 +48,6 @@ export default function SwipeNavigator({ onVideoStart, onPageChange }: SwipeNavi
                 return <StatsPage />
             case 'tasks':
                 return <TasksPage />
-            case 'forum':
-                return <ForumPage />
             default:
                 return <WelcomePage onStart={startApp} hasStarted={hasStarted} onVideoStart={onVideoStart} />
         }
@@ -71,10 +68,10 @@ export default function SwipeNavigator({ onVideoStart, onPageChange }: SwipeNavi
         <div className={`relative w-full overflow-x-hidden overflow-y-auto ${currentPage === 'welcome' ? 'h-screen' : 'min-h-screen pb-48 md:pb-0'}`}>
             {/* Main pages container */}
             <div
-                className="flex transition-transform duration-300 ease-in-out flex-row"
+                className="flex flex-row"
                 style={{
                     transform: getTransformStyle(),
-                    width: '600vw', // 6 pages * 100vw each
+                    width: '500vw', // 5 pages * 100vw each
                     minHeight: currentPage === 'welcome' ? '100vh' : '100vh'
                 }}
             >
@@ -102,11 +99,6 @@ export default function SwipeNavigator({ onVideoStart, onPageChange }: SwipeNavi
                 <div className="w-screen min-h-screen flex-shrink-0">
                     {getPageComponent('tasks')}
                 </div>
-
-                {/* Forum Page */}
-                <div className="w-screen min-h-screen flex-shrink-0">
-                    {getPageComponent('forum')}
-                </div>
             </div>
 
             {/* Navigation Controls - Desktop/Mac */}
@@ -118,7 +110,7 @@ export default function SwipeNavigator({ onVideoStart, onPageChange }: SwipeNavi
                             <button
                                 key={page}
                                 onClick={() => navigateToPage(page)}
-                                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200 ${currentPage === page
+                                className={`px-3 py-1 rounded-full text-xs font-medium ${currentPage === page
                                     ? 'bg-white text-black'
                                     : 'text-white/70 hover:text-white hover:bg-white/10'
                                     }`}
@@ -126,7 +118,7 @@ export default function SwipeNavigator({ onVideoStart, onPageChange }: SwipeNavi
                                 {page === 'timer' ? 'Timer' :
                                     page === 'settings' ? 'Settings' :
                                         page === 'stats' ? 'Stats' :
-                                            page === 'tasks' ? 'Tasks' : 'Forum'}
+                                            page === 'tasks' ? 'Tasks' : page}
                             </button>
                         ))}
                     </div>
@@ -136,7 +128,7 @@ export default function SwipeNavigator({ onVideoStart, onPageChange }: SwipeNavi
                         <button
                             onClick={navigatePrevious}
                             disabled={currentIndex === 0}
-                            className="p-2 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 text-white/70 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors duration-200"
+                            className="p-2 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 text-white/70 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed"
                         >
                             ←
                         </button>
@@ -146,7 +138,7 @@ export default function SwipeNavigator({ onVideoStart, onPageChange }: SwipeNavi
                         <button
                             onClick={navigateNext}
                             disabled={currentIndex === pageOrder.length - 1}
-                            className="p-2 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 text-white/70 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors duration-200"
+                            className="p-2 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 text-white/70 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed"
                         >
                             →
                         </button>
@@ -185,7 +177,7 @@ export default function SwipeNavigator({ onVideoStart, onPageChange }: SwipeNavi
                             <button
                                 key={page}
                                 onClick={() => navigateToPage(page)}
-                                className={`px-2 py-2 rounded-full text-xs font-medium transition-colors duration-200 flex-1 touch-manipulation ${currentPage === page
+                                className={`px-2 py-2 rounded-full text-xs font-medium flex-1 touch-manipulation ${currentPage === page
                                     ? 'bg-white text-black'
                                     : 'text-white/70 hover:text-white hover:bg-white/10 active:bg-white/20'
                                     }`}
@@ -193,7 +185,7 @@ export default function SwipeNavigator({ onVideoStart, onPageChange }: SwipeNavi
                                 {page === 'timer' ? 'Timer' :
                                     page === 'settings' ? 'Settings' :
                                         page === 'stats' ? 'Stats' :
-                                            page === 'tasks' ? 'Tasks' : 'Forum'}
+                                            page === 'tasks' ? 'Tasks' : page}
                             </button>
                         ))}
                     </div>
@@ -205,7 +197,7 @@ export default function SwipeNavigator({ onVideoStart, onPageChange }: SwipeNavi
             {hasStarted && (
                 <div className="hidden md:block absolute bottom-4 left-4 text-xs text-white/40">
                     <div>← → Navigate</div>
-                    <div>1-5 Quick jump</div>
+                    <div>1-4 Quick jump</div>
                 </div>
             )}
         </div>
