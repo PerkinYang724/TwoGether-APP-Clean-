@@ -210,31 +210,45 @@ export default function VideoBackground({
 
     return (
         <div className={`fixed inset-0 w-full h-full overflow-hidden bg-black ${className}`} style={{ zIndex: -1 }}>
-            <video
-                ref={videoRef}
-                className="absolute inset-0 w-full h-full object-cover"
-                loop={loop}
-                muted={muted}
-                autoPlay={autoPlay}
-                playsInline
-                preload="auto"
-                controls={false}
-                webkit-playsinline="true"
-                style={{ pointerEvents: 'none' }}
-                onLoadStart={() => console.log('Video: Load started')}
-                onLoadedData={() => console.log('Video: Data loaded')}
-                onCanPlay={() => console.log('Video: Can play')}
-                onPlay={() => console.log('Video: Playing')}
-                onPause={() => console.log('Video: Paused')}
-                onError={(e) => {
-                    console.error('Video: Error', e)
-                    setVideoError(true)
-                    setShowPlayButton(true)
-                }}
-            >
-                <source src={videoSrc} type="video/mp4" />
-                Your browser does not support the video tag.
-            </video>
+            {/* Fallback gradient background - always visible */}
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900" style={{ zIndex: -2 }} />
+            
+            {/* Animated background elements */}
+            <div className="absolute inset-0 overflow-hidden" style={{ zIndex: -1 }}>
+                {/* Floating circles for visual interest */}
+                <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute top-3/4 right-1/4 w-48 h-48 bg-blue-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                <div className="absolute top-1/2 left-1/2 w-32 h-32 bg-indigo-500/20 rounded-full blur-3xl animate-pulse delay-2000"></div>
+            </div>
+
+            {/* Video element - only if video files are available */}
+            {!videoError && (
+                <video
+                    ref={videoRef}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    loop={loop}
+                    muted={muted}
+                    autoPlay={autoPlay}
+                    playsInline
+                    preload="auto"
+                    controls={false}
+                    webkit-playsinline="true"
+                    style={{ pointerEvents: 'none' }}
+                    onLoadStart={() => console.log('Video: Load started')}
+                    onLoadedData={() => console.log('Video: Data loaded')}
+                    onCanPlay={() => console.log('Video: Can play')}
+                    onPlay={() => console.log('Video: Playing')}
+                    onPause={() => console.log('Video: Paused')}
+                    onError={(e) => {
+                        console.error('Video: Error', e)
+                        setVideoError(true)
+                        setShowPlayButton(true)
+                    }}
+                >
+                    <source src={videoSrc} type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+            )}
 
             {/* Debug info for mobile */}
             <div className="absolute top-4 left-4 text-white text-xs bg-black/50 p-2 rounded z-10">
@@ -243,10 +257,11 @@ export default function VideoBackground({
                 <div>User Interacted: {userInteracted ? 'Yes' : 'No'}</div>
                 <div>AutoPlay: {autoPlay ? 'Yes' : 'No'}</div>
                 <div>Video Error: {videoError ? 'Yes' : 'No'}</div>
+                <div>Status: {videoError ? 'Using Fallback' : 'Loading Video'}</div>
             </div>
 
             {/* Play button overlay for mobile */}
-            {showPlayButton && (
+            {showPlayButton && !videoError && (
                 <div 
                     className="absolute inset-0 flex items-center justify-center bg-black/50 z-20"
                     onClick={async () => {
@@ -267,9 +282,6 @@ export default function VideoBackground({
                     </div>
                 </div>
             )}
-
-            {/* Fallback background for when video fails */}
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900" style={{ zIndex: -2 }} />
 
             {/* Optional overlay for better text readability */}
             {overlay && (

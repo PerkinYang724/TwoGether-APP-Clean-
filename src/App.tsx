@@ -60,7 +60,7 @@ export default function App() {
             <VideoBackground
                 videoSrc={currentPage === 'welcome' ? "/videos/opening.mp4" : "/videos/cafe intro.mp4"}
                 overlay={true}
-                overlayOpacity={0.2}
+                overlayOpacity={0.3}
                 shouldPlay={videoShouldPlay}
                 autoPlay={true}
                 muted={true}
