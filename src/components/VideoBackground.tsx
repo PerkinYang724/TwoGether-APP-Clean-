@@ -33,9 +33,11 @@ export default function VideoBackground({
         console.log('VideoBackground: Video element:', video)
         console.log('VideoBackground: Video src will be set to:', videoSrc)
 
-        const handleLoadedData = async () => {
-            console.log('VideoBackground: Video data loaded for:', videoSrc)
-            if (shouldPlay) {
+        // Reset error state when video source changes
+        setVideoError(false)
+
+        const playVideo = async () => {
+            if (shouldPlay && video.paused) {
                 try {
                     await video.play()
                     console.log('VideoBackground: Video started playing for:', videoSrc)
@@ -49,21 +51,24 @@ export default function VideoBackground({
                         } catch (retryError) {
                             console.log('VideoBackground: Video play failed on retry for:', videoSrc, retryError)
                         }
-                    }, 500)
+                    }, 100)
                 }
             }
         }
 
+        const handleLoadedData = async () => {
+            console.log('VideoBackground: Video data loaded for:', videoSrc)
+            await playVideo()
+        }
+
         const handleCanPlay = async () => {
             console.log('VideoBackground: Video can play for:', videoSrc)
-            if (shouldPlay && video.paused) {
-                try {
-                    await video.play()
-                    console.log('VideoBackground: Video started playing on canplay for:', videoSrc)
-                } catch (error) {
-                    console.log('VideoBackground: Video play failed on canplay for:', videoSrc, error)
-                }
-            }
+            await playVideo()
+        }
+
+        const handleCanPlayThrough = async () => {
+            console.log('VideoBackground: Video can play through for:', videoSrc)
+            await playVideo()
         }
 
         const handleError = (e: any) => {
@@ -88,13 +93,26 @@ export default function VideoBackground({
         video.addEventListener('load', handleLoad)
         video.addEventListener('loadeddata', handleLoadedData)
         video.addEventListener('canplay', handleCanPlay)
+        video.addEventListener('canplaythrough', handleCanPlayThrough)
         video.addEventListener('error', handleError)
 
+        // Try to play immediately if video is already loaded
+        if (video.readyState >= 3) { // HAVE_FUTURE_DATA
+            playVideo()
+        }
+
+        // Also try to play after a short delay to handle async loading
+        const playTimeout = setTimeout(() => {
+            playVideo()
+        }, 1000)
+
         return () => {
+            clearTimeout(playTimeout)
             video.removeEventListener('loadstart', handleLoadStart)
             video.removeEventListener('load', handleLoad)
             video.removeEventListener('loadeddata', handleLoadedData)
             video.removeEventListener('canplay', handleCanPlay)
+            video.removeEventListener('canplaythrough', handleCanPlayThrough)
             video.removeEventListener('error', handleError)
         }
     }, [videoSrc, shouldPlay])
@@ -113,12 +131,16 @@ export default function VideoBackground({
             }
         }
 
-        document.addEventListener('click', handleUserInteraction, { once: true })
-        document.addEventListener('touchstart', handleUserInteraction, { once: true })
+        // Add multiple event listeners for better coverage
+        const events = ['click', 'touchstart', 'keydown', 'mousedown']
+        events.forEach(event => {
+            document.addEventListener(event, handleUserInteraction, { once: true })
+        })
 
         return () => {
-            document.removeEventListener('click', handleUserInteraction)
-            document.removeEventListener('touchstart', handleUserInteraction)
+            events.forEach(event => {
+                document.removeEventListener(event, handleUserInteraction)
+            })
         }
     }, [shouldPlay])
 
@@ -139,13 +161,14 @@ export default function VideoBackground({
                     muted={muted}
                     autoPlay={autoPlay}
                     playsInline
-                    preload="auto"
+                    preload="metadata"
                     controls={false}
                     webkit-playsinline="true"
                     style={{
                         pointerEvents: 'none',
                         zIndex: 1,
-                        transition: 'none'
+                        transition: 'none',
+                        opacity: 1
                     }}
                 >
                     <source src={videoSrc} type={videoSrc.endsWith('.mov') ? 'video/quicktime' : 'video/mp4'} />
