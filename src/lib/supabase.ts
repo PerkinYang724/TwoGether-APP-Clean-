@@ -1,7 +1,14 @@
-import { createClient } from '@supabase/supabase-js'
+import { createSupabaseClient, env } from './env'
 
-const url = import.meta.env.VITE_SUPABASE_URL
-const key = import.meta.env.VITE_SUPABASE_ANON_KEY
+// Create Supabase client safely with fallback handling
+let supabase: any = null
 
-// Only create Supabase client if environment variables are available
-export const supabase = url && key ? createClient(url, key) : null
+// Initialize Supabase client asynchronously
+createSupabaseClient().then(client => {
+    supabase = client
+})
+
+export { supabase }
+
+// Export environment info for debugging
+export { env }

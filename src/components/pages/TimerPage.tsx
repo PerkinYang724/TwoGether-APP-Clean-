@@ -8,7 +8,7 @@ interface TimerPageProps {
 }
 
 export default function TimerPage({ className = '' }: TimerPageProps) {
-    const { phase, isRunning, secondsLeft, start, stop, reset, setPhaseAndReset } = usePomodoroWithSync()
+    const { phase, isRunning, secondsLeft, start, stop, reset, setPhaseAndReset, updateTimerDuration } = usePomodoroWithSync()
 
     return (
         <div className={`flex flex-col items-center justify-start min-h-screen px-4 sm:px-6 py-4 ${className}`}>
@@ -23,6 +23,7 @@ export default function TimerPage({ className = '' }: TimerPageProps) {
                         onStop={stop}
                         onReset={() => reset()}
                         onSetPhase={(p) => setPhaseAndReset(p)}
+                        onUpdateDuration={updateTimerDuration}
                     />
                 </div>
 

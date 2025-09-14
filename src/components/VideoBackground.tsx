@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
+import { errorHandler } from '../lib/errorHandler'
 
 interface VideoBackgroundProps {
     videoSrc: string
@@ -23,6 +24,9 @@ export default function VideoBackground({
 }: VideoBackgroundProps) {
     const videoRef = useRef<HTMLVideoElement>(null)
     const [videoError, setVideoError] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
+    const [retryCount, setRetryCount] = useState(0)
+    const maxRetries = 3
 
     // Handle video playback
     useEffect(() => {
@@ -33,25 +37,45 @@ export default function VideoBackground({
         console.log('VideoBackground: Video element:', video)
         console.log('VideoBackground: Video src will be set to:', videoSrc)
 
-        // Reset error state when video source changes
+        // Reset states when video source changes
         setVideoError(false)
+        setIsLoading(true)
+        setRetryCount(0)
 
         const playVideo = async () => {
             if (shouldPlay && video.paused) {
                 try {
                     await video.play()
                     console.log('VideoBackground: Video started playing for:', videoSrc)
+                    setIsLoading(false)
                 } catch (error) {
                     console.log('VideoBackground: Video play failed for:', videoSrc, error)
-                    // Try again after a short delay
-                    setTimeout(async () => {
-                        try {
-                            await video.play()
-                            console.log('VideoBackground: Video started playing on retry for:', videoSrc)
-                        } catch (retryError) {
-                            console.log('VideoBackground: Video play failed on retry for:', videoSrc, retryError)
-                        }
-                    }, 100)
+                    errorHandler.logError({
+                        message: `Video play failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+                        code: 'VIDEO_PLAY_ERROR',
+                        context: `VideoBackground: ${videoSrc}`
+                    })
+
+                    // Retry logic
+                    if (retryCount < maxRetries) {
+                        setTimeout(async () => {
+                            try {
+                                setRetryCount(prev => prev + 1)
+                                await video.play()
+                                console.log('VideoBackground: Video started playing on retry for:', videoSrc)
+                                setIsLoading(false)
+                            } catch (retryError) {
+                                console.log('VideoBackground: Video play failed on retry for:', videoSrc, retryError)
+                                if (retryCount + 1 >= maxRetries) {
+                                    setVideoError(true)
+                                    setIsLoading(false)
+                                }
+                            }
+                        }, 1000 * (retryCount + 1)) // Exponential backoff
+                    } else {
+                        setVideoError(true)
+                        setIsLoading(false)
+                    }
                 }
             }
         }
@@ -78,7 +102,15 @@ export default function VideoBackground({
                 networkState: e.target?.networkState,
                 readyState: e.target?.readyState
             })
+
+            errorHandler.logError({
+                message: `Video load error: ${e.target?.error?.message || 'Unknown video error'}`,
+                code: 'VIDEO_LOAD_ERROR',
+                context: `VideoBackground: ${videoSrc}`
+            })
+
             setVideoError(true)
+            setIsLoading(false)
         }
 
         const handleLoadStart = () => {
@@ -87,6 +119,7 @@ export default function VideoBackground({
 
         const handleLoad = () => {
             console.log('VideoBackground: Video load completed for:', videoSrc)
+            setIsLoading(false)
         }
 
         video.addEventListener('loadstart', handleLoadStart)
@@ -154,26 +187,38 @@ export default function VideoBackground({
             }}
         >
             {!videoError ? (
-                <video
-                    ref={videoRef}
-                    className="absolute inset-0 w-full h-full object-cover"
-                    loop={loop}
-                    muted={muted}
-                    autoPlay={autoPlay}
-                    playsInline
-                    preload="metadata"
-                    controls={false}
-                    webkit-playsinline="true"
-                    style={{
-                        pointerEvents: 'none',
-                        zIndex: 1,
-                        transition: 'none',
-                        opacity: 1
-                    }}
-                >
-                    <source src={videoSrc} type={videoSrc.endsWith('.mov') ? 'video/quicktime' : 'video/mp4'} />
-                    Your browser does not support the video tag.
-                </video>
+                <>
+                    <video
+                        ref={videoRef}
+                        className="absolute inset-0 w-full h-full object-cover"
+                        loop={loop}
+                        muted={muted}
+                        autoPlay={autoPlay}
+                        playsInline
+                        preload="metadata"
+                        controls={false}
+                        webkit-playsinline="true"
+                        style={{
+                            pointerEvents: 'none',
+                            zIndex: 1,
+                            transition: 'none',
+                            opacity: isLoading ? 0.5 : 1
+                        }}
+                    >
+                        <source src={videoSrc} type={videoSrc.endsWith('.mov') ? 'video/quicktime' : 'video/mp4'} />
+                        Your browser does not support the video tag.
+                    </video>
+
+                    {/* Loading indicator */}
+                    {isLoading && (
+                        <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: 2 }}>
+                            <div className="text-white/70 text-center">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
+                                <div className="text-sm">Loading video...</div>
+                            </div>
+                        </div>
+                    )}
+                </>
             ) : (
                 /* Fallback gradient background when video fails to load */
                 <div

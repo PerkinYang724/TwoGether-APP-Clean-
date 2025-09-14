@@ -41,84 +41,24 @@ export default function SettingsDrawer({ settings, setSettings }: { settings: Po
             {/* Collapsible Content */}
             {isExpanded && (
                 <div className="px-4 pb-4 space-y-4">
-                    {/* Timer Duration Settings */}
+                    {/* Sessions Until Long Break Setting */}
                     <div className="space-y-3">
-                        <div className="text-sm text-white/60 mb-3">
-                            {t('timerDurations')}
-                        </div>
-
-                        <div className="space-y-3">
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <Clock className="size-4 text-white/60" />
-                                    <div>
-                                        <div className="font-medium">{t('focusMinutes')}</div>
-                                        <div className="text-sm text-white/60">{t('focusMinutesDesc')}</div>
-                                    </div>
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <Clock className="size-4 text-white/60" />
+                                <div>
+                                    <div className="font-medium">{t('sessionsUntilLongBreak')}</div>
+                                    <div className="text-sm text-white/60">{t('sessionsUntilLongBreakDesc')}</div>
                                 </div>
-                                <input
-                                    type="number"
-                                    min={1}
-                                    max={60}
-                                    className="w-16 bg-white/10 border border-white/20 rounded-lg px-2 py-1 text-center text-white"
-                                    value={settings.focusMinutes}
-                                    onChange={e => update('focusMinutes', Number(e.target.value))}
-                                />
                             </div>
-
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <Clock className="size-4 text-white/60" />
-                                    <div>
-                                        <div className="font-medium">{t('shortBreakMinutes')}</div>
-                                        <div className="text-sm text-white/60">{t('shortBreakMinutesDesc')}</div>
-                                    </div>
-                                </div>
-                                <input
-                                    type="number"
-                                    min={1}
-                                    max={30}
-                                    className="w-16 bg-white/10 border border-white/20 rounded-lg px-2 py-1 text-center text-white"
-                                    value={settings.shortBreakMinutes}
-                                    onChange={e => update('shortBreakMinutes', Number(e.target.value))}
-                                />
-                            </div>
-
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <Clock className="size-4 text-white/60" />
-                                    <div>
-                                        <div className="font-medium">{t('longBreakMinutes')}</div>
-                                        <div className="text-sm text-white/60">{t('longBreakMinutesDesc')}</div>
-                                    </div>
-                                </div>
-                                <input
-                                    type="number"
-                                    min={1}
-                                    max={60}
-                                    className="w-16 bg-white/10 border border-white/20 rounded-lg px-2 py-1 text-center text-white"
-                                    value={settings.longBreakMinutes}
-                                    onChange={e => update('longBreakMinutes', Number(e.target.value))}
-                                />
-                            </div>
-
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <Clock className="size-4 text-white/60" />
-                                    <div>
-                                        <div className="font-medium">{t('sessionsUntilLongBreak')}</div>
-                                        <div className="text-sm text-white/60">{t('sessionsUntilLongBreakDesc')}</div>
-                                    </div>
-                                </div>
-                                <input
-                                    type="number"
-                                    min={2}
-                                    max={10}
-                                    className="w-16 bg-white/10 border border-white/20 rounded-lg px-2 py-1 text-center text-white"
-                                    value={settings.sessionsUntilLongBreak}
-                                    onChange={e => update('sessionsUntilLongBreak', Number(e.target.value))}
-                                />
-                            </div>
+                            <input
+                                type="number"
+                                min={2}
+                                max={10}
+                                className="w-16 bg-white/10 border border-white/20 rounded-lg px-2 py-1 text-center text-white"
+                                value={settings.sessionsUntilLongBreak}
+                                onChange={e => update('sessionsUntilLongBreak', Number(e.target.value))}
+                            />
                         </div>
                     </div>
 

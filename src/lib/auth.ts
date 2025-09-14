@@ -72,7 +72,7 @@ export function onAuthStateChange(callback: (user: User | null) => void) {
         return { data: { subscription: { unsubscribe: () => { } } } }
     }
 
-    return supabase.auth.onAuthStateChange((_event, session) => {
+    return supabase.auth.onAuthStateChange((_event: any, session: any) => {
         if (session?.user) {
             callback({
                 id: session.user.id,

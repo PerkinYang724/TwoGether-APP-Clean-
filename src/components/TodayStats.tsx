@@ -21,7 +21,7 @@ export default function TodayStats() {
                 const today = new Date()
                 today.setHours(0, 0, 0, 0)
 
-                const todaySessions = allSessions.filter(session => {
+                const todaySessions = allSessions.filter((session: any) => {
                     const sessionDate = new Date(session.started_at)
                     sessionDate.setHours(0, 0, 0, 0)
                     return sessionDate.getTime() === today.getTime()

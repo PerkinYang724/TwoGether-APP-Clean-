@@ -142,9 +142,34 @@ export function usePomodoro() {
         setSecondsLeft(phaseSeconds[p])
     }, [phaseSeconds])
 
+    const updateTimerDuration = useCallback((minutes: number) => {
+        if (minutes < 1 || minutes > 60) return
+
+        const newSettings = { ...settings }
+        switch (phase) {
+            case 'focus':
+                newSettings.focusMinutes = minutes
+                break
+            case 'short_break':
+                newSettings.shortBreakMinutes = minutes
+                break
+            case 'long_break':
+                newSettings.longBreakMinutes = minutes
+                break
+        }
+
+        // Update global settings store
+        settingsStore.setSettings(newSettings)
+
+        // Update local seconds left if timer is not running
+        if (!isRunning) {
+            setSecondsLeft(minutes * 60)
+        }
+    }, [phase, settings, isRunning])
+
     return {
         phase, isRunning, secondsLeft,
         settings, setSettings,
-        start, stop, reset, setPhaseAndReset
+        start, stop, reset, setPhaseAndReset, updateTimerDuration
     }
 }

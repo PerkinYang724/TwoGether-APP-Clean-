@@ -10,6 +10,7 @@ interface TimerCardProps {
     onStop: () => void;
     onReset: () => void;
     onSetPhase: (phase: 'focus' | 'short_break' | 'long_break') => void;
+    onUpdateDuration: (minutes: number) => void;
 }
 
 const TimerCard: React.FC<TimerCardProps> = ({
@@ -19,11 +20,14 @@ const TimerCard: React.FC<TimerCardProps> = ({
     onStart,
     onStop,
     onReset,
-    onSetPhase
+    onSetPhase,
+    onUpdateDuration
 }) => {
     const [showTagInput, setShowTagInput] = useState(false)
     const [currentTag, setCurrentTag] = useState<string>('')
     const [tagInputValue, setTagInputValue] = useState<string>('')
+    const [showTimeInput, setShowTimeInput] = useState(false)
+    const [timeInputValue, setTimeInputValue] = useState<string>('')
 
     const handleStartClick = useCallback((e?: React.MouseEvent) => {
         e?.preventDefault()
@@ -57,6 +61,30 @@ const TimerCard: React.FC<TimerCardProps> = ({
         setShowTagInput(false)
         setTagInputValue('')
     }, [])
+
+    const handleTimeInputSubmit = useCallback(() => {
+        const minutes = parseInt(timeInputValue)
+        if (minutes >= 1 && minutes <= 60) {
+            onUpdateDuration(minutes)
+            setShowTimeInput(false)
+            setTimeInputValue('')
+        }
+    }, [timeInputValue, onUpdateDuration])
+
+    const handleTimeInputCancel = useCallback(() => {
+        setShowTimeInput(false)
+        setTimeInputValue('')
+    }, [])
+
+    const handleTimerClick = useCallback((e: React.MouseEvent) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        if (!isRunning && !showTagInput) {
+            setShowTimeInput(true)
+            setTimeInputValue(Math.floor(secondsLeft / 60).toString())
+        }
+    }, [isRunning, showTagInput, secondsLeft])
 
     const formatMMSS = useCallback((seconds: number) => {
         const mins = Math.floor(seconds / 60);
@@ -98,8 +126,11 @@ const TimerCard: React.FC<TimerCardProps> = ({
                     </div>
                 )}
                 <div
-                    className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-sans font-light text-white mb-8 whitespace-nowrap overflow-hidden tracking-wider"
+                    className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-sans font-light text-white mb-8 whitespace-nowrap overflow-hidden tracking-wider ${!isRunning && !showTagInput ? 'cursor-pointer hover:text-white/80 transition-colors' : ''
+                        }`}
                     key={secondsLeft}
+                    onClick={handleTimerClick}
+                    title={!isRunning && !showTagInput ? 'Click to adjust time' : ''}
                 >
                     {formattedTime}
                 </div>
@@ -141,6 +172,49 @@ const TimerCard: React.FC<TimerCardProps> = ({
                                 className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white/70 rounded-lg text-sm"
                             >
                                 {t('cancel')}
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* Time Input - Inline */}
+                {showTimeInput && (
+                    <div className="mb-6 p-4 bg-white/5 rounded-lg border border-white/10">
+                        <div className="text-sm text-white/70 mb-3 text-center">
+                            Set {phase === 'focus' ? 'focus' : phase === 'short_break' ? 'short break' : 'long break'} duration (minutes)
+                        </div>
+                        <div className="flex gap-2">
+                            <input
+                                type="number"
+                                min="1"
+                                max="60"
+                                value={timeInputValue}
+                                onChange={(e) => setTimeInputValue(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault()
+                                        handleTimeInputSubmit()
+                                    } else if (e.key === 'Escape') {
+                                        e.preventDefault()
+                                        handleTimeInputCancel()
+                                    }
+                                }}
+                                placeholder="25"
+                                className="flex-1 bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent text-sm text-center"
+                                autoFocus
+                            />
+                            <button
+                                onClick={handleTimeInputSubmit}
+                                disabled={!timeInputValue || parseInt(timeInputValue) < 1 || parseInt(timeInputValue) > 60}
+                                className="px-4 py-2 bg-white/20 hover:bg-white/30 disabled:bg-white/10 disabled:text-white/30 text-white font-medium rounded-lg text-sm"
+                            >
+                                Set
+                            </button>
+                            <button
+                                onClick={handleTimeInputCancel}
+                                className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white/70 rounded-lg text-sm"
+                            >
+                                Cancel
                             </button>
                         </div>
                     </div>
