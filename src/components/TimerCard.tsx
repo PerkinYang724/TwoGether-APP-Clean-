@@ -76,10 +76,10 @@ const TimerCard: React.FC<TimerCardProps> = ({
         setTimeInputValue('')
     }, [])
 
-    const handleTimerClick = useCallback((e: React.MouseEvent) => {
+    const handleTimerClick = useCallback((e: React.MouseEvent | React.TouchEvent) => {
         e.preventDefault()
         e.stopPropagation()
-
+        
         if (!isRunning && !showTagInput) {
             setShowTimeInput(true)
             setTimeInputValue(Math.floor(secondsLeft / 60).toString())
@@ -126,11 +126,17 @@ const TimerCard: React.FC<TimerCardProps> = ({
                     </div>
                 )}
                 <div
-                    className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-sans font-light text-white mb-8 whitespace-nowrap overflow-hidden tracking-wider ${!isRunning && !showTagInput ? 'cursor-pointer hover:text-white/80 transition-colors' : ''
+                    className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-sans font-light text-white mb-8 whitespace-nowrap overflow-hidden tracking-wider ${!isRunning && !showTagInput ? 'cursor-pointer hover:text-white/80 transition-colors select-none' : ''
                         }`}
                     key={secondsLeft}
                     onClick={handleTimerClick}
-                    title={!isRunning && !showTagInput ? 'Click to adjust time' : ''}
+                    onTouchStart={handleTimerClick}
+                    onTouchEnd={(e) => e.preventDefault()}
+                    title={!isRunning && !showTagInput ? 'Tap to adjust time' : ''}
+                    style={{ 
+                        WebkitTapHighlightColor: 'transparent',
+                        touchAction: 'manipulation'
+                    }}
                 >
                     {formattedTime}
                 </div>
@@ -202,17 +208,20 @@ const TimerCard: React.FC<TimerCardProps> = ({
                                 placeholder="25"
                                 className="flex-1 bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent text-sm text-center"
                                 autoFocus
+                                inputMode="numeric"
+                                pattern="[0-9]*"
+                                style={{ fontSize: '16px' }}
                             />
                             <button
                                 onClick={handleTimeInputSubmit}
                                 disabled={!timeInputValue || parseInt(timeInputValue) < 1 || parseInt(timeInputValue) > 60}
-                                className="px-4 py-2 bg-white/20 hover:bg-white/30 disabled:bg-white/10 disabled:text-white/30 text-white font-medium rounded-lg text-sm"
+                                className="px-4 py-2 bg-white/20 hover:bg-white/30 disabled:bg-white/10 disabled:text-white/30 text-white font-medium rounded-lg text-sm min-h-[44px] min-w-[44px]"
                             >
                                 Set
                             </button>
                             <button
                                 onClick={handleTimeInputCancel}
-                                className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white/70 rounded-lg text-sm"
+                                className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white/70 rounded-lg text-sm min-h-[44px] min-w-[44px]"
                             >
                                 Cancel
                             </button>
