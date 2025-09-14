@@ -173,14 +173,32 @@ const TimerCard: React.FC<TimerCardProps> = ({
                             />
                             <button
                                 onClick={handleTagSubmit}
+                                onTouchEnd={(e) => {
+                                    e.preventDefault()
+                                    e.stopPropagation()
+                                    handleTagSubmit()
+                                }}
                                 disabled={!tagInputValue.trim()}
-                                className="px-4 py-2 bg-white/20 hover:bg-white/30 disabled:bg-white/10 disabled:text-white/30 text-white font-medium rounded-lg text-sm"
+                                className="px-4 py-2 bg-white/20 hover:bg-white/30 active:bg-white/40 disabled:bg-white/10 disabled:text-white/30 text-white font-medium rounded-lg text-sm min-h-[44px] min-w-[60px] touch-manipulation select-none transition-all duration-150 active:scale-95"
+                                style={{ 
+                                    WebkitTapHighlightColor: 'transparent',
+                                    touchAction: 'manipulation'
+                                }}
                             >
                                 {t('start')}
                             </button>
                             <button
                                 onClick={handleTagCancel}
-                                className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white/70 rounded-lg text-sm"
+                                onTouchEnd={(e) => {
+                                    e.preventDefault()
+                                    e.stopPropagation()
+                                    handleTagCancel()
+                                }}
+                                className="px-4 py-2 bg-white/5 hover:bg-white/10 active:bg-white/15 text-white/70 rounded-lg text-sm min-h-[44px] min-w-[60px] touch-manipulation select-none transition-all duration-150 active:scale-95"
+                                style={{ 
+                                    WebkitTapHighlightColor: 'transparent',
+                                    touchAction: 'manipulation'
+                                }}
                             >
                                 {t('cancel')}
                             </button>
@@ -219,14 +237,32 @@ const TimerCard: React.FC<TimerCardProps> = ({
                             />
                             <button
                                 onClick={handleTimeInputSubmit}
+                                onTouchEnd={(e) => {
+                                    e.preventDefault()
+                                    e.stopPropagation()
+                                    handleTimeInputSubmit()
+                                }}
                                 disabled={!timeInputValue || parseInt(timeInputValue) < 1 || parseInt(timeInputValue) > 60}
-                                className="px-4 py-2 bg-white/20 hover:bg-white/30 disabled:bg-white/10 disabled:text-white/30 text-white font-medium rounded-lg text-sm min-h-[44px] min-w-[44px]"
+                                className="px-4 py-2 bg-white/20 hover:bg-white/30 active:bg-white/40 disabled:bg-white/10 disabled:text-white/30 text-white font-medium rounded-lg text-sm min-h-[44px] min-w-[44px] touch-manipulation select-none transition-all duration-150 active:scale-95"
+                                style={{ 
+                                    WebkitTapHighlightColor: 'transparent',
+                                    touchAction: 'manipulation'
+                                }}
                             >
                                 Set
                             </button>
                             <button
                                 onClick={handleTimeInputCancel}
-                                className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white/70 rounded-lg text-sm min-h-[44px] min-w-[44px]"
+                                onTouchEnd={(e) => {
+                                    e.preventDefault()
+                                    e.stopPropagation()
+                                    handleTimeInputCancel()
+                                }}
+                                className="px-4 py-2 bg-white/5 hover:bg-white/10 active:bg-white/15 text-white/70 rounded-lg text-sm min-h-[44px] min-w-[44px] touch-manipulation select-none transition-all duration-150 active:scale-95"
+                                style={{ 
+                                    WebkitTapHighlightColor: 'transparent',
+                                    touchAction: 'manipulation'
+                                }}
                             >
                                 Cancel
                             </button>
@@ -247,7 +283,7 @@ const TimerCard: React.FC<TimerCardProps> = ({
                                 handleStartClick(e)
                             }
                         }}
-                        onTouchStart={(e) => {
+                        onTouchEnd={(e) => {
                             e.preventDefault()
                             e.stopPropagation()
                             console.log('TimerCard: Start/Pause button touched')
@@ -257,12 +293,11 @@ const TimerCard: React.FC<TimerCardProps> = ({
                                 handleStartClick(e)
                             }
                         }}
-                        onTouchEnd={(e) => {
-                            e.preventDefault()
-                            e.stopPropagation()
+                        className="px-6 py-3 bg-white/10 hover:bg-white/20 active:bg-white/30 active:scale-95 transition-all duration-150 rounded-lg text-white font-medium min-h-[48px] min-w-[100px] touch-manipulation select-none"
+                        style={{ 
+                            WebkitTapHighlightColor: 'transparent',
+                            touchAction: 'manipulation'
                         }}
-                        onTouchMove={(e) => e.stopPropagation()}
-                        className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg text-white font-medium"
                     >
                         {isRunning ? t('pause') : t('start')}
                     </button>
@@ -272,17 +307,16 @@ const TimerCard: React.FC<TimerCardProps> = ({
                             e.stopPropagation()
                             onReset()
                         }}
-                        onTouchStart={(e) => {
+                        onTouchEnd={(e) => {
                             e.preventDefault()
                             e.stopPropagation()
                             onReset()
                         }}
-                        onTouchEnd={(e) => {
-                            e.preventDefault()
-                            e.stopPropagation()
+                        className="px-6 py-3 bg-white/5 hover:bg-white/10 active:bg-white/15 active:scale-95 transition-all duration-150 rounded-lg text-white/70 font-medium min-h-[48px] min-w-[80px] touch-manipulation select-none"
+                        style={{ 
+                            WebkitTapHighlightColor: 'transparent',
+                            touchAction: 'manipulation'
                         }}
-                        onTouchMove={(e) => e.stopPropagation()}
-                        className="px-6 py-3 bg-white/5 hover:bg-white/10 rounded-lg text-white/70 font-medium"
                     >
                         {t('reset')}
                     </button>
@@ -293,14 +327,24 @@ const TimerCard: React.FC<TimerCardProps> = ({
                     {(['focus', 'short_break', 'long_break'] as const).map((p) => (
                         <button
                             key={p}
-                            onClick={() => onSetPhase(p)}
-                            onTouchStart={(e) => e.stopPropagation()}
-                            onTouchEnd={(e) => e.stopPropagation()}
-                            onTouchMove={(e) => e.stopPropagation()}
-                            className={`px-3 py-1 rounded text-xs font-medium ${phase === p
+                            onClick={(e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                onSetPhase(p)
+                            }}
+                            onTouchEnd={(e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                onSetPhase(p)
+                            }}
+                            className={`px-3 py-1 rounded text-xs font-medium min-h-[32px] min-w-[60px] touch-manipulation select-none transition-all duration-150 active:scale-95 ${phase === p
                                 ? 'bg-white/20 text-white'
-                                : 'bg-white/5 text-white/50 hover:bg-white/10'
+                                : 'bg-white/5 text-white/50 hover:bg-white/10 active:bg-white/15'
                                 }`}
+                            style={{ 
+                                WebkitTapHighlightColor: 'transparent',
+                                touchAction: 'manipulation'
+                            }}
                         >
                             {p === 'focus' ? t('focus') : p === 'short_break' ? t('shortBreak') : t('longBreak')}
                         </button>
