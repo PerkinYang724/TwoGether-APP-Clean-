@@ -77,14 +77,19 @@ const TimerCard: React.FC<TimerCardProps> = ({
     }, [])
 
     const handleTimerClick = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+        // Only handle clicks on the timer display itself, not on child elements
+        if (e.target !== e.currentTarget) {
+            return
+        }
+        
         e.preventDefault()
         e.stopPropagation()
         
-        if (!isRunning && !showTagInput) {
+        if (!isRunning && !showTagInput && !showTimeInput) {
             setShowTimeInput(true)
             setTimeInputValue(Math.floor(secondsLeft / 60).toString())
         }
-    }, [isRunning, showTagInput, secondsLeft])
+    }, [isRunning, showTagInput, showTimeInput, secondsLeft])
 
     const formatMMSS = useCallback((seconds: number) => {
         const mins = Math.floor(seconds / 60);
@@ -242,25 +247,40 @@ const TimerCard: React.FC<TimerCardProps> = ({
                                 handleStartClick(e)
                             }
                         }}
-                        onMouseDown={(e) => {
+                        onTouchStart={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            console.log('TimerCard: Start/Pause button touched')
+                            if (isRunning) {
+                                onStop()
+                            } else {
+                                handleStartClick(e)
+                            }
+                        }}
+                        onTouchEnd={(e) => {
                             e.preventDefault()
                             e.stopPropagation()
                         }}
-                        onMouseUp={(e) => {
-                            e.preventDefault()
-                            e.stopPropagation()
-                        }}
-                        onTouchStart={(e) => e.stopPropagation()}
-                        onTouchEnd={(e) => e.stopPropagation()}
                         onTouchMove={(e) => e.stopPropagation()}
                         className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg text-white font-medium"
                     >
                         {isRunning ? t('pause') : t('start')}
                     </button>
                     <button
-                        onClick={onReset}
-                        onTouchStart={(e) => e.stopPropagation()}
-                        onTouchEnd={(e) => e.stopPropagation()}
+                        onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            onReset()
+                        }}
+                        onTouchStart={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            onReset()
+                        }}
+                        onTouchEnd={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                        }}
                         onTouchMove={(e) => e.stopPropagation()}
                         className="px-6 py-3 bg-white/5 hover:bg-white/10 rounded-lg text-white/70 font-medium"
                     >
