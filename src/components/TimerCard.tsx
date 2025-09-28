@@ -82,10 +82,16 @@ const TimerCard: React.FC<TimerCardProps> = ({
             return
         }
         
+        // Don't handle if any input is showing
+        if (showTagInput || showTimeInput) {
+            return
+        }
+        
         e.preventDefault()
         e.stopPropagation()
         
-        if (!isRunning && !showTagInput && !showTimeInput) {
+        if (!isRunning) {
+            console.log('TimerCard: Timer display clicked, showing time input')
             setShowTimeInput(true)
             setTimeInputValue(Math.floor(secondsLeft / 60).toString())
         }
@@ -273,10 +279,31 @@ const TimerCard: React.FC<TimerCardProps> = ({
                 {/* Controls */}
                 <div className="flex justify-center gap-4">
                     <button
+                        data-testid="start-pause-button"
                         onClick={(e) => {
                             e.preventDefault()
                             e.stopPropagation()
-                            console.log('TimerCard: Start/Pause button clicked')
+                            console.log('TimerCard: Start/Pause button clicked', { isRunning, phase })
+                            if (isRunning) {
+                                onStop()
+                            } else {
+                                handleStartClick(e)
+                            }
+                        }}
+                        onMouseDown={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            console.log('TimerCard: Start/Pause button mouse down', { isRunning, phase })
+                            if (isRunning) {
+                                onStop()
+                            } else {
+                                handleStartClick(e)
+                            }
+                        }}
+                        onTouchStart={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            console.log('TimerCard: Start/Pause button touch start', { isRunning, phase })
                             if (isRunning) {
                                 onStop()
                             } else {
@@ -286,17 +313,13 @@ const TimerCard: React.FC<TimerCardProps> = ({
                         onTouchEnd={(e) => {
                             e.preventDefault()
                             e.stopPropagation()
-                            console.log('TimerCard: Start/Pause button touched')
-                            if (isRunning) {
-                                onStop()
-                            } else {
-                                handleStartClick(e)
-                            }
                         }}
                         className="px-6 py-3 bg-white/10 hover:bg-white/20 active:bg-white/30 active:scale-95 transition-all duration-150 rounded-lg text-white font-medium min-h-[48px] min-w-[100px] touch-manipulation select-none"
                         style={{ 
                             WebkitTapHighlightColor: 'transparent',
-                            touchAction: 'manipulation'
+                            touchAction: 'manipulation',
+                            userSelect: 'none',
+                            WebkitUserSelect: 'none'
                         }}
                     >
                         {isRunning ? t('pause') : t('start')}
@@ -307,15 +330,26 @@ const TimerCard: React.FC<TimerCardProps> = ({
                             e.stopPropagation()
                             onReset()
                         }}
-                        onTouchEnd={(e) => {
+                        onMouseDown={(e) => {
                             e.preventDefault()
                             e.stopPropagation()
                             onReset()
                         }}
+                        onTouchStart={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            onReset()
+                        }}
+                        onTouchEnd={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                        }}
                         className="px-6 py-3 bg-white/5 hover:bg-white/10 active:bg-white/15 active:scale-95 transition-all duration-150 rounded-lg text-white/70 font-medium min-h-[48px] min-w-[80px] touch-manipulation select-none"
                         style={{ 
                             WebkitTapHighlightColor: 'transparent',
-                            touchAction: 'manipulation'
+                            touchAction: 'manipulation',
+                            userSelect: 'none',
+                            WebkitUserSelect: 'none'
                         }}
                     >
                         {t('reset')}
