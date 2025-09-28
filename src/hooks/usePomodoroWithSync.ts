@@ -51,6 +51,7 @@ export function usePomodoroWithSync() {
 
     // Start session tracking
     const startWithSync = useCallback(async (tag?: string) => {
+        console.log('usePomodoroWithSync: startWithSync called with tag:', tag, 'phase:', pomodoro.phase)
         pomodoro.start()
 
         if (user && isOnline) {

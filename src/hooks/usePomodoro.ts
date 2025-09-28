@@ -17,7 +17,17 @@ export interface PomodoroSettings {
 export function usePomodoro() {
     const [settings, setSettings] = useState<PomodoroSettings>(() => settingsStore.getSettings())
     const [phase, setPhase] = useState<Phase>('focus')
+
+    // Debug phase changes
+    useEffect(() => {
+        console.log('usePomodoro: Phase changed to:', phase)
+    }, [phase])
     const [isRunning, setIsRunning] = useState(false)
+
+    // Debug isRunning changes
+    useEffect(() => {
+        console.log('usePomodoro: isRunning changed to:', isRunning)
+    }, [isRunning])
     const [secondsLeft, setSecondsLeft] = useState(settings.focusMinutes * 60)
     const [completedFocusSessions, setCompletedFocusSessions] = useState<number>(() => Number(localStorage.getItem('focusCount') || 0))
     const tickRef = useRef<number | null>(null)
@@ -93,8 +103,12 @@ export function usePomodoro() {
     }, [])
 
     const start = useCallback(async () => {
-        console.log('🎯 Pomodoro start called', { isRunning, phase })
-        if (isRunning) return
+        console.log('🎯 Pomodoro start called', { isRunning, phase, secondsLeft })
+        if (isRunning) {
+            console.log('🎯 Timer already running, skipping start')
+            return
+        }
+        console.log('🎯 Setting isRunning to true and starting timer loop')
         setIsRunning(true)
 
         let last = performance.now()
@@ -138,8 +152,11 @@ export function usePomodoro() {
     }, [secondsLeft, nextPhase, settings.autoStartNext, start, stop])
 
     const setPhaseAndReset = useCallback((p: Phase) => {
+        console.log('usePomodoro: setPhaseAndReset called with phase:', p)
+        console.log('usePomodoro: phaseSeconds:', phaseSeconds)
         setPhase(p)
         setSecondsLeft(phaseSeconds[p])
+        console.log('usePomodoro: Phase set to:', p, 'secondsLeft set to:', phaseSeconds[p])
     }, [phaseSeconds])
 
     const updateTimerDuration = useCallback((minutes: number) => {
