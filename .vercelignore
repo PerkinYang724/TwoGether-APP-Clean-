@@ -1,7 +1,0 @@
-# Include music files in Vercel deployment
-# public/music/
-node_modules/
-.git/
-.vercel/
-*.log
-
