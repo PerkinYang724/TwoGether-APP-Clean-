@@ -97,7 +97,7 @@ src/
 ├── lib/
 │   ├── env.ts              # Environment validation
 │   ├── supabase.ts         # Supabase client setup
-│   ├── schemas-new.ts      # Simplified Zod schemas
+│   ├── schemas.ts           # Zod schemas for validation
 │   ├── auth.tsx            # Authentication context
 │   └── hooks.ts            # React Query hooks
 ├── app/

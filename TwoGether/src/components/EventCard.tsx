@@ -109,18 +109,18 @@ export function EventCard({
 
     const getCategoryIcon = (category: string) => {
         const icons: Record<string, React.ReactNode> = {
-            study: "📚",
-            sport: "⚽",
-            party: "🎉",
-            food: "🍕",
-            volunteer: "🤝",
-            carpool: "🚗",
-            social: "👥",
-            academic: "🎓",
-            fitness: "💪",
-            music: "🎵",
-            tech: "💻",
-            other: "📅",
+            study: <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">📚</div>,
+            sport: <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-600 font-bold">⚽</div>,
+            party: <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 font-bold">🎉</div>,
+            food: <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 font-bold">🍕</div>,
+            volunteer: <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center text-pink-600 font-bold">🤝</div>,
+            carpool: <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600 font-bold">🚗</div>,
+            social: <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold">👥</div>,
+            academic: <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 font-bold">🎓</div>,
+            fitness: <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 font-bold">💪</div>,
+            music: <div className="w-8 h-8 bg-rose-100 rounded-full flex items-center justify-center text-rose-600 font-bold">🎵</div>,
+            tech: <div className="w-8 h-8 bg-cyan-100 rounded-full flex items-center justify-center text-cyan-600 font-bold">💻</div>,
+            other: <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 font-bold">📅</div>,
         };
         return icons[category] || icons.other;
     };
@@ -198,9 +198,9 @@ ${event.safety_notes ? `Safety Notes: ${event.safety_notes}` : ''}
     };
 
     return (
-        <Card className={cn("w-full h-full overflow-hidden group hover:shadow-lg transition-all duration-200", className)}>
+        <Card className={cn("w-full h-full event-card overflow-hidden group hover:shadow-lg transition-all duration-200", className)}>
             {/* Event Cover Image */}
-            <div className="relative h-48 bg-gradient-to-br from-primary/20 to-secondary/20 overflow-hidden">
+            <div className="relative event-cover bg-gradient-to-br from-primary/20 to-secondary/20 overflow-hidden">
                 {event.cover_url ? (
                     <img
                         src={event.cover_url}
@@ -209,9 +209,9 @@ ${event.safety_notes ? `Safety Notes: ${event.safety_notes}` : ''}
                     />
                 ) : (
                     <div className="flex items-center justify-center h-full text-muted-foreground">
-                        <div className="text-center space-y-2">
-                            <div className="text-4xl">{getCategoryIcon(event.category)}</div>
-                            <div className="text-sm font-medium">{event.category}</div>
+                        <div className="text-center space-y-3">
+                            <div className="flex justify-center">{getCategoryIcon(event.category)}</div>
+                            <div className="text-sm font-medium capitalize">{event.category}</div>
                         </div>
                     </div>
                 )}

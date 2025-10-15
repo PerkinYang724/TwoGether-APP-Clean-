@@ -28,10 +28,28 @@ export default function AuthCallback() {
                         .single();
 
                     if (!profile) {
-                        // Redirect to profile setup
-                        router.push("/auth/setup");
+                        // Try to create a basic profile automatically
+                        const { error: insertError } = await supabase
+                            .from("profiles")
+                            .insert({
+                                id: data.session.user.id,
+                                email: data.session.user.email!,
+                                full_name: data.session.user.user_metadata?.full_name || data.session.user.email!.split('@')[0],
+                                campus_name: "Stanford University", // Default campus
+                                rating_avg: 0,
+                                rating_count: 0,
+                            });
+
+                        if (insertError) {
+                            console.error("Failed to create profile:", insertError);
+                            // If auto-creation fails, redirect to setup
+                            router.push("/auth/setup");
+                        } else {
+                            // Profile created successfully, redirect to home
+                            router.push("/");
+                        }
                     } else {
-                        // Redirect to home
+                        // Profile exists, redirect to home
                         router.push("/");
                     }
                 } else {

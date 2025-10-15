@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { createClientSupabase } from "@/lib/supabase";
-import { Profile } from "@/lib/schemas-new";
+import { Profile } from "@/lib/schemas";
 
 interface AuthContextType {
     user: User | null;
@@ -31,6 +31,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         try {
+            console.log('🔄 Refreshing profile for user:', user.id);
             const { data, error } = await supabase
                 .from("profiles")
                 .select("*")
@@ -41,6 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 console.error("Error fetching profile:", error);
                 setProfile(null);
             } else {
+                console.log("✅ Profile fetched successfully:", data);
                 setProfile(data);
             }
         } catch (error) {
@@ -53,6 +55,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
             const { error } = await supabase.auth.signOut();
             if (error) throw error;
+            setUser(null);
+            setProfile(null);
+            setSession(null);
         } catch (error) {
             console.error("Error signing out:", error);
         }
@@ -61,12 +66,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         // Get initial session
         const getInitialSession = async () => {
-            const { data: { session }, error } = await supabase.auth.getSession();
-            if (error) {
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+                if (error) {
+                    console.error("Error getting session:", error);
+                } else {
+                    setSession(session);
+                    setUser(session?.user ?? null);
+                }
+            } catch (error) {
                 console.error("Error getting session:", error);
-            } else {
-                setSession(session);
-                setUser(session?.user ?? null);
             }
             setLoading(false);
         };
@@ -74,21 +83,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         getInitialSession();
 
         // Listen for auth changes
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(
-            async (event, session) => {
-                setSession(session);
-                setUser(session?.user ?? null);
-                setLoading(false);
+        try {
+            const { data: { subscription } } = supabase.auth.onAuthStateChange(
+                async (event, session) => {
+                    setSession(session);
+                    setUser(session?.user ?? null);
+                    setLoading(false);
 
-                if (session?.user) {
-                    await refreshProfile();
-                } else {
-                    setProfile(null);
+                    if (session?.user) {
+                        await refreshProfile();
+                    } else {
+                        setProfile(null);
+                    }
                 }
-            }
-        );
+            );
 
-        return () => subscription.unsubscribe();
+            return () => subscription.unsubscribe();
+        } catch (error) {
+            console.error("Error setting up auth listener:", error);
+            setLoading(false);
+        }
     }, []);
 
     useEffect(() => {

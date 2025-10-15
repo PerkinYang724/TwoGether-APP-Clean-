@@ -238,7 +238,7 @@ export function SwipeDeck({
     }
 
     return (
-        <div className={cn("relative w-full h-96", className)}>
+        <div className={cn("relative w-full swipe-deck", className)}>
             <AnimatePresence>
                 {/* Next card (background) */}
                 {nextEvent && (

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase-server";
-import { createProfileSchema, updateProfileSchema } from "@/lib/schemas-new";
+import { createProfileSchema, updateProfileSchema } from "@/lib/schemas";
 
 export async function GET() {
     try {

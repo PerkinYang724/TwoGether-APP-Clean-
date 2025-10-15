@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase-server";
-import { joinEventSchema } from "@/lib/schemas-new";
+import { joinEventSchema } from "@/lib/schemas";
 
 export async function POST(
     request: NextRequest,

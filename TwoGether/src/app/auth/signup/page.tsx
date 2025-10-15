@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/lib/supabase-client";
+import { createClientSupabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -16,12 +16,14 @@ export default function SignupPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const supabase = createClient();
+    const supabase = createClientSupabase();
 
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         setError("");
+
+        console.log('📝 Signup attempt:', email);
 
         try {
             const { error } = await supabase.auth.signUp({
@@ -34,11 +36,18 @@ export default function SignupPage() {
                 },
             });
 
-            if (error) throw error;
+            if (error) {
+                console.log('❌ Signup error:', error);
+                throw error;
+            }
 
-            // Redirect to profile setup
-            window.location.href = "/auth/setup";
+            console.log('✅ Signup successful, redirecting to setup...');
+            // Small delay to ensure auth state is updated
+            setTimeout(() => {
+                window.location.href = "/auth/setup";
+            }, 100);
         } catch (error: any) {
+            console.log('❌ Signup failed:', error);
             setError(error.message);
         } finally {
             setLoading(false);

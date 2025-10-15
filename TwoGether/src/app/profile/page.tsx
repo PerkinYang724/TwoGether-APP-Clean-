@@ -4,11 +4,30 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BottomNav } from "@/components/BottomNav";
-import { ArrowLeft, Edit, Star, Users, Calendar, Settings } from "lucide-react";
+import { ArrowLeft, Edit, Star, Users, Calendar, Settings, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth";
 
 export default function ProfilePage() {
     const router = useRouter();
+    const { user, profile, signOut } = useAuth();
+
+    const handleSignOut = async () => {
+        await signOut();
+        router.push('/');
+    };
+
+    // If no user, redirect to login
+    if (!user) {
+        router.push('/auth/login');
+        return null;
+    }
+
+    // If no profile or incomplete profile, redirect to setup
+    if (!profile || !profile.full_name || !profile.campus_name) {
+        router.push('/auth/setup');
+        return null;
+    }
 
     return (
         <div className="min-h-screen bg-background pb-20">
@@ -28,20 +47,25 @@ export default function ProfilePage() {
                     <CardContent className="p-6">
                         <div className="flex items-start gap-4">
                             <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
-                                <span className="text-2xl font-semibold text-primary">JD</span>
+                                <span className="text-2xl font-semibold text-primary">
+                                    {profile.full_name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
+                                </span>
                             </div>
 
                             <div className="flex-1">
-                                <h2 className="text-xl font-semibold">John Doe</h2>
-                                <p className="text-muted-foreground">Class of 2024</p>
-                                <p className="text-muted-foreground">Computer Science</p>
+                                <h2 className="text-xl font-semibold">{profile.full_name}</h2>
+                                <p className="text-muted-foreground">
+                                    {profile.class_year && `Class of ${profile.class_year}`}
+                                </p>
+                                <p className="text-muted-foreground">{profile.major}</p>
+                                <p className="text-muted-foreground">{profile.campus_name}</p>
 
                                 {/* Rating */}
                                 <div className="flex items-center gap-1 mt-2">
                                     <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                                    <span className="font-medium">4.8</span>
+                                    <span className="font-medium">{profile.rating_avg.toFixed(1)}</span>
                                     <span className="text-sm text-muted-foreground">
-                                        (24 ratings)
+                                        ({profile.rating_count} ratings)
                                     </span>
                                 </div>
                             </div>
@@ -53,20 +77,23 @@ export default function ProfilePage() {
                         </div>
 
                         {/* Bio */}
-                        <p className="mt-4 text-muted-foreground">
-                            CS student who loves coding and coffee ☕. Always up for study groups and hackathons!
-                        </p>
+                        {profile.bio && (
+                            <p className="mt-4 text-muted-foreground">
+                                {profile.bio}
+                            </p>
+                        )}
 
                         {/* Interests */}
-                        <div className="mt-4">
-                            <h3 className="text-sm font-medium mb-2">Interests</h3>
-                            <div className="flex flex-wrap gap-2">
-                                <Badge variant="secondary">Technology</Badge>
-                                <Badge variant="secondary">Gaming</Badge>
-                                <Badge variant="secondary">Coffee</Badge>
-                                <Badge variant="secondary">Hackathons</Badge>
+                        {profile.interests && profile.interests.length > 0 && (
+                            <div className="mt-4">
+                                <h3 className="text-sm font-medium mb-2">Interests</h3>
+                                <div className="flex flex-wrap gap-2">
+                                    {profile.interests.map((interest, index) => (
+                                        <Badge key={index} variant="secondary">{interest}</Badge>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </CardContent>
                 </Card>
 
@@ -97,7 +124,7 @@ export default function ProfilePage() {
                             <div className="flex items-center justify-center mb-2">
                                 <Star className="w-5 h-5 text-primary" />
                             </div>
-                            <p className="text-2xl font-bold">24</p>
+                            <p className="text-2xl font-bold">{profile.rating_count}</p>
                             <p className="text-sm text-muted-foreground">Rated</p>
                         </CardContent>
                     </Card>
@@ -120,6 +147,14 @@ export default function ProfilePage() {
                         <Button variant="outline" className="w-full justify-start">
                             <Star className="w-4 h-4 mr-2" />
                             Rating History
+                        </Button>
+                        <Button
+                            variant="outline"
+                            className="w-full justify-start text-destructive hover:text-destructive"
+                            onClick={handleSignOut}
+                        >
+                            <LogOut className="w-4 h-4 mr-2" />
+                            Sign Out
                         </Button>
                     </CardContent>
                 </Card>

@@ -128,3 +128,52 @@
         backdrop-filter: blur(12px);
     }
 }
+
+/* Mobile-first responsive design */
+@media (max-width: 640px) {
+    .swipe-deck {
+        height: 500px;
+        max-height: 70vh;
+    }
+
+    .event-card {
+        aspect-ratio: 3/4;
+        max-height: 500px;
+    }
+
+    .event-card .event-cover {
+        height: 14rem;
+        /* 224px */
+    }
+}
+
+/* Tablet and larger screens */
+@media (min-width: 641px) {
+    .swipe-deck {
+        height: 600px;
+        max-height: 80vh;
+    }
+
+    .event-card {
+        aspect-ratio: 4/5;
+        max-height: 600px;
+    }
+
+    .event-card .event-cover {
+        height: 16rem;
+        /* 256px */
+    }
+}
+
+/* Mobile viewport optimization */
+@supports (height: 100dvh) {
+    .mobile-viewport {
+        height: 100dvh;
+    }
+}
+
+@supports not (height: 100dvh) {
+    .mobile-viewport {
+        height: 100vh;
+    }
+}

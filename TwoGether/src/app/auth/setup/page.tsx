@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase-client";
+import { createClientSupabase } from "@/lib/supabase";
+import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -37,7 +38,8 @@ export default function ProfileSetupPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const router = useRouter();
-    const supabase = createClient();
+    const supabase = createClientSupabase();
+    const { refreshProfile } = useAuth();
 
     useEffect(() => {
         // Get current user
@@ -67,16 +69,37 @@ export default function ProfileSetupPage() {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error("No user found");
 
+            // Create profile data
+            const profileData = {
+                id: user.id,
+                email: user.email!,
+                full_name: formData.full_name,
+                bio: formData.bio,
+                class_year: formData.class_year,
+                major: formData.major,
+                interests: formData.interests,
+                campus_name: "Stanford University", // Default campus
+                rating_avg: 0,
+                rating_count: 0,
+            };
+
+            // Insert profile into Supabase
             const { error } = await supabase
                 .from("profiles")
-                .insert({
-                    id: user.id,
-                    ...formData,
-                });
+                .insert(profileData);
 
-            if (error) throw error;
+            if (error) {
+                console.error("Failed to create profile:", error);
+                throw new Error("Failed to create profile. Please try again.");
+            }
 
-            router.push("/");
+            // Refresh the profile in auth context
+            await refreshProfile();
+
+            // Small delay to ensure profile is updated
+            setTimeout(() => {
+                router.push("/");
+            }, 100);
         } catch (error: any) {
             setError(error.message);
         } finally {

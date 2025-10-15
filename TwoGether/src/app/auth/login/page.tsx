@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/lib/supabase-client";
+import { createClientSupabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,12 +15,14 @@ export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const supabase = createClient();
+    const supabase = createClientSupabase();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         setError("");
+
+        console.log('🔐 Login attempt:', email);
 
         try {
             const { error } = await supabase.auth.signInWithPassword({
@@ -28,8 +30,18 @@ export default function LoginPage() {
                 password,
             });
 
-            if (error) throw error;
+            if (error) {
+                console.log('❌ Login error:', error);
+                throw error;
+            }
+
+            console.log('✅ Login successful, redirecting...');
+            // Small delay to ensure auth state is updated
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 100);
         } catch (error: any) {
+            console.log('❌ Login failed:', error);
             setError(error.message);
         } finally {
             setLoading(false);
@@ -38,6 +50,8 @@ export default function LoginPage() {
 
     const handleGoogleLogin = async () => {
         setLoading(true);
+        console.log('🔗 Google OAuth attempt');
+
         try {
             const { error } = await supabase.auth.signInWithOAuth({
                 provider: "google",
@@ -45,8 +59,19 @@ export default function LoginPage() {
                     redirectTo: `${window.location.origin}/auth/callback`,
                 },
             });
-            if (error) throw error;
+
+            if (error) {
+                console.log('❌ Google OAuth error:', error);
+                throw error;
+            }
+
+            console.log('✅ Google OAuth successful, redirecting...');
+            // Small delay to ensure auth state is updated
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 100);
         } catch (error: any) {
+            console.log('❌ Google OAuth failed:', error);
             setError(error.message);
         } finally {
             setLoading(false);

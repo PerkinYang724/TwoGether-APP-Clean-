@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Event, Profile, CreateEvent, JoinEvent } from "@/lib/schemas-new";
+import { Event, Profile, CreateEvent, JoinEvent } from "@/lib/schemas";
 
 // Events hooks
 export function useEvents(filters?: {
