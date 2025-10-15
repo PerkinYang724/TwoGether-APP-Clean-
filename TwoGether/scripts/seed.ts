@@ -1,6 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
 import { faker } from "@faker-js/faker";
 
+// Define the category type
+type EventCategory = 'study' | 'sport' | 'party' | 'food' | 'volunteer' | 'carpool' | 'social' | 'academic';
+
 // Initialize Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -74,11 +77,11 @@ const SAMPLE_PROFILES = [
     },
 ];
 
-const EVENT_CATEGORIES = [
+const EVENT_CATEGORIES: EventCategory[] = [
     "study", "sport", "party", "food", "volunteer", "carpool", "social", "academic"
 ];
 
-const EVENT_TITLES = {
+const EVENT_TITLES: Record<EventCategory, string[]> = {
     study: [
         "Study Group for Midterm",
         "Late Night Coding Session",
@@ -178,7 +181,7 @@ async function seedDatabase() {
         // Create sample events
         console.log("📅 Creating sample events...");
         const eventPromises = Array.from({ length: 20 }, async () => {
-            const category = faker.helpers.arrayElement(EVENT_CATEGORIES);
+            const category = faker.helpers.arrayElement<EventCategory>(EVENT_CATEGORIES);
             const host = faker.helpers.arrayElement(profiles);
             const startTime = faker.date.future();
             const endTime = new Date(startTime.getTime() + faker.number.int({ min: 1, max: 6 }) * 60 * 60 * 1000);
@@ -258,29 +261,30 @@ async function seedDatabase() {
 
         // Create sample ratings
         console.log("⭐ Creating sample ratings...");
-        const ratingPromises = events.slice(0, 10).flatMap(event => {
+        const ratingPromises = [];
+        for (const event of events.slice(0, 10)) {
             const { data: members } = await supabase
                 .from("event_members")
                 .select("user_id")
                 .eq("event_id", event.id)
                 .limit(5);
 
-            if (!members) return [];
+            if (!members) continue;
 
-            return members.map(async (member) => {
-                const { error } = await supabase
-                    .from("ratings")
-                    .insert({
-                        event_id: event.id,
-                        rater_id: member.user_id,
-                        ratee_id: event.host_id,
-                        stars: faker.number.int({ min: 3, max: 5 }),
-                        comment: faker.lorem.sentence(),
-                    });
-
-                if (error) throw error;
-            });
-        });
+            for (const member of members) {
+                ratingPromises.push(
+                    supabase
+                        .from("ratings")
+                        .insert({
+                            event_id: event.id,
+                            rater_id: member.user_id,
+                            ratee_id: event.host_id,
+                            stars: faker.number.int({ min: 3, max: 5 }),
+                            comment: faker.lorem.sentence(),
+                        })
+                );
+            }
+        }
 
         await Promise.all(ratingPromises);
         console.log("✅ Created sample ratings");

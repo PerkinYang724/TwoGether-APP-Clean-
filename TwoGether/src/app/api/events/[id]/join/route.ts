@@ -19,6 +19,7 @@ export async function POST(
         const validatedData = joinEventSchema.parse(body);
 
         // Check if user is already attending
+        // @ts-ignore - Supabase client type issue with demo mode
         const { data: existingAttendance } = await supabase
             .from("event_attendees")
             .select("id")

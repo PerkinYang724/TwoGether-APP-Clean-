@@ -530,7 +530,7 @@ Tags: ${event.tags?.join(', ') || 'None'}
                             <h3 className="text-lg font-semibold">{COPY.ERRORS.GENERIC_TITLE}</h3>
                             <p className="text-sm text-muted-foreground">{error}</p>
                         </div>
-                        <Button onClick={() => window.location.reload()}>
+                        <Button onClick={() => typeof window !== 'undefined' && window.location.reload()}>
                             {COPY.ERRORS.GENERIC_CTA}
                         </Button>
                     </div>

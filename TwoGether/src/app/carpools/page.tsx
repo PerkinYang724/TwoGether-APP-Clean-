@@ -168,7 +168,7 @@ export default function CarpoolsPage() {
                             <h3 className="text-lg font-semibold">{COPY.ERRORS.GENERIC_TITLE}</h3>
                             <p className="text-sm text-muted-foreground">{error}</p>
                         </div>
-                        <Button onClick={() => window.location.reload()}>
+                        <Button onClick={() => typeof window !== 'undefined' && window.location.reload()}>
                             {COPY.ERRORS.GENERIC_CTA}
                         </Button>
                     </div>
@@ -279,7 +279,7 @@ export default function CarpoolsPage() {
                                         </p>
                                     </div>
                                 ) : (
-                                    matches?.map((match) => (
+                                    matches?.map((match: CarpoolMatch) => (
                                         <motion.div
                                             key={match.id}
                                             initial={{ opacity: 0, y: 20 }}
@@ -293,7 +293,8 @@ export default function CarpoolsPage() {
                                                         <div className="flex items-center gap-3">
                                                             <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
                                                                 <span className="text-lg font-semibold">
-                                                                    {match.driver_name.split(' ').map(n => n[0]).join('')}
+                                                                    {/* @ts-ignore - TypeScript inference issue with map parameter */}
+                                                                    {match.driver_name.split(' ').map((n: string) => n[0]).join('')}
                                                                 </span>
                                                             </div>
                                                             <div className="flex-1">

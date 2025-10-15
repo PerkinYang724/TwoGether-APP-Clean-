@@ -7,6 +7,9 @@ import { BottomNav } from "@/components/BottomNav";
 import { ArrowLeft, Edit, Star, Users, Calendar, Settings, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
+import { useEffect } from "react";
+
+export const dynamic = 'force-dynamic';
 
 export default function ProfilePage() {
     const router = useRouter();
@@ -18,14 +21,21 @@ export default function ProfilePage() {
     };
 
     // If no user, redirect to login
-    if (!user) {
-        router.push('/auth/login');
-        return null;
-    }
+    useEffect(() => {
+        if (!user) {
+            router.push('/auth/login');
+        }
+    }, [user, router]);
 
     // If no profile or incomplete profile, redirect to setup
-    if (!profile || !profile.full_name || !profile.campus_name) {
-        router.push('/auth/setup');
+    useEffect(() => {
+        if (user && (!profile || !profile.full_name || !profile.campus_name)) {
+            router.push('/auth/setup');
+        }
+    }, [user, profile, router]);
+
+    // Show loading or placeholder while checking auth
+    if (!user || !profile || !profile.full_name || !profile.campus_name) {
         return null;
     }
 
@@ -48,7 +58,7 @@ export default function ProfilePage() {
                         <div className="flex items-start gap-4">
                             <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
                                 <span className="text-2xl font-semibold text-primary">
-                                    {profile.full_name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
+                                    {profile.full_name?.split(' ').map((n: string) => n[0]).join('').toUpperCase() || 'U'}
                                 </span>
                             </div>
 
